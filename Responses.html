@@ -418,6 +418,198 @@ summary(fito)</code></pre>
 </div>
 <div id="question-4" class="section level2">
 <h2>Question 4</h2>
+<p>See appendix <a href="#a4">A4</a> for R code.</p>
+<blockquote>
+<p>The data are from a hypothetical Verbal Learning Experiment in which participants with Low Anxiety levels and High Anxiety levels are given a verbal learning task “anxiety.txt”. Some are given instructions to induce little if any pressure. Some are given instructions to induce moderation pressure to perform well. Others are given instructions to induce strong pressure to perform well. Assume that all assumptions for Two-Way ANOVA model are met.</p>
+<ol style="list-style-type: lower-alpha">
+<li>Is there a Main Effect of Anxiety. Do high anxious persons perform better or worse than low anxious?</li>
+<li>Is there a Main Effect of Pressure. Overall, do persons under different amounts of pressure perform this task differently?</li>
+<li>Is there an Interaction of Anxiety and Pressure: Do performance differences between anxiety levels change at different levels of pressure? Or do the effects of different levels of pressure differ for people with high anxiety vs. low anxiety?</li>
+</ol>
+</blockquote>
+<div id="part-a-2" class="section level3">
+<h3>Part A</h3>
+<p>If we assume that low anxiety is coded as <em>1</em> in the data set and high anxiety is coded as <em>2</em> we can see that anxious persons perform worse. This is because the mean score for high anxiety people (coded as <em>2</em>) is lower than the mean score for low anxiety people (coded as <em>1</em>). Table Q4A reports the mean test scores for high anxiety and low anxiety people.</p>
+<hr />
+<table style="width:53%;">
+<colgroup>
+<col width="26%"></col>
+<col width="26%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Mean Test Score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Low Anxiety</strong></td>
+<td align="center">53.77</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>High Anxiety</strong></td>
+<td align="center">44.53</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table Q4A:</strong> Mean test scores for low anxiety and high anxiety individuals</p>
+<hr />
+<p>We can do a one-way ANOVA test in R using the “aov()” function. The output for this function when looking at the effect of <em>Anxiety</em> on the learning scores is shown below. The low p-value (less than 0.01) indicates that there is indeed a non-zero factor effect of <em>Anxiety</em> on learning scores. Since the mean scores are higher for low anxiety people and the ANOVA test confirms that there is a difference between high and low anxiety individuals we conclude that low anxiety individuals perform better than high anxiety individuals.</p>
+<pre class="r"><code>fit &lt;- aov(verblearn ~ anxiety, data = qdata)
+summary(fit)</code></pre>
+<pre><code>##             Df Sum Sq Mean Sq F value  Pr(&gt;F)    
+## anxiety      1   1279  1278.8   12.96 0.00066 ***
+## Residuals   58   5723    98.7                    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<p><br> <br></p>
+</div>
+<div id="part-b-1" class="section level3">
+<h3>Part B</h3>
+<p>Table Q4B reports the mean learning scores for individuals under low pressure, medium pressure, and high pressure. We are assuming that low pressure is coded as <em>1</em> in the data set and high pressure as <em>3</em>.</p>
+<hr />
+<table style="width:54%;">
+<colgroup>
+<col width="30%"></col>
+<col width="23%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Mean Test Score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Low Pressure</strong></td>
+<td align="center">46</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Medium Pressure</strong></td>
+<td align="center">48.9</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>High Pressure</strong></td>
+<td align="center">52.55</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table Q4B:</strong> Mean test scores for individuals under low, medium, and high pressure.</p>
+<hr />
+<p><br></p>
+<p>Table Q4B shows that the mean scores were higher for individuals under hight pressure. We will use the “aov()” function in R to see if there is actually a significant difference between any of the levels of pressure. Since the p-value is greater than 0.05 we cannot conclude that pressure has a significant effect on performance.</p>
+<pre class="r"><code>fit &lt;- aov(verblearn ~ pressure, data = qdata)
+summary(fit)</code></pre>
+<pre><code>##             Df Sum Sq Mean Sq F value Pr(&gt;F)
+## pressure     2    431   215.4   1.869  0.164
+## Residuals   57   6571   115.3</code></pre>
+<p><br> <br></p>
+</div>
+<div id="part-c-1" class="section level3">
+<h3>Part C</h3>
+<p>Table Q4C reports the mean learning scores for low and high anxiety individuals under low pressure, medium pressure, and high pressure.</p>
+<hr />
+<table>
+<colgroup>
+<col width="25%"></col>
+<col width="20%"></col>
+<col width="24%"></col>
+<col width="21%"></col>
+<col width="9%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Low Pressure</th>
+<th align="center">Medium Pressure</th>
+<th align="center">High Pressure</th>
+<th align="center">Total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Low Anxiety</strong></td>
+<td align="center">48.8</td>
+<td align="center">50.3</td>
+<td align="center">62.2</td>
+<td align="center">53.77</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>High Anxiety</strong></td>
+<td align="center">43.2</td>
+<td align="center">47.5</td>
+<td align="center">42.9</td>
+<td align="center">44.53</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>Total</strong></td>
+<td align="center">46</td>
+<td align="center">48.9</td>
+<td align="center">52.55</td>
+<td align="center">49.15</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table Q4B:</strong> Mean test scores for high and low anxiety individuals under low, medium, and high pressure.</p>
+<hr />
+<p><br></p>
+<p>We can also use the R function “aov()” to perform a two-way ANOVA test. Since the p-value of interaction between <em>Anxiety</em> and <em>Pressure</em> is less than 0.05 we can conclude at a 5% signifcance level that there is an interaction between anxiety and pressure on scores. This means that the effects of different levels of pressure on performance differ between high anxiety and low anxiety individuals, and the effect of anxiety on performance varies at different levels of pressure.</p>
+<pre class="r"><code>## Part C
+fit &lt;- aov(verblearn ~ anxiety*pressure, data = qdata)
+summary(fit)</code></pre>
+<pre><code>##                  Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## anxiety           1   1279  1278.8  15.304 0.000258 ***
+## pressure          2    431   215.5   2.578 0.085217 .  
+## anxiety:pressure  2    780   389.8   4.665 0.013526 *  
+## Residuals        54   4512    83.6                     
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<p>Now that we know there is an interaction between <em>Anxiety</em> and <em>Pressure</em> we want to see which levels actually differ. To this end we will perform Tukey’s Honestly Significant Difference (HSD) test. The output below shows that in addition to there being a differenc between high and low anxiety people (which we alread showed in part A), there are some differences between groups of different <em>combinations</em> of anxiety and pressure levels.</p>
+<p>The p-value of ~0.021 for “1:3-1:1” (<em>Anxiety</em>:<em>Pressure</em>) indicates that there is a significant difference for low anxiety people when under high pressure and low pressure. The “diff” column in the output indicates the estimated difference between the two groups. So low anxiety individuals are estimated to score about 13.4 points better when under high pressure than when under low pressure. However, the 95% confidence interval (lower bound given in column “lwr”, upper bound given in column “upr”) for the difference is large. The p-value of ~0.00031 for “1:3-2:1” indicates that there is a significant difference between low anxiety people under high pressure and high anxiety people under low pressure. Low anxiety people under high pressure are estimated to score 19 points better (95% CI: 6.9 - 13.1) than high anxiety people under low pressure. The p-value of ~0.0087 for “1:3-2:2” indicates that there is a significant difference in performance between low anxiety people under high pressure and high anxiety people under medium pressure. Low anxiety people under high pressure are estimated to score 14.7 points better (95% CI: 2.6 - 26.8) than high anxiety people under medium pressure. Finally, the p-value of ~0.00024 for “2:3-1:3” indicates that there is a significant difference between low anxiety people under high pressure and high anxiety people under high pressure. High anxiety people under high pressure are estimated to do 19.3 points (95% CI: 7.2 - 31.4) <em>worse</em> than low anxiety people under high pressure.</p>
+<pre class="r"><code>TukeyHSD(fit)</code></pre>
+<pre><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = verblearn ~ anxiety * pressure, data = qdata)
+## 
+## $anxiety
+##          diff       lwr       upr     p adj
+## 2-1 -9.233333 -13.96533 -4.501334 0.0002581
+## 
+## $pressure
+##     diff        lwr       upr     p adj
+## 2-1 2.90 -4.0665258  9.866526 0.5780471
+## 3-1 6.55 -0.4165258 13.516526 0.0694300
+## 3-2 3.65 -3.3165258 10.616526 0.4222405
+## 
+## $`anxiety:pressure`
+##          diff         lwr       upr     p adj
+## 2:1-1:1  -5.6 -17.6780857  6.478086 0.7445008
+## 1:2-1:1   1.5 -10.5780857 13.578086 0.9990811
+## 2:2-1:1  -1.3 -13.3780857 10.778086 0.9995416
+## 1:3-1:1  13.4   1.3219143 25.478086 0.0214544
+## 2:3-1:1  -5.9 -17.9780857  6.178086 0.7008265
+## 1:2-2:1   7.1  -4.9780857 19.178086 0.5142860
+## 2:2-2:1   4.3  -7.7780857 16.378086 0.8978816
+## 1:3-2:1  19.0   6.9219143 31.078086 0.0003052
+## 2:3-2:1  -0.3 -12.3780857 11.778086 0.9999997
+## 2:2-1:2  -2.8 -14.8780857  9.278086 0.9828997
+## 1:3-1:2  11.9  -0.1780857 23.978086 0.0556974
+## 2:3-1:2  -7.4 -19.4780857  4.678086 0.4680449
+## 1:3-2:2  14.7   2.6219143 26.778086 0.0087098
+## 2:3-2:2  -4.6 -16.6780857  7.478086 0.8687550
+## 2:3-1:3 -19.3 -31.3780857 -7.221914 0.0002377</code></pre>
+<p>Figure Q4C gives a nice visualization of the interaction effects between <em>Anxiety</em> and <em>Pressure</em>. The combination of low anxiety and high pressure performs best on the test (this can also be seen from the output of the Tukey’s HSD test). The effect of pressure on performance is much greater for low anxiety people than high anxiety people.</p>
+<div class="figure">
+<img src="data:image/png;base64,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" alt="Figure Q4C: Interaction plot showing the effect of pressure on test scores for different anxiety level individuals. Pressure appears to affect low anxiety people positively but doesn’t seem to have much of an effect on high anxiety people." />
+<p class="caption"><strong>Figure Q4C:</strong> Interaction plot showing the effect of pressure on test scores for different anxiety level individuals. Pressure appears to affect low anxiety people positively but doesn’t seem to have much of an effect on high anxiety people.</p>
+</div>
+<p><br> <br></p>
+</div>
+</div>
+<div id="question-5" class="section level2">
+<h2>Question 5</h2>
 <p><br> <br></p>
 </div>
 </div>
@@ -1033,6 +1225,158 @@ dev.off()</code></pre>
 </div>
 <div id="a4" class="section level2">
 <h2>A4</h2>
+<pre class="r"><code>## Part A
+qdata &lt;- data.frame(read.table(&quot;data/anxiety.txt&quot;, header = T, sep = &quot;&quot;))
+qdata$anxiety &lt;- factor(qdata$anxiety)
+qdata$pressure &lt;- factor(qdata$pressure)
+
+x &lt;- data.frame(M = c(mean(qdata$verblearn[qdata$anxiety==1]), mean(qdata$verblearn[qdata$anxiety==2])))
+colnames(x) &lt;- &quot;Mean Test Score&quot;
+rownames(x) &lt;- c(&quot;Low Anxiety&quot;, &quot;High Anxiety&quot;)
+
+pandoc.table(x,
+             caption = &quot;**Table Q4A:** Mean test scores for low anxiety and high anxiety individuals&quot;,
+             split.table = Inf)</code></pre>
+<pre><code>## 
+## ------------------------------------
+##       &amp;nbsp;        Mean Test Score 
+## ------------------ -----------------
+##  **Low Anxiety**         53.77      
+## 
+##  **High Anxiety**        44.53      
+## ------------------------------------
+## 
+## **Table Q4A:** Mean test scores for low anxiety and high anxiety individuals</code></pre>
+<pre class="r"><code>fit &lt;- aov(verblearn ~ anxiety, data = qdata)
+summary(fit)</code></pre>
+<pre><code>##             Df Sum Sq Mean Sq F value  Pr(&gt;F)    
+## anxiety      1   1279  1278.8   12.96 0.00066 ***
+## Residuals   58   5723    98.7                    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<pre class="r"><code>################################################################
+
+## Part B
+x &lt;- data.frame(M = c(mean(qdata$verblearn[qdata$pressure==1]), mean(qdata$verblearn[qdata$pressure==2]), mean(qdata$verblearn[qdata$pressure==3])))
+colnames(x) &lt;- &quot;Mean Test Score&quot;
+rownames(x) &lt;- c(&quot;Low Pressure&quot;, &quot;Medium Pressure&quot;, &quot;High Pressure&quot;)
+
+pandoc.table(x,
+             caption = &quot;**Table Q4B:** Mean test scores for individuals under low, medium, and high pressure.&quot;,
+             split.table = Inf)</code></pre>
+<pre><code>## 
+## ---------------------------------------
+##        &amp;nbsp;          Mean Test Score 
+## --------------------- -----------------
+##   **Low Pressure**           46        
+## 
+##  **Medium Pressure**        48.9       
+## 
+##   **High Pressure**         52.55      
+## ---------------------------------------
+## 
+## **Table Q4B:** Mean test scores for individuals under low, medium, and high pressure.</code></pre>
+<pre class="r"><code>fit &lt;- aov(verblearn ~ pressure, data = qdata)
+summary(fit)</code></pre>
+<pre><code>##             Df Sum Sq Mean Sq F value Pr(&gt;F)
+## pressure     2    431   215.4   1.869  0.164
+## Residuals   57   6571   115.3</code></pre>
+<pre class="r"><code>################################################################
+
+## Part C
+x &lt;- data.frame(L = c(mean(qdata$verblearn[qdata$pressure==1 &amp; qdata$anxiety==1]), 
+                      mean(qdata$verblearn[qdata$pressure==1 &amp; qdata$anxiety==2]),
+                      mean(qdata$verblearn[qdata$pressure==1])),
+                M = c(mean(qdata$verblearn[qdata$pressure==2 &amp; qdata$anxiety==1]), 
+                      mean(qdata$verblearn[qdata$pressure==2 &amp; qdata$anxiety==2]),
+                      mean(qdata$verblearn[qdata$pressure==2])),
+                H = c(mean(qdata$verblearn[qdata$pressure==3 &amp; qdata$anxiety==1]), 
+                      mean(qdata$verblearn[qdata$pressure==3 &amp; qdata$anxiety==2]),
+                      mean(qdata$verblearn[qdata$pressure==3])),
+                A = c(mean(qdata$verblearn[qdata$anxiety==1]), 
+                      mean(qdata$verblearn[qdata$anxiety==2]), 
+                      mean(qdata$verblearn)))
+
+colnames(x) &lt;- c(&quot;Low Pressure&quot;, &quot;Medium Pressure&quot;, &quot;High Pressure&quot;, &quot;Total&quot;)
+rownames(x) &lt;- c(&quot;Low Anxiety&quot;, &quot;High Anxiety&quot;, &quot;Total&quot;)
+
+pandoc.table(x,
+             caption = &quot;**Table Q4B:** Mean test scores for high and low anxiety individuals under low, medium, and high pressure.&quot;,
+             split.table = Inf)</code></pre>
+<pre><code>## 
+## ---------------------------------------------------------------------------
+##       &amp;nbsp;        Low Pressure   Medium Pressure   High Pressure   Total 
+## ------------------ -------------- ----------------- --------------- -------
+##  **Low Anxiety**        48.8            50.3             62.2        53.77 
+## 
+##  **High Anxiety**       43.2            47.5             42.9        44.53 
+## 
+##     **Total**            46             48.9             52.55       49.15 
+## ---------------------------------------------------------------------------
+## 
+## **Table Q4B:** Mean test scores for high and low anxiety individuals under low, medium, and high pressure.</code></pre>
+<pre class="r"><code>fit &lt;- aov(verblearn ~ anxiety*pressure, data = qdata)
+summary(fit)</code></pre>
+<pre><code>##                  Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## anxiety           1   1279  1278.8  15.304 0.000258 ***
+## pressure          2    431   215.5   2.578 0.085217 .  
+## anxiety:pressure  2    780   389.8   4.665 0.013526 *  
+## Residuals        54   4512    83.6                     
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<pre class="r"><code>TukeyHSD(fit)</code></pre>
+<pre><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = verblearn ~ anxiety * pressure, data = qdata)
+## 
+## $anxiety
+##          diff       lwr       upr     p adj
+## 2-1 -9.233333 -13.96533 -4.501334 0.0002581
+## 
+## $pressure
+##     diff        lwr       upr     p adj
+## 2-1 2.90 -4.0665258  9.866526 0.5780471
+## 3-1 6.55 -0.4165258 13.516526 0.0694300
+## 3-2 3.65 -3.3165258 10.616526 0.4222405
+## 
+## $`anxiety:pressure`
+##          diff         lwr       upr     p adj
+## 2:1-1:1  -5.6 -17.6780857  6.478086 0.7445008
+## 1:2-1:1   1.5 -10.5780857 13.578086 0.9990811
+## 2:2-1:1  -1.3 -13.3780857 10.778086 0.9995416
+## 1:3-1:1  13.4   1.3219143 25.478086 0.0214544
+## 2:3-1:1  -5.9 -17.9780857  6.178086 0.7008265
+## 1:2-2:1   7.1  -4.9780857 19.178086 0.5142860
+## 2:2-2:1   4.3  -7.7780857 16.378086 0.8978816
+## 1:3-2:1  19.0   6.9219143 31.078086 0.0003052
+## 2:3-2:1  -0.3 -12.3780857 11.778086 0.9999997
+## 2:2-1:2  -2.8 -14.8780857  9.278086 0.9828997
+## 1:3-1:2  11.9  -0.1780857 23.978086 0.0556974
+## 2:3-1:2  -7.4 -19.4780857  4.678086 0.4680449
+## 1:3-2:2  14.7   2.6219143 26.778086 0.0087098
+## 2:3-2:2  -4.6 -16.6780857  7.478086 0.8687550
+## 2:3-1:3 -19.3 -31.3780857 -7.221914 0.0002377</code></pre>
+<pre class="r"><code>png(&quot;images/q4_int.png&quot;,
+    width = 480, height = 480)
+
+par(oma = c(1,1,1,1))
+
+interaction.plot(qdata$pressure, qdata$anxiety, qdata$verblearn,
+                 trace.label = &quot;Anxiety&quot;,
+                 type = &quot;b&quot;, col = c(&quot;darkmagenta&quot;, &quot;forestgreen&quot;),
+                 leg.bty = &quot;o&quot;, leg.bg = &quot;beige&quot;, lwd = 2, pch = c(20, 24),
+                 xlab = &quot;Pressure&quot;, 
+                 ylab = &quot;Learning Score&quot;,
+                 main = &quot;Interaction Plot&quot;)
+
+dev.off()</code></pre>
+<pre><code>## png 
+##   2</code></pre>
+<p><br> <br></p>
+</div>
+<div id="a5" class="section level2">
+<h2>A5</h2>
 <p><br> <br></p>
 </div>
 </div>
