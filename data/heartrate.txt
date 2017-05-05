@@ -1,0 +1,23 @@
+heartrate smoke
+56 Nonsmoker
+53 Nonsmoker
+53 Nonsmoker
+65 Nonsmoker
+70 Nonsmoker
+58 Nonsmoker
+51 Nonsmoker
+78 LightSmoker
+62 LightSmoker
+70 LightSmoker
+73 LightSmoker
+67 LightSmoker
+75 LightSmoker
+65 LightSmoker
+77 HeavySmoker
+86 HeavySmoker
+65 HeavySmoker
+83 HeavySmoker
+79 HeavySmoker
+80 HeavySmoker
+77 HeavySmoker
+ 
