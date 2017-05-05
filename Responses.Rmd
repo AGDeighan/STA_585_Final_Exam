@@ -522,16 +522,248 @@ qdata <- data.frame(read.table("data/water.txt", header = T, sep = ""))
 
 ## Question 3
 
-  See appendix [A2](#a2) for R code.
+  See appendix [A3](#a3) for R code.
   
-> 
+> Use the flour dataset “flour.txt” to do these problems:
+>
+> a. Create and print a SAS dataset or R dataframe named Flour.
+> b. Use SAS or R to find the simple linear regression model for predicting NBags from
+Weight.
+> c. Include the relevant output in your Word file.
+> d. Use SAS or R to compute the means and standard deviations for Weight and NBags.
+> e. For the simple linear regression model, create the residual and normal plots.
+> f. Use SAS or R to find the regression through the origin model for predicting NBags from
+Weight.
+> g. For the regression through the origin model, create the residual and normal plots.
 
+### Part A
 
+```{r}
+## Part A
+qdata <- data.frame(read.table("data/flour.txt", header = T, sep = ""))
+colnames(qdata) <- c("weight", "nbags")
+
+qdata
+```
+
+<br>
+<br>
+
+### Parts B and C
+
+  The output below is the summary of the linear regression model fit using the "lm()" function in R. The p-value of 0.629 for the intercept coefficient indicates that it is not significantly non-zero.
+
+```{r}
+
+## Parts B and C
+fit <- lm(nbags~weight, data = qdata)
+
+summary(fit)
+
+```
 
 
 <br>
 <br>
 
+### Part D
+
+  Table Q3D reports the means and standard deviations of *Weight* and *Nbags*.
+
+***
+
+```{r, echo=F, results="asis"}
+
+## Part D
+
+x <- data.frame(M = c(mean(qdata$weight), mean(qdata$nbags)), S = c( sqrt(var(qdata$weight)), sqrt(var(qdata$nbags)) ))
+colnames(x) <- c("Mean", "Standard Deviation")
+rownames(x) <- c("Weight", "Nbags")
+
+pandoc.table(x,
+             caption = "**Table Q3D:** The means and standard deviations of *Weight* and *Nbags*.",
+             split.table = Inf)
+
+```
+
+***
+
+<br>
+<br>
+
+### Part E
+
+  Figure Q3E shows the residual and normal plots for the simpler linear regression model of *Nbags* regressed on *Weight* as well as the fitted regression line and observed data points.
+
+```{r, include = F}
+
+## Part E
+
+png("images/q3_fit.png",
+    height = 620, width = 760)
+
+par(mfrow = c(2,3), oma = c(0,0,4,0))
+
+plot(qdata$weight, qdata$nbags,
+     main = "Fitted Regression Line",
+     xlab = "Weight",
+     ylab = "Nbags",
+     xlim = c(4500, 30000),
+     ylim = c(50, 650),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(fit$coefficients[1], fit$coefficients[2])
+
+plot(fit$fitted.values, fit$residuals,
+     main = "Raw Residual Plot",
+     xlab = "Fitted Weight",
+     ylab = "Residual",
+     xlim = c(100, 605),
+     ylim = c(-35, 55),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+plot(fit$fitted.values, studres(fit),
+     main = "Studentized Residual Plot",
+     xlab = "Fitted Weight",
+     ylab = "Students Residual",
+     xlim = c(100, 605),
+     ylim = c(-4, 4),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+cutoff <- 4/((nrow(qdata)-length(fit$coefficients)-2)) 
+plot(fit, which=4, cook.levels=cutoff,
+     cex.lab = 1.4, sub = NA)
+
+par(cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+qqPlot(fit, simulate = F,
+       main = "Q-Q Plot",
+       xlab = "Quantiles",
+       ylab = "Studentized Residuals",
+       grid = F, lwd = 1.5, cex = 2)
+
+hist(studres(fit) , freq=FALSE, 
+   main="Distribution of Studentized Residuals",
+   xlab = "Studentized Residual",
+   ylim = c(0,0.8),
+   cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+xfit<-seq(min(studres(fit)),max(studres(fit)),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit, col = "red")
+
+
+
+mtext(text = "Fitted Regression Line and Diagnostic Plots \n Nbags onto Weight",
+      outer = T,
+      padj = -0.25,
+      cex = 1.2, font = 2)
+
+dev.off()
+
+```
+
+![**Figure Q3E:** Fitted regression line, residual plots, and normality plots for regression of Nbags on Weight.](images/q3_fit.png)
+
+<br>
+<br>
+
+### Part F
+
+  The output below is the summary of the linear regression model through the origin of *Nbags* regressed on *Weight*. In the previous model, which included a y-intercept of approximately -5.86, the estimated slope coefficient for *Weight* was 0.0218. In the model through the origin the slope coefficient is slightly smaller, approximately 0.0215.
+
+```{r}
+
+## Part F
+fito <- lm(nbags~0 + weight, data = qdata)
+
+summary(fito)
+
+```
+
+<br>
+<br>
+
+### Part G
+
+  Figure Q3G shows the residual and normal plots for the simpler linear regression model **passing through the origin** of *Nbags* regressed on *Weight* as well as the fitted regression line and observed data points.
+
+```{r, include = F}
+
+## Part G
+
+png("images/q3_fito.png",
+    height = 620, width = 760)
+
+par(mfrow = c(2,3), oma = c(0,0,4,0))
+
+plot(qdata$weight, qdata$nbags,
+     main = "Fitted Regression Line",
+     xlab = "Weight",
+     ylab = "Nbags",
+     xlim = c(4500, 30000),
+     ylim = c(50, 650),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(0, fito$coefficients[1])
+
+plot(fito$fitted.values, fito$residuals,
+     main = "Raw Residual Plot",
+     xlab = "Fitted Weight",
+     ylab = "Residual",
+     xlim = c(100, 605),
+     ylim = c(-35, 55),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+plot(fito$fitted.values, studres(fito),
+     main = "Studentized Residual Plot",
+     xlab = "Fitted Weight",
+     ylab = "Students Residual",
+     xlim = c(100, 605),
+     ylim = c(-4, 4),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+cutoff <- 4/((nrow(qdata)-length(fito$coefficients)-2)) 
+plot(fito, which=4, cook.levels=cutoff,
+     cex.lab = 1.4, sub = NA)
+
+par(cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+qqPlot(fito, simulate = F,
+       main = "Q-Q Plot",
+       xlab = "Quantiles",
+       ylab = "Studentized Residuals",
+       grid = F, lwd = 1.5, cex = 2)
+
+hist(studres(fito) , freq=FALSE, 
+   main="Distribution of Studentized Residuals",
+   xlab = "Studentized Residual",
+   ylim = c(0,0.8),
+   cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+xfit<-seq(min(studres(fito)),max(studres(fito)),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit, col = "red")
+
+
+
+mtext(text = "Fitted Regression Line and Diagnostic Plots \n Regression through the Origin: Nbags onto Weight",
+      outer = T,
+      padj = -0.25,
+      cex = 1.2, font = 2)
+
+dev.off()
+
+```
+
+![**Figure Q3%:** Fitted regression line, residual plots, and normality plots for the regression model of Nbags on Weight passing through the origin.](images/q3_fito.png)
+
+<br>
+<br>
+
+## Question 4
 
 
 
@@ -904,3 +1136,180 @@ pandoc.table(x,
 <br>
 
 ## A3
+
+```{r}
+## Part A
+qdata <- data.frame(read.table("data/flour.txt", header = T, sep = ""))
+colnames(qdata) <- c("weight", "nbags")
+
+qdata
+
+#######################################################################
+
+## Parts B and C
+fit <- lm(nbags~weight, data = qdata)
+
+summary(fit)
+
+#######################################################################
+
+## Part D
+
+x <- data.frame(M = c(mean(qdata$weight), mean(qdata$nbags)), S = c( sqrt(var(qdata$weight)), sqrt(var(qdata$nbags)) ))
+colnames(x) <- c("Mean", "Standard Deviation")
+rownames(x) <- c("Weight", "Nbags")
+
+pandoc.table(x,
+             caption = "**Table Q3D:** The means and standard deviations of *Weight* and *Nbags*.",
+             split.table = Inf)
+
+#######################################################################
+
+## Part E
+
+png("images/q3_fit.png",
+    height = 620, width = 760)
+
+par(mfrow = c(2,3), oma = c(0,0,4,0))
+
+plot(qdata$weight, qdata$nbags,
+     main = "Fitted Regression Line",
+     xlab = "Weight",
+     ylab = "Nbags",
+     xlim = c(4500, 30000),
+     ylim = c(50, 650),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(fit$coefficients[1], fit$coefficients[2])
+
+plot(fit$fitted.values, fit$residuals,
+     main = "Raw Residual Plot",
+     xlab = "Fitted Weight",
+     ylab = "Residual",
+     xlim = c(100, 605),
+     ylim = c(-35, 55),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+plot(fit$fitted.values, studres(fit),
+     main = "Studentized Residual Plot",
+     xlab = "Fitted Weight",
+     ylab = "Students Residual",
+     xlim = c(100, 605),
+     ylim = c(-4, 4),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+cutoff <- 4/((nrow(qdata)-length(fit$coefficients)-2)) 
+plot(fit, which=4, cook.levels=cutoff,
+     cex.lab = 1.4, sub = NA)
+
+par(cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+qqPlot(fit, simulate = F,
+       main = "Q-Q Plot",
+       xlab = "Quantiles",
+       ylab = "Studentized Residuals",
+       grid = F, lwd = 1.5, cex = 2)
+
+hist(studres(fit) , freq=FALSE, 
+   main="Distribution of Studentized Residuals",
+   xlab = "Studentized Residual",
+   ylim = c(0,0.8),
+   cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+xfit<-seq(min(studres(fit)),max(studres(fit)),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit, col = "red")
+
+
+
+mtext(text = "Fitted Regression Line and Diagnostic Plots \n Nbags onto Weight",
+      outer = T,
+      padj = -0.25,
+      cex = 1.2, font = 2)
+
+dev.off()
+
+#######################################################################
+
+## Part F
+fito <- lm(nbags~0 + weight, data = qdata)
+
+summary(fito)
+
+#######################################################################
+
+## Part G
+
+png("images/q3_fito.png",
+    height = 620, width = 760)
+
+par(mfrow = c(2,3), oma = c(0,0,4,0))
+
+plot(qdata$weight, qdata$nbags,
+     main = "Fitted Regression Line",
+     xlab = "Weight",
+     ylab = "Nbags",
+     xlim = c(4500, 30000),
+     ylim = c(50, 650),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(0, fito$coefficients[1])
+
+plot(fito$fitted.values, fito$residuals,
+     main = "Raw Residual Plot",
+     xlab = "Fitted Weight",
+     ylab = "Residual",
+     xlim = c(100, 605),
+     ylim = c(-35, 55),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+plot(fito$fitted.values, studres(fito),
+     main = "Studentized Residual Plot",
+     xlab = "Fitted Weight",
+     ylab = "Students Residual",
+     xlim = c(100, 605),
+     ylim = c(-4, 4),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+cutoff <- 4/((nrow(qdata)-length(fito$coefficients)-2)) 
+plot(fito, which=4, cook.levels=cutoff,
+     cex.lab = 1.4, sub = NA)
+
+par(cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+qqPlot(fito, simulate = F,
+       main = "Q-Q Plot",
+       xlab = "Quantiles",
+       ylab = "Studentized Residuals",
+       grid = F, lwd = 1.5, cex = 2)
+
+hist(studres(fito) , freq=FALSE, 
+   main="Distribution of Studentized Residuals",
+   xlab = "Studentized Residual",
+   ylim = c(0,0.8),
+   cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+xfit<-seq(min(studres(fito)),max(studres(fito)),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit, col = "red")
+
+
+
+mtext(text = "Fitted Regression Line and Diagnostic Plots \n Regression through the Origin: Nbags onto Weight",
+      outer = T,
+      padj = -0.25,
+      cex = 1.2, font = 2)
+
+dev.off()
+
+```
+
+<br>
+<br>
+
+## A4
+
+<br>
+<br>
