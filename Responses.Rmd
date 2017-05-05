@@ -60,6 +60,8 @@ qdata <- qdata[,2:5]
 
 ```
 
+<br>
+
 ### Part A
 
   The figure below shows the histograms for each variable in our raw data-set.
@@ -87,7 +89,7 @@ hist(qdata$BrainWgt,
 hist(qdata$Sleep,
      main = "Distibution of Amount of Sleep",
      xlab = "Sleep (hours/day)",
-     yab = "Frequency",
+     ylab = "Frequency",
      cex.lab = 1.3, cex.main = 1.4, font.main = 1)
 
 hist(qdata$LifeSpan,
@@ -104,6 +106,7 @@ mtext(text = "Histograms of the Observed Distributions of: \n Body Weight, Brain
 dev.off()
 
 ```
+
 
 ![**Figure Q1A:** The plots in the figure above show the observed distributions of body weight, brain weight, sleep amount, and lifespan for 54 different species of animals. Except for sleep, all distributions are strongly right-skewed, indicating the a log-transformation of the data may be appropriate.](images/q1_histograms_a.png)
 
@@ -143,7 +146,7 @@ hist(lqdata$BrainWgt,
 hist(lqdata$Sleep,
      main = "Distibution of Amount of Sleep",
      xlab = "Sleep (hours/day)",
-     yab = "Frequency",
+     ylab = "Frequency",
      cex.lab = 1.3, cex.main = 1.4, font.main = 1)
 
 hist(lqdata$LifeSpan,
@@ -165,13 +168,13 @@ dev.off()
 
 
 <br>
-<b>
+<br>
 
 ### Part C
 
   Figure Q1C shows the plots of *Lifespan* v.s. *Brain Weight* for both the untransformed data and the log transformed data.
 
-```{r, inlc}
+```{r, include = F}
 
 ## Part C
 png("images/life_vs_brain.png",
@@ -208,6 +211,7 @@ mtext(text = "Plots of Lifespan v.s. Brain Weight",
 dev.off()
 
 ```
+
 
 ![**Figure Q1C:** The plots in the figure above show how lifespan appears to increase with brain weight for both the untransformed and log transformed data. The means for the two variables are given by the red and blue lines.](images/life_vs_brain.png)
 
@@ -248,6 +252,8 @@ pandoc.table(x,
   Figure Q1E.1 shows the plot of the fitted regression line for the regression of *Lifespan* onto *Brain Weight* for the untransformed data along with several residual plots. From the residual plots we can see that the residuals are not uniformly scattered. Additionally from the Q-Q plot of the studentized residuals and the histogram of the studentized residuals it appears that they are *not* uniformly distributed. Thus, one of the key assumptions of the linear regression model -- that the errors are uniformly distributed with a mean of 0 and constant variance -- does not appear valid.
 
 ```{r, include=F}
+## Part E
+
 library(MASS)
 library(car)
 
@@ -317,6 +323,8 @@ mtext(text = "Fitted Regression Line and Diagnostic Plots \n Regression of Lifes
 dev.off()
 
 ```
+
+
 
 ![**Figure Q1E.1:** The top-left plot shows the fitted regression line and the observed data points for the regression of untransformed *Lifespan* onto *Brain Weight*. The other plots are residual analysis. From the raw residual and studentized residual plots we can clearly see that the resiudals are *not* uniformly scattered. The Cook's distance plot shows that we have some very significant outliers. In the Q-Q plot for the studentized residuals we can see that at the upper and lower tails there appear to be significant departures from normality. The histogram of the distribution of the studentized residuals show that they are skewed to the right.](images/q1_ufit.png)
 
@@ -393,11 +401,14 @@ dev.off()
 
 ```
 
+
 ![**Figure Q1E.2:** The top-left plot shows the fitted regression line and the observed data points for the regression of log-transformed *Lifespan* onto *Brain Weight*. The other plots are residual analysis. From the raw residual and studentized residual plots we can clearly see that the resiudals are more uniformly scattered than for the untransformed data, but still not perfectly so. The Cook's distance plot shows that we still have some very significant outliers, but they are less extreme than for the untransformed data. In the Q-Q plot for the studentized residuals we can see that at the upper tail there are still significant departures from normality, but not for the lower tail (as opposed to what we saw for the untransformed data). The histogram of the studentized residuals shows that their distribution is still somewhat skewed to the right, but much less so than for the unstransformed data.](images/q1_ufit.png)
 
 <br>
 
-  Figure Q2E.3 shows the plots of the fitted regression lines for both models (though in this case the log-transformed model has been transformed back from to non-log form) with the predicted *mean* life-span (or *expected* lifespan) for humans and the 95% confidence interval for this estimation. Note that we are predicting the *expected* lifespan for humans based on the model, and not the lifespan of a *specific* person. If we were predicting the lifespan for a *specific* person the 95% confidence interval would be larger.
+  From figures Q1E.1 and Q1E.2 I would expect the model built from the log-transformed data to have the best overally accuracy. Although it is far from perfect, the residual diagnostics show that it is much better than the model built from the raw data.
+
+  Figure Q2E.3 shows the plots of the fitted regression lines for both models (though in this case the log-transformed model has been transformed back from to non-log form) with the predicted *mean* life-span (or *expected* lifespan) for humans and the 95% confidence interval for this estimation. Note that we are predicting the *expected* lifespan for humans based on the model, and not the lifespan of a *specific* person. If we were predicting the lifespan for a *specific* person the 95% confidence interval would be larger. Table Q1E reports the expected human lifespan estimates for each model as well as the actual average lifespan for humans. From the table and figure it is clear that the estimates are far off from the actual expected lifespan for humans, but the estimate using the log-transformed model is the closest.
 
 ```{r, include=F}
 nd <- data.frame(BodyWgt = rep(0,121), BrainWgt = seq(-2, 10, by = .1), Sleep = rep(0,121), LifeSpan = rep(0,121))
@@ -438,15 +449,15 @@ plot(exp(x), pU, type = "l",
      ylim = c(0, 110),
      cex.lab = 1, cex.main = 1, font.main = 1)
 
-hL <- predict(fit, qdata["Homo sapiens",], interval = "c")
+hU <- predict(fit, qdata["Homo sapiens",], interval = "c")
 
 points(qdata["Homo sapiens",2], qdata["Homo sapiens",4])
 text(qdata["Homo sapiens",2] - 300, qdata["Homo sapiens",4] + 5,labels = "Homo sapiens", cex = .8)
 
-points(qdata["Homo sapiens",2], hL[1], pch = 20, col = "red")
-segments(qdata["Homo sapiens",2], hL[2], qdata["Homo sapiens",2], hL[3])
-arrows(qdata["Homo sapiens",2], hL[2], qdata["Homo sapiens",2], hL[3], angle = 90, length = .1)
-arrows(qdata["Homo sapiens",2], hL[3], qdata["Homo sapiens",2], hL[2], angle = 90, length = .1)
+points(qdata["Homo sapiens",2], hU[1], pch = 20, col = "red")
+segments(qdata["Homo sapiens",2], hU[2], qdata["Homo sapiens",2], hU[3])
+arrows(qdata["Homo sapiens",2], hU[2], qdata["Homo sapiens",2], hU[3], angle = 90, length = .1)
+arrows(qdata["Homo sapiens",2], hU[3], qdata["Homo sapiens",2], hU[2], angle = 90, length = .1)
 
 mtext(text = "95% Confidence Intervals for Predicted Expected Lifespan for Homo sapiens",
       outer = T,
@@ -456,16 +467,70 @@ mtext(text = "95% Confidence Intervals for Predicted Expected Lifespan for Homo 
 
 dev.off()
 
+```
+
+![**Figure Q2E.3:** The plots above show the 95% confidence interval for the expected lifespan of Homo sapiens according to the two models. Both estimates are very far from the actual lifespan of humans (also shown in the plots), but the model built from the untransformed data is further off.](images/q1_pred.png)
+
+<br>
+
+***
+
+```{r, echo=F, results="asis"}
+
+x <- data.frame("LP" = c(hU[1], hL[1], qdata["Homo sapiens",2]))
+colnames(x) <- "Lifespan (years)"
+rownames(x) <- c("Estimate from Untransformed Model", "Estimate from Log-Transformed Model", "Actual Average")
+
+pandoc.table(x,
+            caption = "**Table Q1E:** The estimated expected lifespan for each model and the actual average human lifespan.",
+            split.table = Inf)
+
+```
+
+***
+
+  The 
+
+<br>
+<br>
+
+## Question 2
+
+  See appendix [A2](#a2) for R code.
+
+> The amount of water used by a production plant varies from month to month. Observations
+on water usage and a few other, possibly related, variables were collected for 17 months
+“water.txt”. The explanatory variables are the average monthly temperature, amount of
+production, number of operating days in the month, number of people on the monthly plant
+payroll and the number of hours the plant was shut down for maintenance. The response
+variable is the monthly water usage (in gallons/100) “USAGE”. Determine an appropriate
+model for predicting water usage using any or all of the 5 possible explanatory variables.
+Keep in mind that the production plant is interested in developing the most parsimonious
+model that is still able to efficiently predict water usage.
+
+<br>
+
+```{r, eval=F}
+
+qdata <- data.frame(read.table("data/water.txt", header = T, sep = ""))
 
 ```
 
 
-![**Figure Q2E.3:** The plots above show the 95% confidence interval for the expected lifespan of Homo sapiens according to the two models. Both estimates are very far from the actual lifespan of humans (also shown in the plots), but the model built from the untransformed data is further off.](images/q1_pred.png)
+<br>
+<br>
+
+## Question 3
+
+  See appendix [A2](#a2) for R code.
+  
+> 
+
+
 
 
 <br>
 <br>
-
 
 
 
@@ -479,10 +544,363 @@ dev.off()
 <br>
 
 ## A1
+```{r}
+## Import data
 
+qdata <- data.frame(read.table("data/sleep.txt", header = T, sep = ""))
+
+rownames(qdata) <- qdata$Species
+
+qdata <- qdata[,2:5]
+
+#######################################################################
+
+## Part A
+png("images/q1_histograms_a.png",
+    height = 620, width = 600)
+
+par(mfrow = c(2,2), oma = c(0,0,4,0))
+
+hist(qdata$BodyWgt, 
+     main = "Distribution of Body Weight",
+     xlab = "Body Weight (kg)",
+     ylab = "Frequency",
+     cex.lab = 1.3, cex.main = 1.4, font.main = 1)
+
+hist(qdata$BrainWgt,
+     main = "Distribution of Brain Weight",
+     xlab = "Brain Weight (g)",
+     ylab = "Frequency",
+     cex.lab = 1.3, cex.main = 1.4, font.main = 1)
+
+hist(qdata$Sleep,
+     main = "Distibution of Amount of Sleep",
+     xlab = "Sleep (hours/day)",
+     ylab = "Frequency",
+     cex.lab = 1.3, cex.main = 1.4, font.main = 1)
+
+hist(qdata$LifeSpan,
+     main = "Distribution of Lifespan",
+     xlab = "Lifespan (years)",
+     ylab = "Frequency",
+     cex.lab = 1.3, cex.main = 1.4, font.main = 1)
+
+mtext(text = "Histograms of the Observed Distributions of: \n Body Weight, Brain Weight, Sleep, and Lifespan for different Species",
+      outer = T,
+      padj = -.25,
+      cex = 1.2, font = 2)
+
+dev.off()
+
+#######################################################################
+
+## Part B
+lqdata <- qdata
+
+lqdata$BodyWgt <- log(lqdata$BodyWgt)
+lqdata$BrainWgt <- log(lqdata$BrainWgt)
+lqdata$LifeSpan <- log(lqdata$LifeSpan)
+
+png("images/q1_histograms_b.png",
+    height = 620, width = 600)
+
+par(mfrow = c(2,2), oma = c(0,0,4,0))
+
+hist(lqdata$BodyWgt, 
+     main = "Distribution of the Natural Log of Body Weight",
+     xlab = "Body Weight (ln[kg])",
+     ylab = "Frequency",
+     cex.lab = 1.3, cex.main = 1.4, font.main = 1)
+
+hist(lqdata$BrainWgt,
+     main = "Distribution of the Natural Log of Brain Weight",
+     xlab = "Brain Weight (ln[g])",
+     ylab = "Frequency",
+     cex.lab = 1.3, cex.main = 1.4, font.main = 1)
+
+hist(lqdata$Sleep,
+     main = "Distibution of Amount of Sleep",
+     xlab = "Sleep (hours/day)",
+     ylab = "Frequency",
+     cex.lab = 1.3, cex.main = 1.4, font.main = 1)
+
+hist(lqdata$LifeSpan,
+     main = "Distribution of the Natural Log of Lifespan",
+     xlab = "Lifespan (ln[years])",
+     ylab = "Frequency",
+     cex.lab = 1.3, cex.main = 1.4, font.main = 1)
+
+mtext(text = "Histograms of the Observed Distributions of: \n ln(Body Weight), ln(Brain Weight), Sleep, and ln(Lifespan) for different Species",
+      outer = T,
+      padj = -.25,
+      cex = 1.2, font = 2)
+
+dev.off()
+
+#######################################################################
+
+## Part C
+png("images/life_vs_brain.png",
+    height = 480, width = 620)
+
+par(mfrow = c(1,2), oma = c(3,0,4,0))
+
+plot(qdata$BrainWgt, qdata$LifeSpan,
+     main = "Untransformed Data",
+     xlab = "Brain Weight (g)",
+     ylab = "Lifespan (years)",
+     cex.lab = 1.3, cex.main = 1.4, font.main = 1)
+abline(v = mean(qdata$BrainWgt), col = "blue", lwd = 1.5)
+abline(h = mean(qdata$LifeSpan), col = "red", lwd = 1)
+
+plot(lqdata$BrainWgt, lqdata$LifeSpan,
+     main = "Log Tranformed Data",
+     xlab = "Brain Weight (ln[g])",
+     ylab = "Lifespan (ln[years])",
+     cex.lab = 1.3, cex.main = 1.4, font.main = 1)
+abline(v = mean(lqdata$BrainWgt), col = "blue", lwd = 1.5)
+abline(h = mean(lqdata$LifeSpan), col = "red", lwd = 1)
+
+legend(-13, -.6,
+       legend = c("Mean Brain Weight   ", "Mean Lifespan"),
+       lty = 1,
+       col = c("blue", "red"), xpd = NA, horiz = T)
+
+mtext(text = "Plots of Lifespan v.s. Brain Weight",
+      outer = T,
+      padj = -0.25,
+      cex = 1.2, font = 2)
+
+dev.off()
+
+#######################################################################
+
+## Part D
+library(pander)
+panderOptions("table.caption.prefix", "")
+
+x <- data.frame("Correlation" = c(cor(qdata$BrainWgt, qdata$LifeSpan), cor(lqdata$BrainWgt, lqdata$LifeSpan)))
+rownames(x) <- c("Untransformed", "Log-Transformed")
+
+pandoc.table(x,
+             caption = "**Table Q1D:** The observed correlation between lifespan and brain weight for both the untransformed and log-transformed data. Notice that the correlation for the log-transformed data is quite a bit higher than that for the untransformed data.",
+             split.table = Inf)
+
+#######################################################################
+
+## Part E
+library(MASS)
+library(car)
+
+png("images/q1_ufit.png",
+    height = 620, width = 760)
+
+par(mfrow = c(2,3), oma = c(0,0,4,0))
+
+fit <- lm(LifeSpan~BrainWgt, data = qdata)
+
+plot(qdata$BrainWgt, qdata$LifeSpan,
+     main = "Fitted Regression Line",
+     xlab = "Brain Weight (g)",
+     ylab = "Lifespan (years)",
+     xlim = c(0, 5750),
+     ylim = c(0, 110),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(fit$coefficients[1], fit$coefficients[2])
+
+plot(fit$fitted.values, fit$residuals,
+     main = "Raw Residual Plot",
+     xlab = "Fitted Lifespan Value (years)",
+     ylab = "Residual",
+     xlim = c(15, 75),
+     ylim = c(-35, 75),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+plot(fit$fitted.values, studres(fit),
+     main = "Studentized Residual Plot",
+     xlab = "Fitted Lifespan Value (years)",
+     ylab = "Students Residual",
+     xlim = c(15, 75),
+     ylim = c(-6, 6),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+cutoff <- 4/((nrow(qdata)-length(fit$coefficients)-2)) 
+plot(fit, which=4, cook.levels=cutoff,
+     cex.lab = 1.4, sub = NA)
+
+par(cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+qqPlot(fit, simulate = F,
+       main = "Q-Q Plot",
+       xlab = "Quantiles",
+       ylab = "Studentized Residuals",
+       grid = F, lwd = 1.5, cex = 2)
+
+hist(studres(fit) , freq=FALSE, 
+   main="Distribution of Studentized Residuals",
+   xlab = "Studentized Residual",
+   ylim = c(0,0.6),
+   cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+xfit<-seq(min(studres(fit)),max(studres(fit)),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit, col = "red")
+
+
+
+mtext(text = "Fitted Regression Line and Diagnostic Plots \n Regression of Lifespan onto Brain Weight: Untransformed Data",
+      outer = T,
+      padj = -0.25,
+      cex = 1.2, font = 2)
+
+dev.off()
+
+
+
+png("images/q1_lfit.png",
+    height = 620, width = 760)
+
+par(mfrow = c(2,3), oma = c(0,0,4,0))
+
+lfit <- lm(LifeSpan~BrainWgt, data = lqdata)
+
+plot(lqdata$BrainWgt, lqdata$LifeSpan,
+     main = "Fitted Regression Line",
+     xlab = "Brain Weight (log[g])",
+     ylab = "Lifespan (log[years])",
+     xlim = c(-2, 10),
+     ylim = c(0, 5),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(lfit$coefficients[1], lfit$coefficients[2])
+
+plot(lfit$fitted.values, lfit$residuals,
+     main = "Raw Residual Plot",
+     xlab = "Fitted Lifespan Value (log[years])",
+     ylab = "Residual",
+     xlim = c(0, 5),
+     ylim = c(-2, 2),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+plot(lfit$fitted.values, studres(lfit),
+     main = "Studentized Residual Plot",
+     xlab = "Fitted Value",
+     ylab = "Students Residual",
+     xlim = c(0, 5),
+     ylim = c(-2, 4),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+cutoff <- 4/((nrow(lqdata)-length(lfit$coefficients)-2)) 
+plot(lfit, which=4, cook.levels=cutoff,
+     cex.lab = 1.4, sub = NA)
+
+par(cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+qqPlot(lfit, simulate = F,
+       main = "Q-Q Plot",
+       xlab = "Quantiles",
+       ylab = "Studentized Residuals",
+       grid = F, lwd = 1.5, cex = 2)
+
+hist(studres(lfit) , freq=FALSE, 
+   main="Distribution of Studentized Residuals",
+   xlab = "Studentized Residual",
+   ylim = c(0,0.5),
+   cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+xfit<-seq(min(studres(lfit)),max(studres(lfit)),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit, col = "red")
+
+
+
+mtext(text = "Fitted Regression Line and Diagnostic Plots \n Regression of Lifespan onto Brain Weight: Untransformed Data",
+      outer = T,
+      padj = -0.25,
+      cex = 1.2, font = 2)
+
+dev.off()
+
+
+
+nd <- data.frame(BodyWgt = rep(0,121), BrainWgt = seq(-2, 10, by = .1), Sleep = rep(0,121), LifeSpan = rep(0,121))
+x <- seq(-2, 10, by = .1)
+
+png("images/q1_pred.png",
+    height = 480, width = 620)
+
+par(mfrow = c(1,2), oma = c(0,0,4,1))
+
+pL <- as.numeric(exp(predict(lfit, newdata = nd)))
+pU <- as.numeric(predict(fit, newdata = exp(nd)))
+
+plot(exp(x), pL, type = "l",
+     main = "Regression Model for Transformed Data",
+     xlab = "Brain Weight (g)",
+     ylab = "Lifespan (years)",
+     xlim = c(0,1500),
+     ylim = c(0, 110),
+     cex.lab = 1, cex.main = 1, font.main = 1)
+
+hL <- exp(predict(lfit, lqdata["Homo sapiens",], interval = "c"))
+
+points(qdata["Homo sapiens",2], qdata["Homo sapiens",4])
+text(qdata["Homo sapiens",2] - 300, qdata["Homo sapiens",4] + 5,labels = "Homo sapiens", cex = .8)
+
+points(qdata["Homo sapiens",2], hL[1], pch = 20, col = "red")
+segments(qdata["Homo sapiens",2], hL[2], qdata["Homo sapiens",2], hL[3])
+arrows(qdata["Homo sapiens",2], hL[2], qdata["Homo sapiens",2], hL[3], angle = 90, length = .1)
+arrows(qdata["Homo sapiens",2], hL[3], qdata["Homo sapiens",2], hL[2], angle = 90, length = .1)
+
+
+plot(exp(x), pU, type = "l",
+     main = "Regression Model for Raw Data",
+     xlab = "Brain Weight (g)",
+     ylab = "Lifespan (years)",
+     xlim = c(0,1500),
+     ylim = c(0, 110),
+     cex.lab = 1, cex.main = 1, font.main = 1)
+
+hU <- predict(fit, qdata["Homo sapiens",], interval = "c")
+
+points(qdata["Homo sapiens",2], qdata["Homo sapiens",4])
+text(qdata["Homo sapiens",2] - 300, qdata["Homo sapiens",4] + 5,labels = "Homo sapiens", cex = .8)
+
+points(qdata["Homo sapiens",2], hU[1], pch = 20, col = "red")
+segments(qdata["Homo sapiens",2], hU[2], qdata["Homo sapiens",2], hU[3])
+arrows(qdata["Homo sapiens",2], hU[2], qdata["Homo sapiens",2], hU[3], angle = 90, length = .1)
+arrows(qdata["Homo sapiens",2], hU[3], qdata["Homo sapiens",2], hU[2], angle = 90, length = .1)
+
+mtext(text = "95% Confidence Intervals for Predicted Expected Lifespan for Homo sapiens",
+      outer = T,
+      padj = -0.25,
+      cex = 1.3,
+      font = 2)
+
+dev.off()
+
+
+
+x <- data.frame("LP" = c(hU[1], hL[1], qdata["Homo sapiens",2]))
+colnames(x) <- "Lifespan (years)"
+rownames(x) <- c("Estimate from Untransformed Model", "Estimate from Log-Transformed Model", "Actual Average")
+
+pandoc.table(x,
+            caption = "**Table Q1E:** The estimated expected lifespan for each model and the actual average human lifespan.",
+            split.table = Inf)
+
+```
 
 
 <br>
 <br>
 
 ## A2
+
+<br>
+<br>
+
+## A3
