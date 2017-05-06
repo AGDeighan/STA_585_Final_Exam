@@ -1873,10 +1873,236 @@ TukeyHSD(a)
 ## Question 8
 
   See appendix [A8](#a8) for R code.
+
+> (only for graduate students) In a psychology experiment, researchers asked participants to
+respond to various stimuli and measured their reaction time. Participants were randomly
+assigned to one of three treatment groups. Subjects in group 1 were required to respond as
+quickly as possible to any stimulus that was presented. Subjects in group 2 were required to
+respond to a particular stimulus while disregarding other types of stimuli. Finally, subjects in
+group 3 were required to respond differently depending on the stimuli presented. The
+researcher felt that age may be a factor in determining the reaction time, so she organized the
+subjects by age and obtained the following data:
+
+![](images/Q8Table.png)
+
+<br>
+
+ 
+> a. Fit a two-way ANOVA model with interactions.
+>b. Is there a significant interaction effect between group and age?
+>c. Draw an interaction plot to support the result of (b).
+>d. Refit the model without the interaction term.
+>e. What are the null and alternative hypotheses for the two main effects?
+>f. How many degrees of freedom does the sum of square error have?
+>g. Is there a significant difference in the mean reaction time between the three stimulus groups?
+>h. Is there a significant difference in the mean reaction time between the three age groups?
+>i. Make a residual plot. Do the assumptions of ANOVA appear to be valid?
+
+```{r, include = F}
+
+## Create Data Frame
+q8data <- data.frame("Reaction Time" = c(0.384, 0.248, 0.191, 0.338, 0.495, 0.631, 0.586, 0.509, 0.364,
+                                         0.203, 0.331, 0.438, 0.485, 0.389, 0.629, 0.626, 0.858, 0.529,
+                                         0.494, 0.467, 0.302, 0.585, 0.782, 0.529, 0.520, 0.854, 0.700),
+                     "Age" = c(rep("18-24 years old", 9), 
+                               rep("25-34 years old", 9),
+                               rep("35 and older", 9)),
+                     "Group" = rep(c(rep("Group 1", 3), rep("Group 2", 3), rep("Group 3", 3)), 3)
+                     )
+
+q8data$Age <- factor(q8data$Age, levels = c("18-24 years old", "25-34 years old", "35 and older" ))
+q8data$Group <- factor(q8data$Group, levels = c("Group 1", "Group 2", "Group 3"))
+
+```
   
   
   
+
+<br>
+
+### Part A
+
+  We will use the R function "aov()" to fit a two-way ANOVA model with interactions. See below:
   
+```{r}
+fit.i <- aov(Reaction.Time ~ Age + Group + Age:Group, data = q8data)
+```
+
+<br>
+<br>
+
+### Part B
+
+  The ANOVA model summary below gives us the F-statistics and corresponding p-values for the effects of *Age*, *Group* and the ineraction between the two on response time. The large p-value (0.834 >> 0.05) indicates that is not a significant interaction effect between *Age* and *Group* on mean response time.
+
+```{r}
+summary(fit.i)
+```
+
+<br>
+<br>
+
+### Part C
+
+  The interaction plot of the fitted ANOVA model shown below shows that there are are not any obvious interactions between *Group* and *Age*. It appears that younger individuals may tend to have lower reaction times and people in group 1 tend to have lower reaction times than those in group 2 or 3.
+
+```{r, echo = F}
+
+## Part C
+interaction.plot(q8data$Age, q8data$Group, q8data$Reaction.Time,
+                 trace.label = "Group",
+                 type = "b", col = c("darkmagenta", "forestgreen", "red"),
+                 leg.bty = "o", leg.bg = "beige", lwd = 2, pch = c(20, 24, 23),
+                 xlab = "Group", 
+                 ylab = "Reaction Time",
+                 main = "Interaction Plot")
+
+```
+
+
+<br>
+<br>
+
+### Part D
+
+  We will use the R function "aov()" to refit a two-way ANOVA model without interactions. See below:
+  
+```{r}
+fit.ni <- aov(Reaction.Time ~ Age + Group, data = q8data)
+```
+
+<br>
+<br>
+
+### Part E
+
+  The null and alternative hypotheses (using factor effects model) for the main effect of the factor *Age* on mean *Reaction Time* are:
+
+* Null Hypothesis: the effect of each level *Age* on mean *Reaction Time* is 0.
+
+  $$ \text{H}_o: \alpha_{la} = \alpha_{ma} = \alpha_{ha} = 0 \\ \text{where: } \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \\ la \rightarrow \text{Age Group 18-24} \\ ma \rightarrow \text{Age Group 25-34} \\ ha \rightarrow \text{Age Group 35 and over}  $$
+
+* Alternative Hypothesis: the effect of at least one level of *Age* on mean response time is not 0.
+
+  $$ \text{H}_a: \text{ at least one } \alpha_i \neq 0  $$
+
+<br>
+
+  Similarly, the null and alternative hypotheses for the main effect of the facter *Group* on mean *Reaction Time* are:
+
+* Null Hypothesis: the effect of each level *Age* on mean *Reaction Time* is 0.
+
+  $$ \text{H}_o: \beta_{G1} = \beta_{G3} = \beta_{G3} = 0 \\ \text{where: } \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \\  G1 \rightarrow \text{Group 1} \\ G2 \rightarrow \text{Group 3} \\ G3 \rightarrow \text{Group 3}  $$
+
+* Alternative Hypothesis: the effect of at least one level of *Age* on mean response time is not 0.
+
+  $$ \text{H}_a: \text{ at least one } \beta_i \neq 0  $$  
+
+<br>
+<br>
+
+### Part F
+
+  If we were including the interaction term the degrees of freedom for the error sum of squares would be:
+
+  $$ df_e = a*b*(n-1) \\ \text{where: } \space \space \space \space \space \\ a = \text{number of levels of Age} = 3 \\ b = \text{number of levels of Group} = 3 \\ n = \text{total observations for each treatment combination} = 3 $$ 
+  
+  So if we were including interaction term the degrees of freedom for the error sum of squares would be 3*3*2 = 18. However, since we are exlcuding the interaction term the degrees of freedom of the interaction term, which equal $(a-1)(b-1)$ also go into the error sum of squares degrees of freedom. Thus the error sum of squares degrees of freedom is:
+  
+  $$ df_e = a*b*(n-1) + (a-1)*(b-1) = 18 + 4 = 22 $$
+
+### Parts G and H
+
+  We will use Tukey's HSD test (alpha level 0.05) to determine if there is a significant difference in mean reaction time between different age groups (levels of factor *Age*) and different stimulus groups (levels of factor *Group*). See below:
+
+```{r}
+TukeyHSD(fit.ni)
+```
+
+
+  The results of the Tukey's HSD test shown above indicate that at an alpha level of 0.05 there is a significant difference in mean reaction time between stimulus group 1 and stimulus group 2 (p-value ~0.0066) and between stimulus group 1 and stimulus group 3 (p-value ~0.0003), but there is not a significant difference in mean reaction time between stimulus group 3 and 2 (p-value ~0.41 > 0.05). For the age groups, the Tukey's HSD test shows there is only a significant difference between individuals 35 and older and indivuals between teh age of 18 to 24 (p-value ~0.026).
+
+<br>
+<br>
+
+### Part I
+
+  Figure Q8I below shows the residual and normality plots. The residual plots do not show any pattern to indicate heteroskedacity or nonlinearity. The Q-Q plot and the histogram of the studentized residuals don't show any large deviations from normality. The Cook's Distance plot does not indicate any large outliers. Overall our ANOVA assumptions of normality, independence, and homoskedacity all appear valid.
+
+
+```{r, include=F}
+
+## Part I
+png("images/q8_resplots.png",
+    height = 620, width = 760)
+
+par(mfrow = c(2,2), oma = c(0,0,4,0))
+
+#-------------------------------------------#
+
+plot(fit.ni$fitted.values, studres(fit.ni),
+     main = "Studentized Residual Plot",
+     xlab = "Fitted Cholesterol (mg)",
+     ylab = "Students Residual",
+     xlim = c(0.25, 0.75),
+     ylim = c(-3, 3),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+#-------------------------------------------#
+
+cutoff <- 4/((nrow(q8data)-length(fit.ni$coefficients)-2)) 
+plot(fit.ni, which=4, cook.levels=cutoff,
+     cex.lab = 1.4, sub = NA)
+
+par(cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+#-------------------------------------------#
+
+qqPlot(fit.ni, simulate = F,
+       main = "Q-Q Plot",
+       xlab = "Quantiles",
+       ylab = "Studentized Residuals",
+       grid = F, lwd = 1.5, cex = 1)
+
+#-------------------------------------------#
+
+hist(studres(fit.ni) , freq=FALSE, 
+   main="Distribution of Studentized Residuals",
+   xlab = "Studentized Residual",
+   ylim = c(0,0.5),
+   cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+xfit<-seq(min(studres(fit.ni) - 1),max(studres(fit.ni) + 1),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit, col = "red")
+
+
+
+mtext(text = "Diagnostic Plots for Two-Way ANOVA Model \n  Effect of Age and Stimulus Type on Reaction Time",
+      outer = T,
+      padj = -0.25,
+      cex = 1.2, font = 2)
+
+dev.off()
+
+
+```
+
+![**Figure Q8I:** Residual and normality plots for our fitted two-way ANOVA model. The studentized residual plot shows scatter that is pretty pattern free. The Cook's Distance plot shows doesn't show any exceedingly large outliers. Most of the residuals lie close to the normal line in the Q-Q plot, there is some deviation at the lower tail of the Q-Q plot. The histogram of the residuals shows that they are pretty close to normally distributed, though perhaps a little left-skewed (agrees with Q-Q plot). ](images/q8_resplots.png)
+
+<br>
+<br>
+
+## Question 9
+
+  See appendix [A9](#a9) for R code.
+
+
+
+
+
+
 <br>
 <br>
 
@@ -3175,7 +3401,122 @@ TukeyHSD(a)
 
 ## A8
 
+```{r}
+## Create Data Frame
+q8data <- data.frame("Reaction Time" = c(0.384, 0.248, 0.191, 0.338, 0.495, 0.631, 0.586, 0.509, 0.364,
+                                         0.203, 0.331, 0.438, 0.485, 0.389, 0.629, 0.626, 0.858, 0.529,
+                                         0.494, 0.467, 0.302, 0.585, 0.782, 0.529, 0.520, 0.854, 0.700),
+                     "Age" = c(rep("18-24 years old", 9), 
+                               rep("25-34 years old", 9),
+                               rep("35 and older", 9)),
+                     "Group" = rep(c(rep("Group 1", 3), rep("Group 2", 3), rep("Group 3", 3)), 3)
+                     )
+
+q8data$Age <- factor(q8data$Age, levels = c("18-24 years old", "25-34 years old", "35 and older" ))
+q8data$Group <- factor(q8data$Group, levels = c("Group 1", "Group 2", "Group 3"))
+
+#########################################################
+
+## Part A
+fit.i <- aov(Reaction.Time ~ Age + Group + Age:Group, data = q8data)
+
+#########################################################
+
+## Part B
+summary(fit.i)
+
+#########################################################
+
+## Part C
+interaction.plot(q8data$Age, q8data$Group, q8data$Reaction.Time,
+                 trace.label = "Group",
+                 type = "b", col = c("darkmagenta", "forestgreen", "red"),
+                 leg.bty = "o", leg.bg = "beige", lwd = 2, pch = c(20, 24, 23),
+                 xlab = "Group", 
+                 ylab = "Reaction Time",
+                 main = "Interaction Plot")
+
+#########################################################
+
+## Part D
+fit.ni <- aov(Reaction.Time ~ Age + Group, data = q8data)
+
+#########################################################
+
+## Parts G and H
+TukeyHSD(fit.ni)
+
+#########################################################
+
+## Part I
+png("images/q8_resplots.png",
+    height = 620, width = 760)
+
+par(mfrow = c(2,2), oma = c(0,0,4,0))
+
+#-------------------------------------------#
+
+plot(fit.ni$fitted.values, studres(fit.ni),
+     main = "Studentized Residual Plot",
+     xlab = "Fitted Cholesterol (mg)",
+     ylab = "Students Residual",
+     xlim = c(0.25, 0.75),
+     ylim = c(-3, 3),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+#-------------------------------------------#
+
+cutoff <- 4/((nrow(q8data)-length(fit.ni$coefficients)-2)) 
+plot(fit.ni, which=4, cook.levels=cutoff,
+     cex.lab = 1.4, sub = NA)
+
+par(cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+#-------------------------------------------#
+
+qqPlot(fit.ni, simulate = F,
+       main = "Q-Q Plot",
+       xlab = "Quantiles",
+       ylab = "Studentized Residuals",
+       grid = F, lwd = 1.5, cex = 1)
+
+#-------------------------------------------#
+
+hist(studres(fit.ni) , freq=FALSE, 
+   main="Distribution of Studentized Residuals",
+   xlab = "Studentized Residual",
+   ylim = c(0,0.5),
+   cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+xfit<-seq(min(studres(fit.ni) - 1),max(studres(fit.ni) + 1),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit, col = "red")
+
+
+
+mtext(text = "Diagnostic Plots for Two-Way ANOVA Model \n  Effect of Age and Stimulus Type on Reaction Time",
+      outer = T,
+      padj = -0.25,
+      cex = 1.2, font = 2)
+
+dev.off()
+```
+
+
+
 <br>
 <br>
 
 ## A9
+
+
+
+<br>
+<br>
+
+## A10
+
+<br>
+<br>
+
