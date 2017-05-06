@@ -7,7 +7,7 @@ output: html_document
 
 # Responses
 
-  The full R code for each response is given in the [appendix](#appendix).
+  The full R code for each response is given in the [appendix](#appendix). To run the codes effectively the proper data files must be in a subfolder of the working director called "data" and there must also be a subfolder in the working director called "images" to which plots can be saved and opened from.
 
 
 <br>
@@ -1771,7 +1771,109 @@ pandoc.table(x,
 
 ## Question 7
 
-  See appendix [A6](#a6) for R code.
+  See appendix [A7](#a7) for full R code.
+
+> A researcher wanted to determine the impact that smoking has on resting heart rate. She
+randomly selected seven individuals from each of three categories: nonsmokers, light
+smokers (<10 cigarettes/day) and heavy smokers (>10 cigarettes/day) “heartrate.txt” and
+obtained the following resting heart rate data (in beats/minute):
+>
+>
+> Nonsmoker: 56 53 53 65 70 58 51
+>
+> Light smoker: 78 62 70 73 67 75 65
+>
+> Heavy smoker: 77 86 65 83 79 80 77
+>
+>
+> a. Make a side-by-side boxplot showing the distribution of resting heart rate for the three
+different groups.
+> b. State the appropriate null and alternative hypotheses to test whether the mean heart rate
+differs between the three groups.
+> c. Perform ANOVA on the data. What can you conclude?
+> d. If the results of the ANOVA indicate that the means are significantly different, perform a
+multiple comparisons test to determine which groups differ in terms of mean resting heart
+rate.
+
+```{r, include=F}
+q7data <- data.frame(read.table("data/heartrate.txt", header = T, sep = ""))
+```
+
+
+<br>
+
+### Part A
+
+  Figure Q71 shows the side-by-side boxplots for the distribution of resting heart rate for heavysmokers, lightsmokers, and nonsmokers.
+
+```{r, include=F}
+
+## Part A
+png("images/q7a_bp.png",
+    width = 480, height = 520)
+
+boxplot(heartrate~smoke, data=q7data, main="Distibutions of Resting Heartrates", 
+  	xlab="Smoking Stats", ylab="Heart Rate (bpm)")
+
+dev.off()
+
+```
+
+![**Figure Q71:** Boxplots showing the distribution of resting heart rates for heavysmokers, lightsmokers, and nonsmokers](images/q7a_bp.png)
+
+<br>
+<br>
+
+### Part B
+
+  To test whether mean heart rate differs between the three groups we will test the following null hypothesis agains the following alternative hypothesis (using factor effects model):
+
+* Null Hypothesis: the effect of each level of smoking on mean resting heartrate is zero.
+
+    $$ \text{H}_o: \tau_{ns} = \tau_{ls} = \tau_{hs} = 0 \\ \text{where: } \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \\ ns = \text{Nonsmoker} \\ ls = \text{Lightsmoker} \\ hs = \text{Heavysmoker}  $$
+
+* Alternative Hypothesis: the effect of at least one level of smoking on mean heartrate is not zero.
+
+  $$ \text{H}_a: \text{ at least one } \tau_i \neq 0  $$
+
+<br>
+<br>
+
+### Part C
+  
+  We will use the R function "aov()" to perform a one-way ANOVA on the data.
+  
+```{r}
+a <- aov(heartrate ~ smoke, data = q7data)
+summary(a)
+```
+
+<br>
+
+  The printed summary above shows that our F-statistic is 17.09 on 2 and 18 degrees of freedom. The probability (p-value) of observing an F-statistic this large or larger under the null hypothesis is ~0.00007, much less than 0.05. Thus we reject the null hypothesis that the factor effect of every level on mean heartrate is 0. We conclude that the factor effect of at least one level of smoking must have a significant impact on mean heartrate.
+  
+<br>
+<br>
+
+### Part D
+
+  In order to determine which smoking groups differ in mean resting heart rate we will perform Tukey's Honestly Significant Difference (HSD) test using the R function "TukeyHSD()".
+
+```{r}
+TukeyHSD(a)
+```
+
+<br>
+
+  The p-values in the printed summary of the Tukey's HSD test shown above, indicate that, at a significance level of 5%, the mean resting heart rates of nonsmokers and heavysmokers differ (p-value ~0.00005) as well as the mean resting heart rate of nonsmokers and light smokers (p-value ~0.0074). The p-value of ~0.074 for the comparison between heavysmokers and lightsmokers indicates that there is not a significant difference in mean resting heart rate between these to groups.
+  
+<br>
+<br>
+
+## Question 8
+
+  See appendix [A8](#a8) for R code.
+  
   
   
   
@@ -3039,7 +3141,41 @@ pandoc.table(x,
 
 ## A7
 
+```{r}
+## Import Data
+q7data <- data.frame(read.table("data/heartrate.txt", header = T, sep = ""))
+
+###################################################
+
+## Part A
+png("images/q7a_bp.png",
+    width = 480, height = 520)
+
+boxplot(heartrate~smoke, data=q7data, main="Distibutions of Resting Heartrates", 
+  	xlab="Smoking Stats", ylab="Heart Rate (bpm)")
+
+dev.off()
+
+###################################################
+
+## Part C
+a <- aov(heartrate ~ smoke, data = q7data)
+summary(a)
+
+###################################################
+
+## Part D
+TukeyHSD(a)
+
+```
+
+  
 <br>
 <br>
 
 ## A8
+
+<br>
+<br>
+
+## A9

@@ -125,7 +125,7 @@ $(document).ready(function () {
 
 <div id="responses" class="section level1">
 <h1>Responses</h1>
-<p>The full R code for each response is given in the <a href="#appendix">appendix</a>.</p>
+<p>The full R code for each response is given in the <a href="#appendix">appendix</a>. To run the codes effectively the proper data files must be in a subfolder of the working director called “data” and there must also be a subfolder in the working director called “images” to which plots can be saved and opened from.</p>
 <p><br></p>
 <div id="question-1" class="section level2">
 <h2>Question 1</h2>
@@ -1100,7 +1100,76 @@ pandoc.table(x,
 </div>
 <div id="question-7" class="section level2">
 <h2>Question 7</h2>
-<p>See appendix <a href="#a6">A6</a> for R code.</p>
+<p>See appendix <a href="#a7">A7</a> for full R code.</p>
+<blockquote>
+<p>A researcher wanted to determine the impact that smoking has on resting heart rate. She randomly selected seven individuals from each of three categories: nonsmokers, light smokers (&lt;10 cigarettes/day) and heavy smokers (&gt;10 cigarettes/day) “heartrate.txt” and obtained the following resting heart rate data (in beats/minute):</p>
+<p>Nonsmoker: 56 53 53 65 70 58 51</p>
+<p>Light smoker: 78 62 70 73 67 75 65</p>
+<p>Heavy smoker: 77 86 65 83 79 80 77</p>
+<ol style="list-style-type: lower-alpha">
+<li>Make a side-by-side boxplot showing the distribution of resting heart rate for the three different groups.</li>
+<li>State the appropriate null and alternative hypotheses to test whether the mean heart rate differs between the three groups.</li>
+<li>Perform ANOVA on the data. What can you conclude?</li>
+<li>If the results of the ANOVA indicate that the means are significantly different, perform a multiple comparisons test to determine which groups differ in terms of mean resting heart rate.</li>
+</ol>
+</blockquote>
+<p><br></p>
+<div id="part-a-4" class="section level3">
+<h3>Part A</h3>
+<p>Figure Q71 shows the side-by-side boxplots for the distribution of resting heart rate for heavysmokers, lightsmokers, and nonsmokers.</p>
+<div class="figure">
+<img src="data:image/png;base64,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" alt="Figure Q71: Boxplots showing the distribution of resting heart rates for heavysmokers, lightsmokers, and nonsmokers" />
+<p class="caption"><strong>Figure Q71:</strong> Boxplots showing the distribution of resting heart rates for heavysmokers, lightsmokers, and nonsmokers</p>
+</div>
+<p><br> <br></p>
+</div>
+<div id="part-b-3" class="section level3">
+<h3>Part B</h3>
+<p>To test whether mean heart rate differs between the three groups we will test the following null hypothesis agains the following alternative hypothesis (using factor effects model):</p>
+<ul>
+<li><p>Null Hypothesis: the effect of each level of smoking on mean resting heartrate is zero.</p>
+<p><span class="math display">\[ \text{H}_o: \tau_{ns} = \tau_{ls} = \tau_{hs} = 0 \\ \text{where: } \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \\ ns = \text{Nonsmoker} \\ ls = \text{Lightsmoker} \\ hs = \text{Heavysmoker}  \]</span></p></li>
+<li><p>Alternative Hypothesis: the effect of at least one level of smoking on mean heartrate is not zero.</p></li>
+</ul>
+<p><span class="math display">\[ \text{H}_a: \text{ at least one } \tau_i \neq 0  \]</span></p>
+<p><br> <br></p>
+</div>
+<div id="part-c-3" class="section level3">
+<h3>Part C</h3>
+<p>We will use the R function “aov()” to perform a one-way ANOVA on the data.</p>
+<pre class="r"><code>a &lt;- aov(heartrate ~ smoke, data = q7data)
+summary(a)</code></pre>
+<pre><code>##             Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## smoke        2 1437.4   718.7   17.09 6.91e-05 ***
+## Residuals   18  756.9    42.0                     
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<p><br></p>
+<p>The printed summary above shows that our F-statistic is 17.09 on 2 and 18 degrees of freedom. The probability (p-value) of observing an F-statistic this large or larger under the null hypothesis is ~0.00007, much less than 0.05. Thus we reject the null hypothesis that the factor effect of every level on mean heartrate is 0. We conclude that the factor effect of at least one level of smoking must have a significant impact on mean heartrate.</p>
+<p><br> <br></p>
+</div>
+<div id="part-d-3" class="section level3">
+<h3>Part D</h3>
+<p>In order to determine which smoking groups differ in mean resting heart rate we will perform Tukey’s Honestly Significant Difference (HSD) test using the R function “TukeyHSD()”.</p>
+<pre class="r"><code>TukeyHSD(a)</code></pre>
+<pre><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = heartrate ~ smoke, data = q7data)
+## 
+## $smoke
+##                               diff       lwr         upr     p adj
+## LightSmoker-HeavySmoker  -8.142857 -16.98882   0.7031058 0.0742307
+## Nonsmoker-HeavySmoker   -20.142857 -28.98882 -11.2968942 0.0000473
+## Nonsmoker-LightSmoker   -12.000000 -20.84596  -3.1540371 0.0074499</code></pre>
+<p><br></p>
+<p>The p-values in the printed summary of the Tukey’s HSD test shown above, indicate that, at a significance level of 5%, the mean resting heart rates of nonsmokers and heavysmokers differ (p-value ~0.00005) as well as the mean resting heart rate of nonsmokers and light smokers (p-value ~0.0074). The p-value of ~0.074 for the comparison between heavysmokers and lightsmokers indicates that there is not a significant difference in mean resting heart rate between these to groups.</p>
+<p><br> <br></p>
+</div>
+</div>
+<div id="question-8" class="section level2">
+<h2>Question 8</h2>
+<p>See appendix <a href="#a8">A8</a> for R code.</p>
 <p><br> <br></p>
 </div>
 </div>
@@ -2713,10 +2782,53 @@ pandoc.table(x,
 </div>
 <div id="a7" class="section level2">
 <h2>A7</h2>
+<pre class="r"><code>## Import Data
+q7data &lt;- data.frame(read.table(&quot;data/heartrate.txt&quot;, header = T, sep = &quot;&quot;))
+
+###################################################
+
+## Part A
+png(&quot;images/q7a_bp.png&quot;,
+    width = 480, height = 520)
+
+boxplot(heartrate~smoke, data=q7data, main=&quot;Distibutions of Resting Heartrates&quot;, 
+    xlab=&quot;Smoking Stats&quot;, ylab=&quot;Heart Rate (bpm)&quot;)
+
+dev.off()</code></pre>
+<pre><code>## png 
+##   2</code></pre>
+<pre class="r"><code>###################################################
+
+## Part C
+a &lt;- aov(heartrate ~ smoke, data = q7data)
+summary(a)</code></pre>
+<pre><code>##             Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## smoke        2 1437.4   718.7   17.09 6.91e-05 ***
+## Residuals   18  756.9    42.0                     
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<pre class="r"><code>###################################################
+
+## Part D
+TukeyHSD(a)</code></pre>
+<pre><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = heartrate ~ smoke, data = q7data)
+## 
+## $smoke
+##                               diff       lwr         upr     p adj
+## LightSmoker-HeavySmoker  -8.142857 -16.98882   0.7031058 0.0742307
+## Nonsmoker-HeavySmoker   -20.142857 -28.98882 -11.2968942 0.0000473
+## Nonsmoker-LightSmoker   -12.000000 -20.84596  -3.1540371 0.0074499</code></pre>
 <p><br> <br></p>
 </div>
 <div id="a8" class="section level2">
 <h2>A8</h2>
+<p><br> <br></p>
+</div>
+<div id="a9" class="section level2">
+<h2>A9</h2>
 </div>
 </div>
 
