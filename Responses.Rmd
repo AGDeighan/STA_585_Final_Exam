@@ -929,6 +929,621 @@ dev.off()
 <br>
 
 ## Question 5
+
+  See appendix [A5](#a5) for R code.
+  
+> Researchers were interested in determining the relationship between a person’s cholesterol
+level and their age and gender. For each of 30 subjects, data was collected on their
+cholesterol level (in mg), age group (Under 30, 30-50, Over 50) and gender
+“CholesterolLevel.txt”. Fit an appropriate model to the data set. Justify your choice carefully.
+Determine whether there is a significant age or gender difference in the mean cholesterol
+levels. Also determine whether or not the two factors interact with one another.
+
+  First we loaded the data set and converted the string values for *Age Group* and *Gender* into factors such that:
+  
+* *Age Group* Levels
+    1. Under 30
+    2. 30-50
+    3. Over 50
+* *Gender* Levels
+    1. Female
+    2. Male
+    
+```{r, include=F}
+
+q5data <- data.frame(read.delim("data/CholesterolLevel2.txt", header = T, sep = "\t"))
+q5data$Age.Group <- factor(q5data$Age.Group, levels = c("Under 30", "30-50", "Over 50"))
+q5data$Gender <- factor(q5data$Gender)
+
+```
+
+  
+  Since we converted the variables *Age Group* and *Gender* to factors with different levels (three for *Age Group* and two for *Gender*), the linear regression model fitting function "lm()" in R will automatically treat the lowest factor level as the baseline. So the baseline for *Age Group* is "30-50" and the baseline fore *Gender* is female. Fitting a linear regression model (including interaction terms), we find that *Gender* has a significant effect (p-value = 0.05) as well as the interaction between *Gender* and the *Age Group* level of "Over 50" (p-value < 0.05). Except for this interaction, *Age Group* does not have a significant effect on *Cholesterol* level.
+
+<br>
+
+```{r}
+fit1 <- lm(Cholesterol ~ Gender + Age.Group + Gender:Age.Group, data = q5data)
+summary(fit1)
+```
+
+<br>
+  
+  Since the only level of *Age Group* that seemed to be significant in the above model was the group over 50 (when interacting with *Gender*), we collapsed the *Age Group* levels "Under 30" and "30-50" into one level and fit a model to this data. In this simplified model we find that the same factors and interactions are significant, but now the coefficient for the intercept is also significant (p-value < 0.05) which it was not in the previous model (p-value ~0.08).
+
+```{r}
+q5data.2 <- q5data
+q5data.2$Age.Group <- as.character(q5data.2$Age.Group)
+q5data.2$Age.Group[q5data$Age.Group == "30-50" | q5data$Age.Group == "Under 30"] <- "Under 50"
+q5data.2$Age.Group <- factor(q5data.2$Age.Group, levels = c("Under 50", "Over 50"))
+
+fit2 <- lm(Cholesterol ~ Gender + Age.Group + Gender:Age.Group, data = q5data.2)
+summary(fit2)
+
+```
+
+<br>
+
+  Figures Q51 and Q52 show the fitted linear regression model, residual plots, and normality plots for the two models. Figure Q51 shows the plots for model including all levels of *Age Group*, while figure Q52 shows the plots for the model with the "Under 30" and "30-50" levels collapsed.
+
+```{r, include=F}
+
+png("images/q5_fit1.png",
+    height = 620, width = 760)
+
+par(mfrow = c(2,3), oma = c(0,0,4,0))
+
+plot(as.numeric(q5data$Age.Group[q5data$Gender == "Female"]), q5data$Cholesterol[q5data$Gender == "Female"],
+     main = "Fitted Regression Line",
+     xlab = "Age Group",
+     ylab = "Cholesterol Level (mg)",
+     xlim = c(1, 3),
+     ylim = c(25, 1275),
+     pch = 20, col = "forestgreen",
+     axes = F,
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+points(as.numeric(q5data$Age.Group[q5data$Gender == "Male"]), q5data$Cholesterol[q5data$Gender == "Male"],
+       pch = 20, col = "red")
+box()
+axis(1, labels = c("Under 30", "30 - 50", "Over 50"), at = c(1,2,3), cex = .9)
+axis(2, at = (seq(50, 1250, 200)), cex = .9)
+
+nd.m <- data.frame(Age.Group = c("Under 30", "30-50", "Over 50"), Gender = rep("Male", 3), Cholesterol = rep(0,3))
+nd.m$Age.Group <- factor(nd.m$Age.Group, levels = c("Under 30", "30-50", "Over 50"))
+nd.m$Gender <- factor(nd.m$Gender, levels = c("Female", "Male"))
+
+nd.f <- data.frame(Age.Group = c("Under 30", "30-50", "Over 50"), Gender = rep("Female", 3), Cholesterol = rep(0,3))
+nd.f$Age.Group <- factor(nd.f$Age.Group, levels = c("Under 30", "30-50", "Over 50"))
+nd.f$Gender <- factor(nd.f$Gender, levels = c("Female", "Male"))
+
+pm <- predict(fit1, newdata = nd.m)
+pf <- predict(fit1, newdata = nd.f)
+
+lines(as.numeric(nd.m$Age.Group), pm, col = "red")
+lines(as.numeric(nd.f$Age.Group), pf, col = "forestgreen")
+
+legend("topright",
+       legend = c("Female", "Male"),
+       pch = 20,
+       col = c("forestgreen", "red"))
+
+#-------------------------------------------#
+
+plot(fit1$fitted.values, fit1$residuals,
+     main = "Raw Residual Plot",
+     xlab = "Fitted Cholesterol Level (mg)",
+     ylab = "Residual",
+     xlim = c(200, 610),
+     ylim = c(-375, 650),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+#-------------------------------------------#
+
+plot(fit1$fitted.values, studres(fit1),
+     main = "Studentized Residual Plot",
+     xlab = "Fitted Cholesterol (mg)",
+     ylab = "Students Residual",
+     xlim = c(200, 610),
+     ylim = c(-4, 4),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+#-------------------------------------------#
+
+cutoff <- 4/((nrow(q5data)-length(fit1$coefficients)-2)) 
+plot(fit1, which=4, cook.levels=cutoff,
+     cex.lab = 1.4, sub = NA)
+
+par(cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+#-------------------------------------------#
+
+qqPlot(fit1, simulate = F,
+       main = "Q-Q Plot",
+       xlab = "Quantiles",
+       ylab = "Studentized Residuals",
+       grid = F, lwd = 1.5, cex = 1)
+
+#-------------------------------------------#
+
+hist(studres(fit1) , freq=FALSE, 
+   main="Distribution of Studentized Residuals",
+   xlab = "Studentized Residual",
+   ylim = c(0,0.5),
+   cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+xfit<-seq(min(studres(fit1)),max(studres(fit1)),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit, col = "red")
+
+
+
+mtext(text = "Fitted Regression Line and Diagnostic Plots \n Regression of Cholesterol Level onto Age Group and Gender",
+      outer = T,
+      padj = -0.25,
+      cex = 1.2, font = 2)
+
+dev.off()
+
+
+```
+
+![**Figure Q51:** Fitted linear regression model, residual plots, and normality plots for the linear regression of cholesterol level onto *Age Group* and *Gender* using all levels of *Age Group*. The residual plots show that there seems to be more variation for higher predicted cholesterol levels. The Q-Q plot looks pretty good except for the upper tail. The histogram of the studentized residuals shows that the distribution of the residuals is right-skewed.](images/q5_fit1.png)
+
+<br>
+
+```{r, include=F}
+
+png("images/q5_fit2.png",
+    height = 620, width = 760)
+
+par(mfrow = c(2,3), oma = c(0,0,5.5,0))
+
+plot(as.numeric(q5data.2$Age.Group[q5data.2$Gender == "Female"]), q5data.2$Cholesterol[q5data.2$Gender == "Female"],
+     main = "Fitted Regression Line",
+     xlab = "Age Group",
+     ylab = "Cholesterol Level (mg)",
+     xlim = c(0.8,2.2),
+     ylim = c(25, 1275),
+     pch = 20, col = "forestgreen",
+     axes = F,
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+points(as.numeric(q5data.2$Age.Group[q5data.2$Gender == "Male"]), q5data.2$Cholesterol[q5data.2$Gender == "Male"],
+       pch = 20, col = "red")
+box()
+axis(1, labels = c("Under 50", "Over 50"), at = c(1,2), cex = .9)
+axis(2, at = (seq(50, 1250, 200)), cex = .9)
+
+nd.m <- data.frame(Age.Group = c("Under 50", "Over 50"), Gender = rep("Male", 2), Cholesterol = rep(0,2))
+nd.m$Age.Group <- factor(nd.m$Age.Group, levels = c("Under 50", "Over 50"))
+nd.m$Gender <- factor(nd.m$Gender, levels = c("Female", "Male"))
+
+nd.f <- data.frame(Age.Group = c("Under 50", "Over 50"), Gender = rep("Female", 2), Cholesterol = rep(0,2))
+nd.f$Age.Group <- factor(nd.f$Age.Group, levels = c("Under 50", "Over 50"))
+nd.f$Gender <- factor(nd.f$Gender, levels = c("Female", "Male"))
+
+pm <- predict(fit2, newdata = nd.m)
+pf <- predict(fit2, newdata = nd.f)
+
+lines(as.numeric(nd.m$Age.Group), pm, col = "red")
+lines(as.numeric(nd.f$Age.Group), pf, col = "forestgreen")
+
+legend("topright",
+       legend = c("Female", "Male"),
+       pch = 20,
+       col = c("forestgreen", "red"))
+
+#-------------------------------------------#
+
+plot(fit2$fitted.values, fit2$residuals,
+     main = "Raw Residual Plot",
+     xlab = "Fitted Cholesterol Level (mg)",
+     ylab = "Residual",
+     xlim = c(200, 500),
+     ylim = c(-375, 650),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+#-------------------------------------------#
+
+plot(fit2$fitted.values, studres(fit2),
+     main = "Studentized Residual Plot",
+     xlab = "Fitted Cholesterol (mg)",
+     ylab = "Students Residual",
+     xlim = c(200, 500),
+     ylim = c(-4, 4.5),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+#-------------------------------------------#
+
+cutoff <- 4/((nrow(q5data.2)-length(fit2$coefficients)-2)) 
+plot(fit2, which=4, cook.levels=cutoff,
+     cex.lab = 1.4, sub = NA)
+
+par(cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+#-------------------------------------------#
+
+qqPlot(fit2, simulate = F,
+       main = "Q-Q Plot",
+       xlab = "Quantiles",
+       ylab = "Studentized Residuals",
+       grid = F, lwd = 1.5, cex = 1)
+
+#-------------------------------------------#
+
+hist(studres(fit2) , freq=FALSE, 
+   main="Distribution of Studentized Residuals",
+   xlab = "Studentized Residual",
+   ylim = c(0,0.6),
+   cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+xfit<-seq(min(studres(fit2)-1),max(studres(fit2)),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit, col = "red")
+
+
+
+mtext(text = "Fitted Regression Line and Diagnostic Plots \n Regression of Cholesterol Level onto Age Group and Gender: \n Age Groups \"Under 30\" and \"30-50\" Collapsed",
+      outer = T,
+      padj = 0,
+      cex = 1.2, font = 2)
+
+dev.off()
+
+
+```
+
+![**Figure Q52:** Fitted linear regression model, residual plots, and normality plots for the linear regression of cholesterol level onto *Age Group* and *Gender* with the "Under 30" and "30-50" levels of *Age Group* collapsed together. The residual plots look quite similar to those for the regression model with uncollapsed *Age Group* levels. The normality plots are also quite similar though there is greater deviation from the normal at the upper tail of the Q-Q plot which can also be seen in the histogram of the residuals which are slightly more right skewed.](images/q5_fit2.png)
+
+<br>
+
+
+  Before we proceed further, we will take a look at the distribution of observed cholesterol levels. Figure Q53 shows histograms of the raw untransformed obeserved *Cholesterol* values as well as the log-transformed *Cholesterol* values. We can clearly see that the distribution of the untransformed data is right-skewed, while the distribution of the log-transformed data appears more normally distributed.
+
+```{r include=F}
+
+png("images/q5_histograms_a.png",
+    height = 480, width = 600)
+
+par(mfrow = c(1,2), oma = c(0,0,4,0))
+
+hist(q5data$Cholesterol, 
+     main = "Distribution of Cholesterol Levels",
+     xlab = "Cholesterol Level (mg)",
+     ylab = "Frequency",
+     cex.lab = 1.3, cex.main = 1.4, font.main = 1)
+
+hist(log(q5data$Cholesterol),
+     main = "Distribution of ln[Cholesterol] Levels",
+     xlab = "Cholesterol Level (ln[mg])",
+     ylab = "Frequency",
+     cex.lab = 1.3, cex.main = 1.4, font.main = 1)
+
+mtext(text = "Histograms of Untransformed and Log-Transformed Cholesterol Data",
+      outer = T,
+      padj = -.25,
+      cex = 1.2, font = 2)
+
+dev.off()
+
+```
+ 
+![**Figure Q53:** The histograms above show the distributions of the untransformed and log-transformed cholesterol data. The untransformed data is much more right-skewed than the log-transformed data.](images/q5_histograms_a.png) 
+ 
+<br>
+
+  Running Shapiro-Wilk tests for normality (using the "shapiro.test()" function in R) concluded our suspicions from the histograms shown in figure Q51. Table Q51 reports the p-values for the Shapiro-Wilk tests for the untransformed and log-transformed *Cholesterol* data. The small p-value (< 0.05) for the untransformed data indicates that we should reject the null hypothesis that the untransformed *Cholesterol* data are normally distributed and conclude that the untransformed data are not normally distributed. On the other hand the large p-value for the log-transformed data (>0.05) indicates that we should accept the null hypothesis that the data are normally distributed, thus we can safely assume the log-transformed *Cholesterol* data are approximately normally distributed.
+  
+***
+  
+```{r, results="asis"}
+
+x <- data.frame(P = c(shapiro.test(q5data$Cholesterol)$p.value, 
+                      shapiro.test(log(q5data$Cholesterol))$p.value))
+colnames(x) <- "P-Value"
+rownames(x) <- c("Untransformed Cholesterol Data", "Log-Transformed Cholesterol Data")
+
+pandoc.table(x,
+             caption = "**Table Q51:** Shapiro-Wilk normality test results for untransformed and log-transformed cholesterol data. The p-value of less than 0.05 for the untransformed data means we should reject the assumption that the unstransformed data are normally distributed. Conversely, the p-value of more than 0.05 for the log-transformed data indicates that we can accept the assumption that the log-transformed cholesterol data are normally distributed",
+             split.table = Inf)
+
+```
+
+***
+
+<br>
+
+  We will now try and regress the log-transformed *Cholesterol* data onto *Age Group* and *Gender* and see if we can get any better fit. Below is the output for the model fitting with all levels of *Age Group*. As before we see that *Age Group* is only significant at one level and then only when interacting with *Gender*. *Gender* is still significant and the coefficient for the intercept is also no significant.
+
+```{r}
+fit1l <- lm(log(Cholesterol) ~ Gender + Age.Group + Gender:Age.Group, data = q5data)
+summary(fit1l)
+```
+
+<br>  
+  
+  Now lets look at the linear regression of the log-transformed *Cholesterol* data onto *Gender* and *Age Group* with the two youngest levels of *Age Group* collapsed together. The same parameters are significant at a significance level of 5% as the collapsed model for the untransformed data, but the p-values are slightly different.
+  
+```{r}
+fit2l <- lm(log(Cholesterol) ~ Gender + Age.Group + Gender:Age.Group, data = q5data.2)
+summary(fit2l)
+```
+
+<br>
+
+  Now lets take a look at the residual and normality plots for the log-transformed regressions. Figure Q54 shows the fitted regression model, residual plots, and normality plots for the linear regression of the log-transformed *Cholesterol* data onto *Gender* and *Age Group* using all levels of *Age Group*. Figure Q55 shows the same plots but for the regression model with the two youngest age groups collapsed together.
+
+```{r, include=F}
+
+png("images/q5_fitl1.png",
+    height = 620, width = 760)
+
+par(mfrow = c(2,3), oma = c(0,0,4,0))
+
+plot(as.numeric(q5data$Age.Group[q5data$Gender == "Female"]), q5data$Cholesterol[q5data$Gender == "Female"],
+     main = "Fitted Regression Line",
+     xlab = "Age Group",
+     ylab = "Cholesterol Level (mg)",
+     xlim = c(1, 3),
+     ylim = c(25, 1275),
+     pch = 20, col = "forestgreen",
+     axes = F,
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+points(as.numeric(q5data$Age.Group[q5data$Gender == "Male"]), q5data$Cholesterol[q5data$Gender == "Male"],
+       pch = 20, col = "red")
+box()
+axis(1, labels = c("Under 30", "30 - 50", "Over 50"), at = c(1,2,3), cex = .9)
+axis(2, at = (seq(50, 1250, 200)), cex = .9)
+
+nd.m <- data.frame(Age.Group = c("Under 30", "30-50", "Over 50"), Gender = rep("Male", 3), Cholesterol = rep(0,3))
+nd.m$Age.Group <- factor(nd.m$Age.Group, levels = c("Under 30", "30-50", "Over 50"))
+nd.m$Gender <- factor(nd.m$Gender, levels = c("Female", "Male"))
+
+nd.f <- data.frame(Age.Group = c("Under 30", "30-50", "Over 50"), Gender = rep("Female", 3), Cholesterol = rep(0,3))
+nd.f$Age.Group <- factor(nd.f$Age.Group, levels = c("Under 30", "30-50", "Over 50"))
+nd.f$Gender <- factor(nd.f$Gender, levels = c("Female", "Male"))
+
+pm <- exp(predict(fit1l, newdata = nd.m))
+pf <- exp(predict(fit1l, newdata = nd.f))
+
+lines(as.numeric(nd.m$Age.Group), pm, col = "red")
+lines(as.numeric(nd.f$Age.Group), pf, col = "forestgreen")
+
+legend("topright",
+       legend = c("Female", "Male"),
+       pch = 20,
+       col = c("forestgreen", "red"))
+
+#-------------------------------------------#
+
+plot(fit1l$fitted.values, fit1l$residuals,
+     main = "Raw Residual Plot",
+     xlab = "Fitted ln[Cholesterol] Level (ln[mg])",
+     ylab = "Residual",
+     xlim = c(5, 6),
+     ylim = c(-2, 2),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+#-------------------------------------------#
+
+plot(fit1l$fitted.values, studres(fit1l),
+     main = "Studentized Residual Plot",
+     xlab = "Fitted ln[Cholesterol] Level (ln[mg])",
+     ylab = "Students Residual",
+     xlim = c(5, 6),
+     ylim = c(-3, 3),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+#-------------------------------------------#
+
+cutoff <- 4/((nrow(q5data)-length(fit1l$coefficients)-2)) 
+plot(fit1l, which=4, cook.levels=cutoff,
+     cex.lab = 1.4, sub = NA)
+
+par(cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+#-------------------------------------------#
+
+qqPlot(fit1l, simulate = F,
+       main = "Q-Q Plot",
+       xlab = "Quantiles",
+       ylab = "Studentized Residuals",
+       grid = F, lwd = 1.5, cex = 1)
+
+#-------------------------------------------#
+
+hist(studres(fit1l) , freq=FALSE, 
+   main="Distribution of Studentized Residuals",
+   xlab = "Studentized Residual",
+   ylim = c(0,0.5),
+   cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+xfit<-seq(min(studres(fit1l)-1),max(studres(fit1l)+1),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit, col = "red")
+
+
+
+mtext(text = "Fitted Regression Line and Diagnostic Plots \n Regression of Log Transformed Cholesterol Level onto Age Group and Gender",
+      outer = T,
+      padj = -0.25,
+      cex = 1.2, font = 2)
+
+dev.off()
+
+
+```
+
+![**Figure Q54:** Fitted linear regression model, residual plots, and normality plots for the linear regression of log-transformed cholesterol level onto *Age Group* and *Gender* using all levels of *Age Group*. The scatter on the residual plots seems to be a little more random than that observed for the untransformed data but there is still a slight pattern, the residuals for smaller fitted values seem to be larger overall. However the normality plots are much better than those observed for the regression of the untransformed data. All the residuals lie close to the normal line in the Q-Q plot and the histogram of the residuals show that they are appear to be very close to normally distributed.](images/q5_fitl1.png)  
+ 
+<br>
+
+```{r, include=F}
+
+png("images/q5_fitl2.png",
+    height = 620, width = 760)
+
+par(mfrow = c(2,3), oma = c(0,0,6,0))
+
+plot(as.numeric(q5data.2$Age.Group[q5data.2$Gender == "Female"]), q5data.2$Cholesterol[q5data.2$Gender == "Female"],
+     main = "Fitted Regression Line",
+     xlab = "Age Group",
+     ylab = "Cholesterol Level (mg)",
+     xlim = c(0.9, 2.1),
+     ylim = c(25, 1275),
+     pch = 20, col = "forestgreen",
+     axes = F,
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+points(as.numeric(q5data.2$Age.Group[q5data.2$Gender == "Male"]), q5data.2$Cholesterol[q5data.2$Gender == "Male"],
+       pch = 20, col = "red")
+box()
+axis(1, labels = c("Under 50", "Over 50"), at = c(1,2), cex = .9)
+axis(2, at = (seq(50, 1250, 200)), cex = .9)
+
+nd.m <- data.frame(Age.Group = c("Under 50", "Over 50"), Gender = rep("Male", 2), Cholesterol = rep(0,2))
+nd.m$Age.Group <- factor(nd.m$Age.Group, levels = c("Under 50", "Over 50"))
+nd.m$Gender <- factor(nd.m$Gender, levels = c("Female", "Male"))
+
+nd.f <- data.frame(Age.Group = c("Under 50", "Over 50"), Gender = rep("Female", 2), Cholesterol = rep(0,2))
+nd.f$Age.Group <- factor(nd.f$Age.Group, levels = c("Under 50", "Over 50"))
+nd.f$Gender <- factor(nd.f$Gender, levels = c("Female", "Male"))
+
+pm <- exp(predict(fit2l, newdata = nd.m))
+pf <- exp(predict(fit2l, newdata = nd.f))
+
+lines(as.numeric(nd.m$Age.Group), pm, col = "red")
+lines(as.numeric(nd.f$Age.Group), pf, col = "forestgreen")
+
+legend("topright",
+       legend = c("Female", "Male"),
+       pch = 20,
+       col = c("forestgreen", "red"))
+
+#-------------------------------------------#
+
+plot(fit2l$fitted.values, fit2l$residuals,
+     main = "Raw Residual Plot",
+     xlab = "Fitted ln[Cholesterol] Level (ln[mg])",
+     ylab = "Residual",
+     xlim = c(5, 6),
+     ylim = c(-2, 2),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+#-------------------------------------------#
+
+plot(fit2l$fitted.values, studres(fit2l),
+     main = "Studentized Residual Plot",
+     xlab = "Fitted ln[Cholesterol] Level (ln[mg])",
+     ylab = "Students Residual",
+     xlim = c(5, 6),
+     ylim = c(-3, 3),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+#-------------------------------------------#
+
+cutoff <- 4/((nrow(q5data.2)-length(fit2l$coefficients)-2)) 
+plot(fit2l, which=4, cook.levels=cutoff,
+     cex.lab = 1.4, sub = NA)
+
+par(cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+#-------------------------------------------#
+
+qqPlot(fit2l, simulate = F,
+       main = "Q-Q Plot",
+       xlab = "Quantiles",
+       ylab = "Studentized Residuals",
+       grid = F, lwd = 1.5, cex = 1)
+
+#-------------------------------------------#
+
+hist(studres(fit2l) , freq=FALSE, 
+   main="Distribution of Studentized Residuals",
+   xlab = "Studentized Residual",
+   ylim = c(0,0.5),
+   cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+xfit<-seq(min(studres(fit2l)-1),max(studres(fit2l)+1),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit, col = "red")
+
+
+
+mtext(text = "Fitted Regression Line and Diagnostic Plots \n Regression of Log Transformed Cholesterol Level onto Age Group and Gender: \n Age Groups \"Under 30\" and \"30-50\" Collapsed",
+      outer = T,
+      padj = 0,
+      cex = 1.2, font = 2)
+
+dev.off()
+
+
+```
+ 
+![**Figure Q55:** Fitted linear regression model, residual plots, and normality plots for the linear regression of log-transformed cholesterol level onto *Age Group* and *Gender* with the two youngest age groups collapsed. The scatter on the residual plots seems a bit more uniform that that observed on the residual plots for the model using all levels of *Age Group*, but the spread variance does seem larger overall. As with the model including all levels of *Age Group* the normality plots show that the residuals appear to be normally distributed.](images/q5_fitl2.png)  
+  
+<br>
+
+  In both figures Q54 and Q55 the normality plots show that the residuals appear to be normally distributed with all the residuals lying close to the normal line in the Q-Q plot and the histogram of the residuals showing an approximatly normal distribution. The residual plots in figure Q55 show more uniform scatter than those in Q54 indicating that there is less pattern (and thus less heteroskedacity) in the error of the model with the two youngest levels of *Age Group* collapsed. Both models appear to be improvements over the models using the untransformed *Cholesterol* data.
+
+  Before choosing between the two models let's look at the R summary output for both models. Below, the summary for the log-transformed model with all levels of *Age Group* is given first and the log-transformed model with the youngest levels of *Age Group* collapsed is given second.
+
+```{r}
+summary(fit1l)
+
+summary(fit2l)
+```
+
+<br>
+
+  I would recommend using the model with the two youngest levels of *Age Group* collapsed primarily because it is the simpler model of the two and when looking at the residual and normality plots both models perform about equally (see figures Q54 and Q55). Additionally, even though it is the simpler model, it has a slightly larger adjusted R-squared value, slightly smaller residual standard error, and the p-value of the F-statistic is smaller.
+  
+  In conclusion, there does seem to be significant association between gender and cholesterol level, males appear to have higher overall cholesterol levels than females. Additionally, although there does not seem to be an overall effect of age on cholesterol, there is an interactive effect between gender and age. Males over the age of fifty appear to have lower cholesterol levels than females over the age of 50.
+
+
+
+<br>
+<br>
+
+## Question 6
+
+  See appendix [A6](#a6) for R code.
+
+> A hospital surgical unit was interested in predicting survival time in patients undergoing a
+particular type of liver operation. From a random sample of 54 patients, information on the
+patient’s survival time, blood clotting score, prognostic index, enzyme function test score and
+liver function test score were extracted “Surgical.txt”.
+>
+>a. Fit a multiple regression model using the natural logarithm of survival time as the response
+variable and the other four variables as explanatory variables.
+>b. Conduct an F-test for the overall fit of the regression model in (a). Comment on the results.
+>c. Test each of the individual regression coefficients. Do the results indicate that any of the
+explanatory variables can be removed from the model?
+>d. Perform variable selection by finding the subset model that minimizes the BIC criteria. State
+the ‘best’ model.
+>e. Using the model from part (d) make appropriate diagnostic plots to determine whether the
+model assumptions are valid. Comment on the plots.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <br>
 <br>
 
@@ -1559,5 +2174,489 @@ dev.off()
 
 ## A5
 
+```{r}
+
+q5data <- data.frame(read.delim("data/CholesterolLevel2.txt", header = T, sep = "\t"))
+q5data$Age.Group <- factor(q5data$Age.Group, levels = c("Under 30", "30-50", "Over 50"))
+q5data$Gender <- factor(q5data$Gender)
+
+################################################################
+
+fit1 <- lm(Cholesterol ~ Gender + Age.Group + Gender:Age.Group, data = q5data)
+summary(fit1)
+
+################################################################
+
+q5data.2 <- q5data
+q5data.2$Age.Group <- as.character(q5data.2$Age.Group)
+q5data.2$Age.Group[q5data$Age.Group == "30-50" | q5data$Age.Group == "Under 30"] <- "Under 50"
+q5data.2$Age.Group <- factor(q5data.2$Age.Group, levels = c("Under 50", "Over 50"))
+
+fit2 <- lm(Cholesterol ~ Gender + Age.Group + Gender:Age.Group, data = q5data.2)
+summary(fit2)
+
+################################################################
+
+png("images/q5_fit1.png",
+    height = 620, width = 760)
+
+par(mfrow = c(2,3), oma = c(0,0,4,0))
+
+plot(as.numeric(q5data$Age.Group[q5data$Gender == "Female"]), q5data$Cholesterol[q5data$Gender == "Female"],
+     main = "Fitted Regression Line",
+     xlab = "Age Group",
+     ylab = "Cholesterol Level (mg)",
+     xlim = c(1, 3),
+     ylim = c(25, 1275),
+     pch = 20, col = "forestgreen",
+     axes = F,
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+points(as.numeric(q5data$Age.Group[q5data$Gender == "Male"]), q5data$Cholesterol[q5data$Gender == "Male"],
+       pch = 20, col = "red")
+box()
+axis(1, labels = c("Under 30", "30 - 50", "Over 50"), at = c(1,2,3), cex = .9)
+axis(2, at = (seq(50, 1250, 200)), cex = .9)
+
+nd.m <- data.frame(Age.Group = c("Under 30", "30-50", "Over 50"), Gender = rep("Male", 3), Cholesterol = rep(0,3))
+nd.m$Age.Group <- factor(nd.m$Age.Group, levels = c("Under 30", "30-50", "Over 50"))
+nd.m$Gender <- factor(nd.m$Gender, levels = c("Female", "Male"))
+
+nd.f <- data.frame(Age.Group = c("Under 30", "30-50", "Over 50"), Gender = rep("Female", 3), Cholesterol = rep(0,3))
+nd.f$Age.Group <- factor(nd.f$Age.Group, levels = c("Under 30", "30-50", "Over 50"))
+nd.f$Gender <- factor(nd.f$Gender, levels = c("Female", "Male"))
+
+pm <- predict(fit1, newdata = nd.m)
+pf <- predict(fit1, newdata = nd.f)
+
+lines(as.numeric(nd.m$Age.Group), pm, col = "red")
+lines(as.numeric(nd.f$Age.Group), pf, col = "forestgreen")
+
+legend("topright",
+       legend = c("Female", "Male"),
+       pch = 20,
+       col = c("forestgreen", "red"))
+
+#-------------------------------------------#
+
+plot(fit1$fitted.values, fit1$residuals,
+     main = "Raw Residual Plot",
+     xlab = "Fitted Cholesterol Level (mg)",
+     ylab = "Residual",
+     xlim = c(200, 610),
+     ylim = c(-375, 650),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+#-------------------------------------------#
+
+plot(fit1$fitted.values, studres(fit1),
+     main = "Studentized Residual Plot",
+     xlab = "Fitted Cholesterol (mg)",
+     ylab = "Students Residual",
+     xlim = c(200, 610),
+     ylim = c(-4, 4),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+#-------------------------------------------#
+
+cutoff <- 4/((nrow(q5data)-length(fit1$coefficients)-2)) 
+plot(fit1, which=4, cook.levels=cutoff,
+     cex.lab = 1.4, sub = NA)
+
+par(cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+#-------------------------------------------#
+
+qqPlot(fit1, simulate = F,
+       main = "Q-Q Plot",
+       xlab = "Quantiles",
+       ylab = "Studentized Residuals",
+       grid = F, lwd = 1.5, cex = 1)
+
+#-------------------------------------------#
+
+hist(studres(fit1) , freq=FALSE, 
+   main="Distribution of Studentized Residuals",
+   xlab = "Studentized Residual",
+   ylim = c(0,0.5),
+   cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+xfit<-seq(min(studres(fit1)),max(studres(fit1)),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit, col = "red")
+
+
+
+mtext(text = "Fitted Regression Line and Diagnostic Plots \n Regression of Cholesterol Level onto Age Group and Gender",
+      outer = T,
+      padj = -0.25,
+      cex = 1.2, font = 2)
+
+dev.off()
+
+################################################################
+
+png("images/q5_fit2.png",
+    height = 620, width = 760)
+
+par(mfrow = c(2,3), oma = c(0,0,5.5,0))
+
+plot(as.numeric(q5data.2$Age.Group[q5data.2$Gender == "Female"]), q5data.2$Cholesterol[q5data.2$Gender == "Female"],
+     main = "Fitted Regression Line",
+     xlab = "Age Group",
+     ylab = "Cholesterol Level (mg)",
+     xlim = c(0.8,2.2),
+     ylim = c(25, 1275),
+     pch = 20, col = "forestgreen",
+     axes = F,
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+points(as.numeric(q5data.2$Age.Group[q5data.2$Gender == "Male"]), q5data.2$Cholesterol[q5data.2$Gender == "Male"],
+       pch = 20, col = "red")
+box()
+axis(1, labels = c("Under 50", "Over 50"), at = c(1,2), cex = .9)
+axis(2, at = (seq(50, 1250, 200)), cex = .9)
+
+nd.m <- data.frame(Age.Group = c("Under 50", "Over 50"), Gender = rep("Male", 2), Cholesterol = rep(0,2))
+nd.m$Age.Group <- factor(nd.m$Age.Group, levels = c("Under 50", "Over 50"))
+nd.m$Gender <- factor(nd.m$Gender, levels = c("Female", "Male"))
+
+nd.f <- data.frame(Age.Group = c("Under 50", "Over 50"), Gender = rep("Female", 2), Cholesterol = rep(0,2))
+nd.f$Age.Group <- factor(nd.f$Age.Group, levels = c("Under 50", "Over 50"))
+nd.f$Gender <- factor(nd.f$Gender, levels = c("Female", "Male"))
+
+pm <- predict(fit2, newdata = nd.m)
+pf <- predict(fit2, newdata = nd.f)
+
+lines(as.numeric(nd.m$Age.Group), pm, col = "red")
+lines(as.numeric(nd.f$Age.Group), pf, col = "forestgreen")
+
+legend("topright",
+       legend = c("Female", "Male"),
+       pch = 20,
+       col = c("forestgreen", "red"))
+
+#-------------------------------------------#
+
+plot(fit2$fitted.values, fit2$residuals,
+     main = "Raw Residual Plot",
+     xlab = "Fitted Cholesterol Level (mg)",
+     ylab = "Residual",
+     xlim = c(200, 500),
+     ylim = c(-375, 650),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+#-------------------------------------------#
+
+plot(fit2$fitted.values, studres(fit2),
+     main = "Studentized Residual Plot",
+     xlab = "Fitted Cholesterol (mg)",
+     ylab = "Students Residual",
+     xlim = c(200, 500),
+     ylim = c(-4, 4.5),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+#-------------------------------------------#
+
+cutoff <- 4/((nrow(q5data.2)-length(fit2$coefficients)-2)) 
+plot(fit2, which=4, cook.levels=cutoff,
+     cex.lab = 1.4, sub = NA)
+
+par(cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+#-------------------------------------------#
+
+qqPlot(fit2, simulate = F,
+       main = "Q-Q Plot",
+       xlab = "Quantiles",
+       ylab = "Studentized Residuals",
+       grid = F, lwd = 1.5, cex = 1)
+
+#-------------------------------------------#
+
+hist(studres(fit2) , freq=FALSE, 
+   main="Distribution of Studentized Residuals",
+   xlab = "Studentized Residual",
+   ylim = c(0,0.6),
+   cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+xfit<-seq(min(studres(fit2)-1),max(studres(fit2)),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit, col = "red")
+
+
+
+mtext(text = "Fitted Regression Line and Diagnostic Plots \n Regression of Cholesterol Level onto Age Group and Gender: \n Age Groups \"Under 30\" and \"30-50\" Collapsed",
+      outer = T,
+      padj = 0,
+      cex = 1.2, font = 2)
+
+dev.off()
+
+################################################################
+
+png("images/q5_histograms_a.png",
+    height = 480, width = 600)
+
+par(mfrow = c(1,2), oma = c(0,0,4,0))
+
+hist(q5data$Cholesterol, 
+     main = "Distribution of Cholesterol Levels",
+     xlab = "Cholesterol Level (mg)",
+     ylab = "Frequency",
+     cex.lab = 1.3, cex.main = 1.4, font.main = 1)
+
+hist(log(q5data$Cholesterol),
+     main = "Distribution of ln[Cholesterol] Levels",
+     xlab = "Cholesterol Level (ln[mg])",
+     ylab = "Frequency",
+     cex.lab = 1.3, cex.main = 1.4, font.main = 1)
+
+mtext(text = "Histograms of Untransformed and Log-Transformed Cholesterol Data",
+      outer = T,
+      padj = -.25,
+      cex = 1.2, font = 2)
+
+dev.off()
+
+################################################################
+
+x <- data.frame(P = c(shapiro.test(q5data$Cholesterol)$p.value, 
+                      shapiro.test(log(q5data$Cholesterol))$p.value))
+colnames(x) <- "P-Value"
+rownames(x) <- c("Untransformed Cholesterol Data", "Log-Transformed Cholesterol Data")
+
+pandoc.table(x,
+             caption = "**Table Q51:** Shapiro-Wilk normality test results for untransformed and log-transformed cholesterol data. The p-value of less than 0.05 for the untransformed data means we should reject the assumption that the unstransformed data are normally distributed. Conversely, the p-value of more than 0.05 for the log-transformed data indicates that we can accept the assumption that the log-transformed cholesterol data are normally distributed",
+             split.table = Inf)
+
+################################################################
+
+fit1l <- lm(log(Cholesterol) ~ Gender + Age.Group + Gender:Age.Group, data = q5data)
+summary(fit1l)
+
+################################################################
+
+fit2l <- lm(log(Cholesterol) ~ Gender + Age.Group + Gender:Age.Group, data = q5data.2)
+summary(fit2l)
+
+################################################################
+
+png("images/q5_fitl1.png",
+    height = 620, width = 760)
+
+par(mfrow = c(2,3), oma = c(0,0,4,0))
+
+plot(as.numeric(q5data$Age.Group[q5data$Gender == "Female"]), q5data$Cholesterol[q5data$Gender == "Female"],
+     main = "Fitted Regression Line",
+     xlab = "Age Group",
+     ylab = "Cholesterol Level (mg)",
+     xlim = c(1, 3),
+     ylim = c(25, 1275),
+     pch = 20, col = "forestgreen",
+     axes = F,
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+points(as.numeric(q5data$Age.Group[q5data$Gender == "Male"]), q5data$Cholesterol[q5data$Gender == "Male"],
+       pch = 20, col = "red")
+box()
+axis(1, labels = c("Under 30", "30 - 50", "Over 50"), at = c(1,2,3), cex = .9)
+axis(2, at = (seq(50, 1250, 200)), cex = .9)
+
+nd.m <- data.frame(Age.Group = c("Under 30", "30-50", "Over 50"), Gender = rep("Male", 3), Cholesterol = rep(0,3))
+nd.m$Age.Group <- factor(nd.m$Age.Group, levels = c("Under 30", "30-50", "Over 50"))
+nd.m$Gender <- factor(nd.m$Gender, levels = c("Female", "Male"))
+
+nd.f <- data.frame(Age.Group = c("Under 30", "30-50", "Over 50"), Gender = rep("Female", 3), Cholesterol = rep(0,3))
+nd.f$Age.Group <- factor(nd.f$Age.Group, levels = c("Under 30", "30-50", "Over 50"))
+nd.f$Gender <- factor(nd.f$Gender, levels = c("Female", "Male"))
+
+pm <- exp(predict(fit1l, newdata = nd.m))
+pf <- exp(predict(fit1l, newdata = nd.f))
+
+lines(as.numeric(nd.m$Age.Group), pm, col = "red")
+lines(as.numeric(nd.f$Age.Group), pf, col = "forestgreen")
+
+legend("topright",
+       legend = c("Female", "Male"),
+       pch = 20,
+       col = c("forestgreen", "red"))
+
+#-------------------------------------------#
+
+plot(fit1l$fitted.values, fit1l$residuals,
+     main = "Raw Residual Plot",
+     xlab = "Fitted ln[Cholesterol] Level (ln[mg])",
+     ylab = "Residual",
+     xlim = c(5, 6),
+     ylim = c(-2, 2),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+#-------------------------------------------#
+
+plot(fit1l$fitted.values, studres(fit1l),
+     main = "Studentized Residual Plot",
+     xlab = "Fitted ln[Cholesterol] Level (ln[mg])",
+     ylab = "Students Residual",
+     xlim = c(5, 6),
+     ylim = c(-3, 3),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+#-------------------------------------------#
+
+cutoff <- 4/((nrow(q5data)-length(fit1l$coefficients)-2)) 
+plot(fit1l, which=4, cook.levels=cutoff,
+     cex.lab = 1.4, sub = NA)
+
+par(cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+#-------------------------------------------#
+
+qqPlot(fit1l, simulate = F,
+       main = "Q-Q Plot",
+       xlab = "Quantiles",
+       ylab = "Studentized Residuals",
+       grid = F, lwd = 1.5, cex = 1)
+
+#-------------------------------------------#
+
+hist(studres(fit1l) , freq=FALSE, 
+   main="Distribution of Studentized Residuals",
+   xlab = "Studentized Residual",
+   ylim = c(0,0.5),
+   cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+xfit<-seq(min(studres(fit1l)-1),max(studres(fit1l)+1),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit, col = "red")
+
+
+
+mtext(text = "Fitted Regression Line and Diagnostic Plots \n Regression of Log Transformed Cholesterol Level onto Age Group and Gender",
+      outer = T,
+      padj = -0.25,
+      cex = 1.2, font = 2)
+
+dev.off()
+
+################################################################
+
+png("images/q5_fitl2.png",
+    height = 620, width = 760)
+
+par(mfrow = c(2,3), oma = c(0,0,6,0))
+
+plot(as.numeric(q5data.2$Age.Group[q5data.2$Gender == "Female"]), q5data.2$Cholesterol[q5data.2$Gender == "Female"],
+     main = "Fitted Regression Line",
+     xlab = "Age Group",
+     ylab = "Cholesterol Level (mg)",
+     xlim = c(0.9, 2.1),
+     ylim = c(25, 1275),
+     pch = 20, col = "forestgreen",
+     axes = F,
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+points(as.numeric(q5data.2$Age.Group[q5data.2$Gender == "Male"]), q5data.2$Cholesterol[q5data.2$Gender == "Male"],
+       pch = 20, col = "red")
+box()
+axis(1, labels = c("Under 50", "Over 50"), at = c(1,2), cex = .9)
+axis(2, at = (seq(50, 1250, 200)), cex = .9)
+
+nd.m <- data.frame(Age.Group = c("Under 50", "Over 50"), Gender = rep("Male", 2), Cholesterol = rep(0,2))
+nd.m$Age.Group <- factor(nd.m$Age.Group, levels = c("Under 50", "Over 50"))
+nd.m$Gender <- factor(nd.m$Gender, levels = c("Female", "Male"))
+
+nd.f <- data.frame(Age.Group = c("Under 50", "Over 50"), Gender = rep("Female", 2), Cholesterol = rep(0,2))
+nd.f$Age.Group <- factor(nd.f$Age.Group, levels = c("Under 50", "Over 50"))
+nd.f$Gender <- factor(nd.f$Gender, levels = c("Female", "Male"))
+
+pm <- exp(predict(fit2l, newdata = nd.m))
+pf <- exp(predict(fit2l, newdata = nd.f))
+
+lines(as.numeric(nd.m$Age.Group), pm, col = "red")
+lines(as.numeric(nd.f$Age.Group), pf, col = "forestgreen")
+
+legend("topright",
+       legend = c("Female", "Male"),
+       pch = 20,
+       col = c("forestgreen", "red"))
+
+#-------------------------------------------#
+
+plot(fit2l$fitted.values, fit2l$residuals,
+     main = "Raw Residual Plot",
+     xlab = "Fitted ln[Cholesterol] Level (ln[mg])",
+     ylab = "Residual",
+     xlim = c(5, 6),
+     ylim = c(-2, 2),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+#-------------------------------------------#
+
+plot(fit2l$fitted.values, studres(fit2l),
+     main = "Studentized Residual Plot",
+     xlab = "Fitted ln[Cholesterol] Level (ln[mg])",
+     ylab = "Students Residual",
+     xlim = c(5, 6),
+     ylim = c(-3, 3),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+#-------------------------------------------#
+
+cutoff <- 4/((nrow(q5data.2)-length(fit2l$coefficients)-2)) 
+plot(fit2l, which=4, cook.levels=cutoff,
+     cex.lab = 1.4, sub = NA)
+
+par(cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+#-------------------------------------------#
+
+qqPlot(fit2l, simulate = F,
+       main = "Q-Q Plot",
+       xlab = "Quantiles",
+       ylab = "Studentized Residuals",
+       grid = F, lwd = 1.5, cex = 1)
+
+#-------------------------------------------#
+
+hist(studres(fit2l) , freq=FALSE, 
+   main="Distribution of Studentized Residuals",
+   xlab = "Studentized Residual",
+   ylim = c(0,0.5),
+   cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+xfit<-seq(min(studres(fit2l)-1),max(studres(fit2l)+1),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit, col = "red")
+
+
+
+mtext(text = "Fitted Regression Line and Diagnostic Plots \n Regression of Log Transformed Cholesterol Level onto Age Group and Gender: \n Age Groups \"Under 30\" and \"30-50\" Collapsed",
+      outer = T,
+      padj = 0,
+      cex = 1.2, font = 2)
+
+dev.off()
+
+################################################################
+
+summary(fit1l)
+
+summary(fit2l)
+
+```
+
 <br>
 <br>
+
+## A6
+
+
+<br>
+<br>
+
+## A7
