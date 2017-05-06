@@ -1530,20 +1530,251 @@ the ‘best’ model.
 >e. Using the model from part (d) make appropriate diagnostic plots to determine whether the
 model assumptions are valid. Comment on the plots.
 
+```{r, include=F}
+## Import Data
+q6data <- data.frame(read.table("data/Surgical.txt", header = T, quote = "\'", sep = ""))
+```
+
+<br>
+
+### Part A
+
+  Below we use the "lm()" function in R to regress the natural log of survival time onto all four explanatory variables. We are not including interaction terms since they were not asked for.
+
+```{r}
+fit1 <- lm(log(survival) ~ blood.clotting + prognostic + enzyme + liver.function, data = q6data) 
+```
+
+<br>
+<br>
+
+### Part B
+
+  We use the "summary" function in R to get a summary of the model we fit in part A. The line at the bottom of the summary output that starts with "F-statistic:" gives the result of the F-test the null model (horizontal line through global mean of ln[survival]) vs. our model with all four explanatory variables. The F-test test the null hypothesis that all parameters in the full model that are not in the reduced (null) model are equal to zero against the alternative hypothesis that at least one of them is not. The test statistic for F-test has an F distribution with numerator degrees of freedom equal to the number of parameters in the full model minus the number of parameters in the null model, and denominator degrees of freedom equal to the number of parameters in the full model minus the sample size. In our case the reduced model (null model) has 1 parameter (global mean), the full model has five (4 slope parameters and 1 intercept), and out sample size is 54. Thus, our F-statitistic under the null hypothesis has an F-distribution with numerator degrees of freedom equal to 4 and denominator degrees of freedom equal to 49. Looking at the last line of the the summary gives us the result of the F-test for our model. The observed F-statistic is 431 and the p-value for this statistic is close to zero, indicating that we should reject the null hypothesis and conclude that at least one of the slope parameters in our model is significantly non-zero.
+  
+```{r}
+summary(fit1)
+```
+
+<br>
+
+### Part C
+
+  To test each of the individual coefficients, I will remove them one at a time from the model and use the "anova()" function in R to compare the reduced model (one explanatory variable), to the full model fitted in part A.
+
+#### Blood Clotting
+
+```{r}
+redb <- lm(log(survival) ~ prognostic + enzyme + liver.function, data = q6data) 
+anova(redb, fit1)
+```
+
+  The "anova()" output above shows that our F-statistic is 158.65 on 1 and 49 degrees of freedom. The probability of observing a statistic this large or larger if the slope parameter for *blood clotting* were actually zero is practically zero. Thus we can conclude that regression coefficient for *blood clotting* is significant.
+
+
+<br>
+
+#### Prognostic
+
+```{r}
+redp <- lm(log(survival) ~ blood.clotting + enzyme + liver.function, data = q6data) 
+anova(redp, fit1)
+```
+
+  The "anova()" output above shows that our F-statistic is 448.9 on 1 and 49 degrees of freedom. The probability of observing a statistic this large or larger if the slope parameter for *prognostic* were actually zero is practically zero. Thus we can conclude that regression coefficient for *prognostic* is significant.
+
+<br>
+
+#### Enzyme
+
+```{r}
+rede <- lm(log(survival) ~ blood.clotting + prognostic + liver.function, data = q6data) 
+anova(rede, fit1)
+```
+
+  The "anova()" output above shows that our F-statistic is 571.55 on 1 and 49 degrees of freedom. The probability of observing a statistic this large or larger if the slope parameter for *enzyme* were actually zero is practically zero. Thus we can conclude that regression coefficient for *enzyme* is significant.
+  
+<br>
+
+#### Liver Function
+
+```{r}
+redl <- lm(log(survival) ~ blood.clotting + enzyme + prognostic, data = q6data) 
+anova(redl, fit1)
+```
+
+  The "anova()" output above shows that our F-statistic is 0.039 on 1 and 49 degrees of freedom. The probability of observing a statistic this large or larger if the slope parameter for *liver function* were actually zero is 0.8842. Since this p-value is greater than 0.05 we cannot reject the null hypothesis and thus we conclude that the coefficient for *liver function* is *not* significantly non-zero.
+
+
+<br>
+
+  In summary, since the F-statistic for the model without *liver function* compared to the full model is so small, we can conclude that the coefficient for *liver function* is insignificant and we canl remove it from the model.
+  
+<br>
+<br>
+  
+### Part D
+
+  Ignoring *liver function* but now including interaction terms we have 18 possible models with different combinations of explanatory variables:
+
+a. *Blood Clotting* + *Enzyme* + *Prognostic* + All 4 Interaction Terms
+b. *Blood Clotting* + *Enzyme* + *Prognostic* + 3 Interaction Terms (between each explanatory variable)
+c. *Blood Clotting* + *Enzyme* + *Prognostic* + *Blood Clotting*:*Enzyme* + *Blood Clotting*:*Prognostic*
+d. *Blood Clotting* + *Enzyme* + *Prognostic* + *Blood Clotting*:*Enzyme* + *Enzyme*:*Prognostic*
+e. *Blood Clotting* + *Enzyme* + *Prognostic* + *Blood Clotting*:*Prognostic* + *Enzyme:Prognostic*
+f. *Blood Clotting* + *Enzyme* + *Prognostic* + *Blood Clotting*:*Enzyme*
+g. *Blood Clotting* + *Enzyme* + *Prognostic* + *Blood Clotting*:*Prognostic*
+h. *Blood Clotting* + *Enzyme* + *Prognostic* + *Enzyme*:*Prognostic*
+i. *Blood Clotting* + *Enzyme* + *Prognostic*
+j. *Blood Clotting* + *Enzyme* + *Blood Clotting*:*Enzyme*
+k. *Blood Clotting* + *Enzyme* 
+l. *Blood Clotting* + *Prognostic* + *Blood Clotting*:*Prognostic*
+m. *Blood Clotting* + *Prognostic*
+n. *Enzyme* + *Prognostic* + *Enzyme*:*Prognostic*
+o. *Enzyme* + *Prognostic*
+p. *Blood Clotting*
+q. *Enzyme*
+r. *Prognostic*
+
+  We will use the "BIC()" function from the R package "stats4" to calculate the Bayesian information criterion (Schwarz criterion) for each model. See below:
+
+```{r}
+a = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:enzyme + blood.clotting:prognostic + 
+         enzyme:prognostic + blood.clotting:enzyme:prognostic, 
+       data = q6data)
+b = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:enzyme + blood.clotting:prognostic + 
+         enzyme:prognostic, data = q6data)
+c = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:enzyme + blood.clotting:prognostic, 
+       data = q6data)
+d = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:enzyme + enzyme:prognostic, 
+       data = q6data)
+e = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:prognostic + enzyme:prognostic, 
+       data = q6data)
+f = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:enzyme, data = q6data)
+g = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:prognostic, data = q6data)
+h = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         enzyme:prognostic, data = q6data)
+i = lm(log(survival) ~ blood.clotting + enzyme + prognostic, 
+       data = q6data)
+j = lm(log(survival) ~ blood.clotting + enzyme + 
+         blood.clotting:enzyme, data = q6data)
+k = lm(log(survival) ~ blood.clotting + enzyme, data = q6data)
+l = lm(log(survival) ~ blood.clotting + prognostic + 
+         blood.clotting:prognostic, data = q6data)
+m = lm(log(survival) ~ blood.clotting + prognostic, data = q6data)
+n = lm(log(survival) ~ enzyme + prognostic +  enzyme:prognostic, 
+       data = q6data)
+o = lm(log(survival) ~ enzyme + prognostic, data = q6data)
+p = lm(log(survival) ~ blood.clotting, data = q6data)
+q = lm(log(survival) ~ enzyme, data = q6data)
+r = lm(log(survival) ~ prognostic, data = q6data)
+
+BIC(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r)
+    
+```
+
+<br>
+
+  The lower the BIC the better. From the output above we can clearly see that the the model containing the *blood clotting*, *enzyme*, and *prognostic* variables has the lowest BIC (-71.38). Thus, according to the BIC, the model containing the *blood clotting*, *enzyme*, and *prognostic* explanatory variables (and no interaction terms) is the "best" model.
+  
+<br>
+<br>
+
+### Part E
+
+  Figure Q6E shows the residual and normality plots for the model regressing the log of survival time onto blood clotting score, prognostic index, and enzyme function test score. While an obvious pattern is not visible from the Studentized residual plot, when we look at the Cook's Distance plot we see that there some significant outliers. Additionally from looking at the Q-Q plot and the histogram of the the Studentized residuals it appears that the residuals are slightly right-skewed. Table Q6A reports the p-values for the Shapiro-Wilk test for normality on the raw residuals and Studentized residuals. The p-values of less than 0.05 indicate that our assumption of normally distributed error term is not valid.
+
+```{r, include = F}
+fit1 <- redl
+
+png("images/q6_plots.png",
+    height = 620, width = 760)
+
+par(mfrow = c(2,2), oma = c(0,0,4,0))
+
+#-------------------------------------------#
+
+plot(fit1$fitted.values, studres(fit1),
+     main = "Studentized Residual Plot",
+     xlab = "Fitted Cholesterol (mg)",
+     ylab = "Students Residual",
+     xlim = c(3, 7),
+     ylim = c(-4, 4),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+#-------------------------------------------#
+
+cutoff <- 4/((nrow(q6data)-length(fit1$coefficients)-2)) 
+plot(fit1, which=4, cook.levels=cutoff,
+     cex.lab = 1.4, sub = NA)
+
+par(cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+#-------------------------------------------#
+
+qqPlot(fit1, simulate = F,
+       main = "Q-Q Plot",
+       xlab = "Quantiles",
+       ylab = "Studentized Residuals",
+       grid = F, lwd = 1.5, cex = 1)
+
+#-------------------------------------------#
+
+hist(studres(fit1) , freq=FALSE, 
+   main="Distribution of Studentized Residuals",
+   xlab = "Studentized Residual",
+   ylim = c(0,0.5),
+   cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+xfit<-seq(min(studres(fit1) - 1),max(studres(fit1) + 1),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit, col = "red")
 
 
 
+mtext(text = "Diagnostic Plots \n Regression of Survival Time Level onto Blood Clotting, Prognostic, and Enzyme Function Scores",
+      outer = T,
+      padj = -0.25,
+      cex = 1.2, font = 2)
 
+dev.off()
+```
 
+![**Figure Q6E:** Residual and normality plots for our regression model. The Cook's Distance plot shows that there are some influential outliers and the the Q-Q plot and histogram of the studentized residuals show that the residuals appear to be a little right-skewed.](images/q6_plots.png)
 
+<br>
 
+***
+```{r, results="asis"}
+x <- data.frame(P = c(shapiro.test(fit1$residuals)$p.value, shapiro.test(studres(fit1))$p.value))
+colnames(x) <- "P-Value"
+rownames(x) <- c("Raw Residuals", "Studentized Residuals")
 
+pandoc.table(x,
+             caption = "**Table Q6E:** Results from Shapiro-Wilk normality test on raw and studentized residuals of our regression model. The p-values of less than 0.05 indicate that the residuals are not normally distributed",
+             split.table = Inf)
 
+```
 
+***
 
+<br>
+<br>
 
+## Question 7
 
-
+  See appendix [A6](#a6) for R code.
+  
+  
+  
 <br>
 <br>
 
@@ -2655,8 +2886,160 @@ summary(fit2l)
 
 ## A6
 
+```{r}
+## Import Data
+q6data <- data.frame(read.table("data/Surgical.txt", header = T, quote = "\'", sep = ""))
+
+########################################################
+
+## Part A
+fit1 <- lm(log(survival) ~ blood.clotting + prognostic + enzyme + liver.function, data = q6data) 
+
+########################################################
+
+## Part B
+summary(fit1)
+
+########################################################
+
+## Part C
+redb <- lm(log(survival) ~ prognostic + enzyme + liver.function, data = q6data) 
+anova(redb, fit1)
+
+########################################################
+
+redp <- lm(log(survival) ~ blood.clotting + enzyme + liver.function, data = q6data) 
+anova(redp, fit1)
+
+########################################################
+
+rede <- lm(log(survival) ~ blood.clotting + prognostic + liver.function, data = q6data) 
+anova(rede, fit1)
+
+########################################################
+
+redl <- lm(log(survival) ~ blood.clotting + enzyme + prognostic, data = q6data) 
+anova(redl, fit1)
+
+########################################################
+
+## Part D
+a = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:enzyme + blood.clotting:prognostic + 
+         enzyme:prognostic + blood.clotting:enzyme:prognostic, 
+       data = q6data)
+b = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:enzyme + blood.clotting:prognostic + 
+         enzyme:prognostic, data = q6data)
+c = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:enzyme + blood.clotting:prognostic, 
+       data = q6data)
+d = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:enzyme + enzyme:prognostic, 
+       data = q6data)
+e = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:prognostic + enzyme:prognostic, 
+       data = q6data)
+f = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:enzyme, data = q6data)
+g = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:prognostic, data = q6data)
+h = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         enzyme:prognostic, data = q6data)
+i = lm(log(survival) ~ blood.clotting + enzyme + prognostic, 
+       data = q6data)
+j = lm(log(survival) ~ blood.clotting + enzyme + 
+         blood.clotting:enzyme, data = q6data)
+k = lm(log(survival) ~ blood.clotting + enzyme, data = q6data)
+l = lm(log(survival) ~ blood.clotting + prognostic + 
+         blood.clotting:prognostic, data = q6data)
+m = lm(log(survival) ~ blood.clotting + prognostic, data = q6data)
+n = lm(log(survival) ~ enzyme + prognostic +  enzyme:prognostic, 
+       data = q6data)
+o = lm(log(survival) ~ enzyme + prognostic, data = q6data)
+p = lm(log(survival) ~ blood.clotting, data = q6data)
+q = lm(log(survival) ~ enzyme, data = q6data)
+r = lm(log(survival) ~ prognostic, data = q6data)
+
+BIC(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r)
+
+########################################################
+
+## Part E
+fit1 <- redl
+
+png("images/q6_plots.png",
+    height = 620, width = 760)
+
+par(mfrow = c(2,2), oma = c(0,0,4,0))
+
+#-------------------------------------------#
+
+plot(fit1$fitted.values, studres(fit1),
+     main = "Studentized Residual Plot",
+     xlab = "Fitted Cholesterol (mg)",
+     ylab = "Students Residual",
+     xlim = c(3, 7),
+     ylim = c(-4, 4),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+#-------------------------------------------#
+
+cutoff <- 4/((nrow(q6data)-length(fit1$coefficients)-2)) 
+plot(fit1, which=4, cook.levels=cutoff,
+     cex.lab = 1.4, sub = NA)
+
+par(cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+#-------------------------------------------#
+
+qqPlot(fit1, simulate = F,
+       main = "Q-Q Plot",
+       xlab = "Quantiles",
+       ylab = "Studentized Residuals",
+       grid = F, lwd = 1.5, cex = 1)
+
+#-------------------------------------------#
+
+hist(studres(fit1) , freq=FALSE, 
+   main="Distribution of Studentized Residuals",
+   xlab = "Studentized Residual",
+   ylim = c(0,0.5),
+   cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+xfit<-seq(min(studres(fit1) - 1),max(studres(fit1) + 1),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit, col = "red")
+
+
+
+mtext(text = "Diagnostic Plots \n Regression of Survival Time Level onto Blood Clotting, Prognostic, and Enzyme Function Scores",
+      outer = T,
+      padj = -0.25,
+      cex = 1.2, font = 2)
+
+dev.off()
+
+########################################################
+
+x <- data.frame(P = c(shapiro.test(fit1$residuals)$p.value, shapiro.test(studres(fit1))$p.value))
+colnames(x) <- "P-Value"
+rownames(x) <- c("Raw Residuals", "Studentized Residuals")
+
+pandoc.table(x,
+             caption = "**Table Q6E:** Results from Shapiro-Wilk normality test on raw and studentized residuals of our regression model. The p-values of less than 0.05 indicate that the residuals are not normally distributed",
+             split.table = Inf)
+
+```
+
 
 <br>
 <br>
 
 ## A7
+
+<br>
+<br>
+
+## A8

@@ -867,6 +867,240 @@ summary(fit2l)</code></pre>
 <li>Using the model from part (d) make appropriate diagnostic plots to determine whether the model assumptions are valid. Comment on the plots.</li>
 </ol>
 </blockquote>
+<p><br></p>
+<div id="part-a-3" class="section level3">
+<h3>Part A</h3>
+<p>Below we use the “lm()” function in R to regress the natural log of survival time onto all four explanatory variables. We are not including interaction terms since they were not asked for.</p>
+<pre class="r"><code>fit1 &lt;- lm(log(survival) ~ blood.clotting + prognostic + enzyme + liver.function, data = q6data) </code></pre>
+<p><br> <br></p>
+</div>
+<div id="part-b-2" class="section level3">
+<h3>Part B</h3>
+<p>We use the “summary” function in R to get a summary of the model we fit in part A. The line at the bottom of the summary output that starts with “F-statistic:” gives the result of the F-test the null model (horizontal line through global mean of ln[survival]) vs. our model with all four explanatory variables. The F-test test the null hypothesis that all parameters in the full model that are not in the reduced (null) model are equal to zero against the alternative hypothesis that at least one of them is not. The test statistic for F-test has an F distribution with numerator degrees of freedom equal to the number of parameters in the full model minus the number of parameters in the null model, and denominator degrees of freedom equal to the number of parameters in the full model minus the sample size. In our case the reduced model (null model) has 1 parameter (global mean), the full model has five (4 slope parameters and 1 intercept), and out sample size is 54. Thus, our F-statitistic under the null hypothesis has an F-distribution with numerator degrees of freedom equal to 4 and denominator degrees of freedom equal to 49. Looking at the last line of the the summary gives us the result of the F-test for our model. The observed F-statistic is 431 and the p-value for this statistic is close to zero, indicating that we should reject the null hypothesis and conclude that at least one of the slope parameters in our model is significantly non-zero.</p>
+<pre class="r"><code>summary(fit1)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = log(survival) ~ blood.clotting + prognostic + enzyme + 
+##     liver.function, data = q6data)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.23140 -0.04012 -0.00599  0.02915  0.32101 
+## 
+## Coefficients:
+##                 Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)    1.1253602  0.1156807   9.728 4.99e-13 ***
+## blood.clotting 0.1577881  0.0125271  12.596  &lt; 2e-16 ***
+## prognostic     0.0213089  0.0010057  21.187  &lt; 2e-16 ***
+## enzyme         0.0218156  0.0009125  23.907  &lt; 2e-16 ***
+## liver.function 0.0044163  0.0223600   0.198    0.844    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.109 on 49 degrees of freedom
+## Multiple R-squared:  0.9724, Adjusted R-squared:  0.9701 
+## F-statistic:   431 on 4 and 49 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p><br></p>
+</div>
+<div id="part-c-2" class="section level3">
+<h3>Part C</h3>
+<p>To test each of the individual coefficients, I will remove them one at a time from the model and use the “anova()” function in R to compare the reduced model (one explanatory variable), to the full model fitted in part A.</p>
+<div id="blood-clotting" class="section level4">
+<h4>Blood Clotting</h4>
+<pre class="r"><code>redb &lt;- lm(log(survival) ~ prognostic + enzyme + liver.function, data = q6data) 
+anova(redb, fit1)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: log(survival) ~ prognostic + enzyme + liver.function
+## Model 2: log(survival) ~ blood.clotting + prognostic + enzyme + liver.function
+##   Res.Df     RSS Df Sum of Sq      F    Pr(&gt;F)    
+## 1     50 2.46698                                  
+## 2     49 0.58214  1    1.8848 158.65 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<p>The “anova()” output above shows that our F-statistic is 158.65 on 1 and 49 degrees of freedom. The probability of observing a statistic this large or larger if the slope parameter for <em>blood clotting</em> were actually zero is practically zero. Thus we can conclude that regression coefficient for <em>blood clotting</em> is significant.</p>
+<p><br></p>
+</div>
+<div id="prognostic" class="section level4">
+<h4>Prognostic</h4>
+<pre class="r"><code>redp &lt;- lm(log(survival) ~ blood.clotting + enzyme + liver.function, data = q6data) 
+anova(redp, fit1)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: log(survival) ~ blood.clotting + enzyme + liver.function
+## Model 2: log(survival) ~ blood.clotting + prognostic + enzyme + liver.function
+##   Res.Df    RSS Df Sum of Sq     F    Pr(&gt;F)    
+## 1     50 5.9152                                 
+## 2     49 0.5821  1     5.333 448.9 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<p>The “anova()” output above shows that our F-statistic is 448.9 on 1 and 49 degrees of freedom. The probability of observing a statistic this large or larger if the slope parameter for <em>prognostic</em> were actually zero is practically zero. Thus we can conclude that regression coefficient for <em>prognostic</em> is significant.</p>
+<p><br></p>
+</div>
+<div id="enzyme" class="section level4">
+<h4>Enzyme</h4>
+<pre class="r"><code>rede &lt;- lm(log(survival) ~ blood.clotting + prognostic + liver.function, data = q6data) 
+anova(rede, fit1)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: log(survival) ~ blood.clotting + prognostic + liver.function
+## Model 2: log(survival) ~ blood.clotting + prognostic + enzyme + liver.function
+##   Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+## 1     50 7.3723                                  
+## 2     49 0.5821  1    6.7902 571.55 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<p>The “anova()” output above shows that our F-statistic is 571.55 on 1 and 49 degrees of freedom. The probability of observing a statistic this large or larger if the slope parameter for <em>enzyme</em> were actually zero is practically zero. Thus we can conclude that regression coefficient for <em>enzyme</em> is significant.</p>
+<p><br></p>
+</div>
+<div id="liver-function" class="section level4">
+<h4>Liver Function</h4>
+<pre class="r"><code>redl &lt;- lm(log(survival) ~ blood.clotting + enzyme + prognostic, data = q6data) 
+anova(redl, fit1)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: log(survival) ~ blood.clotting + enzyme + prognostic
+## Model 2: log(survival) ~ blood.clotting + prognostic + enzyme + liver.function
+##   Res.Df     RSS Df  Sum of Sq     F Pr(&gt;F)
+## 1     50 0.58260                           
+## 2     49 0.58214  1 0.00046344 0.039 0.8442</code></pre>
+<p>The “anova()” output above shows that our F-statistic is 0.039 on 1 and 49 degrees of freedom. The probability of observing a statistic this large or larger if the slope parameter for <em>liver function</em> were actually zero is 0.8842. Since this p-value is greater than 0.05 we cannot reject the null hypothesis and thus we conclude that the coefficient for <em>liver function</em> is <em>not</em> significantly non-zero.</p>
+<p><br></p>
+<p>In summary, since the F-statistic for the model without <em>liver function</em> compared to the full model is so small, we can conclude that the coefficient for <em>liver function</em> is insignificant and we canl remove it from the model.</p>
+<p><br> <br></p>
+</div>
+</div>
+<div id="part-d-2" class="section level3">
+<h3>Part D</h3>
+<p>Ignoring <em>liver function</em> but now including interaction terms we have 18 possible models with different combinations of explanatory variables:</p>
+<ol style="list-style-type: lower-alpha">
+<li><em>Blood Clotting</em> + <em>Enzyme</em> + <em>Prognostic</em> + All 4 Interaction Terms</li>
+<li><em>Blood Clotting</em> + <em>Enzyme</em> + <em>Prognostic</em> + 3 Interaction Terms (between each explanatory variable)</li>
+<li><em>Blood Clotting</em> + <em>Enzyme</em> + <em>Prognostic</em> + <em>Blood Clotting</em>:<em>Enzyme</em> + <em>Blood Clotting</em>:<em>Prognostic</em></li>
+<li><em>Blood Clotting</em> + <em>Enzyme</em> + <em>Prognostic</em> + <em>Blood Clotting</em>:<em>Enzyme</em> + <em>Enzyme</em>:<em>Prognostic</em></li>
+<li><em>Blood Clotting</em> + <em>Enzyme</em> + <em>Prognostic</em> + <em>Blood Clotting</em>:<em>Prognostic</em> + <em>Enzyme:Prognostic</em></li>
+<li><em>Blood Clotting</em> + <em>Enzyme</em> + <em>Prognostic</em> + <em>Blood Clotting</em>:<em>Enzyme</em></li>
+<li><em>Blood Clotting</em> + <em>Enzyme</em> + <em>Prognostic</em> + <em>Blood Clotting</em>:<em>Prognostic</em></li>
+<li><em>Blood Clotting</em> + <em>Enzyme</em> + <em>Prognostic</em> + <em>Enzyme</em>:<em>Prognostic</em></li>
+<li><em>Blood Clotting</em> + <em>Enzyme</em> + <em>Prognostic</em></li>
+<li><em>Blood Clotting</em> + <em>Enzyme</em> + <em>Blood Clotting</em>:<em>Enzyme</em></li>
+<li><em>Blood Clotting</em> + <em>Enzyme</em></li>
+<li><em>Blood Clotting</em> + <em>Prognostic</em> + <em>Blood Clotting</em>:<em>Prognostic</em></li>
+<li><em>Blood Clotting</em> + <em>Prognostic</em></li>
+<li><em>Enzyme</em> + <em>Prognostic</em> + <em>Enzyme</em>:<em>Prognostic</em></li>
+<li><em>Enzyme</em> + <em>Prognostic</em></li>
+<li><em>Blood Clotting</em></li>
+<li><em>Enzyme</em></li>
+<li><em>Prognostic</em></li>
+</ol>
+<p>We will use the “BIC()” function from the R package “stats4” to calculate the Bayesian information criterion (Schwarz criterion) for each model. See below:</p>
+<pre class="r"><code>a = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:enzyme + blood.clotting:prognostic + 
+         enzyme:prognostic + blood.clotting:enzyme:prognostic, 
+       data = q6data)
+b = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:enzyme + blood.clotting:prognostic + 
+         enzyme:prognostic, data = q6data)
+c = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:enzyme + blood.clotting:prognostic, 
+       data = q6data)
+d = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:enzyme + enzyme:prognostic, 
+       data = q6data)
+e = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:prognostic + enzyme:prognostic, 
+       data = q6data)
+f = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:enzyme, data = q6data)
+g = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:prognostic, data = q6data)
+h = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         enzyme:prognostic, data = q6data)
+i = lm(log(survival) ~ blood.clotting + enzyme + prognostic, 
+       data = q6data)
+j = lm(log(survival) ~ blood.clotting + enzyme + 
+         blood.clotting:enzyme, data = q6data)
+k = lm(log(survival) ~ blood.clotting + enzyme, data = q6data)
+l = lm(log(survival) ~ blood.clotting + prognostic + 
+         blood.clotting:prognostic, data = q6data)
+m = lm(log(survival) ~ blood.clotting + prognostic, data = q6data)
+n = lm(log(survival) ~ enzyme + prognostic +  enzyme:prognostic, 
+       data = q6data)
+o = lm(log(survival) ~ enzyme + prognostic, data = q6data)
+p = lm(log(survival) ~ blood.clotting, data = q6data)
+q = lm(log(survival) ~ enzyme, data = q6data)
+r = lm(log(survival) ~ prognostic, data = q6data)
+
+BIC(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r)</code></pre>
+<pre><code>##   df       BIC
+## a  9 -70.57050
+## b  8 -67.42302
+## c  7 -65.30855
+## d  7 -66.52116
+## e  7 -71.19779
+## f  6 -68.37125
+## g  6 -68.76799
+## h  6 -69.38580
+## i  5 -71.38847
+## j  5  65.28978
+## k  4  62.31910
+## l  5  88.70800
+## m  4  87.23674
+## n  5  31.74638
+## o  4  27.83797
+## p  3 107.46924
+## q  3  82.83581
+## r  3  90.98374</code></pre>
+<p><br></p>
+<p>The lower the BIC the better. From the output above we can clearly see that the the model containing the <em>blood clotting</em>, <em>enzyme</em>, and <em>prognostic</em> variables has the lowest BIC (-71.38). Thus, according to the BIC, the model containing the <em>blood clotting</em>, <em>enzyme</em>, and <em>prognostic</em> explanatory variables (and no interaction terms) is the “best” model.</p>
+<p><br> <br></p>
+</div>
+<div id="part-e-2" class="section level3">
+<h3>Part E</h3>
+<p>Figure Q6E shows the residual and normality plots for the model regressing the log of survival time onto blood clotting score, prognostic index, and enzyme function test score. While an obvious pattern is not visible from the Studentized residual plot, when we look at the Cook’s Distance plot we see that there some significant outliers. Additionally from looking at the Q-Q plot and the histogram of the the Studentized residuals it appears that the residuals are slightly right-skewed. Table Q6A reports the p-values for the Shapiro-Wilk test for normality on the raw residuals and Studentized residuals. The p-values of less than 0.05 indicate that our assumption of normally distributed error term is not valid.</p>
+<div class="figure">
+<img src="data:image/png;base64,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" alt="Figure Q6E: Residual and normality plots for our regression model. The Cook’s Distance plot shows that there are some influential outliers and the the Q-Q plot and histogram of the studentized residuals show that the residuals appear to be a little right-skewed." />
+<p class="caption"><strong>Figure Q6E:</strong> Residual and normality plots for our regression model. The Cook’s Distance plot shows that there are some influential outliers and the the Q-Q plot and histogram of the studentized residuals show that the residuals appear to be a little right-skewed.</p>
+</div>
+<p><br></p>
+<hr />
+<pre class="r"><code>x &lt;- data.frame(P = c(shapiro.test(fit1$residuals)$p.value, shapiro.test(studres(fit1))$p.value))
+colnames(x) &lt;- &quot;P-Value&quot;
+rownames(x) &lt;- c(&quot;Raw Residuals&quot;, &quot;Studentized Residuals&quot;)
+
+pandoc.table(x,
+             caption = &quot;**Table Q6E:** Results from Shapiro-Wilk normality test on raw and studentized residuals of our regression model. The p-values of less than 0.05 indicate that the residuals are not normally distributed&quot;,
+             split.table = Inf)</code></pre>
+<table style="width:51%;">
+<colgroup>
+<col width="38%"></col>
+<col width="12%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">P-Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Raw Residuals</strong></td>
+<td align="center">0.002438</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Studentized Residuals</strong></td>
+<td align="center">0.0006446</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table Q6E:</strong> Results from Shapiro-Wilk normality test on raw and studentized residuals of our regression model. The p-values of less than 0.05 indicate that the residuals are not normally distributed</p>
+<hr />
+<p><br> <br></p>
+</div>
+</div>
+<div id="question-7" class="section level2">
+<h2>Question 7</h2>
+<p>See appendix <a href="#a6">A6</a> for R code.</p>
 <p><br> <br></p>
 </div>
 </div>
@@ -2252,10 +2486,237 @@ summary(fit1l)</code></pre>
 </div>
 <div id="a6" class="section level2">
 <h2>A6</h2>
+<pre class="r"><code>## Import Data
+q6data &lt;- data.frame(read.table(&quot;data/Surgical.txt&quot;, header = T, quote = &quot;\'&quot;, sep = &quot;&quot;))
+
+########################################################
+
+## Part A
+fit1 &lt;- lm(log(survival) ~ blood.clotting + prognostic + enzyme + liver.function, data = q6data) 
+
+########################################################
+
+## Part B
+summary(fit1)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = log(survival) ~ blood.clotting + prognostic + enzyme + 
+##     liver.function, data = q6data)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.23140 -0.04012 -0.00599  0.02915  0.32101 
+## 
+## Coefficients:
+##                 Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)    1.1253602  0.1156807   9.728 4.99e-13 ***
+## blood.clotting 0.1577881  0.0125271  12.596  &lt; 2e-16 ***
+## prognostic     0.0213089  0.0010057  21.187  &lt; 2e-16 ***
+## enzyme         0.0218156  0.0009125  23.907  &lt; 2e-16 ***
+## liver.function 0.0044163  0.0223600   0.198    0.844    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.109 on 49 degrees of freedom
+## Multiple R-squared:  0.9724, Adjusted R-squared:  0.9701 
+## F-statistic:   431 on 4 and 49 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>########################################################
+
+## Part C
+redb &lt;- lm(log(survival) ~ prognostic + enzyme + liver.function, data = q6data) 
+anova(redb, fit1)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: log(survival) ~ prognostic + enzyme + liver.function
+## Model 2: log(survival) ~ blood.clotting + prognostic + enzyme + liver.function
+##   Res.Df     RSS Df Sum of Sq      F    Pr(&gt;F)    
+## 1     50 2.46698                                  
+## 2     49 0.58214  1    1.8848 158.65 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<pre class="r"><code>########################################################
+
+redp &lt;- lm(log(survival) ~ blood.clotting + enzyme + liver.function, data = q6data) 
+anova(redp, fit1)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: log(survival) ~ blood.clotting + enzyme + liver.function
+## Model 2: log(survival) ~ blood.clotting + prognostic + enzyme + liver.function
+##   Res.Df    RSS Df Sum of Sq     F    Pr(&gt;F)    
+## 1     50 5.9152                                 
+## 2     49 0.5821  1     5.333 448.9 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<pre class="r"><code>########################################################
+
+rede &lt;- lm(log(survival) ~ blood.clotting + prognostic + liver.function, data = q6data) 
+anova(rede, fit1)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: log(survival) ~ blood.clotting + prognostic + liver.function
+## Model 2: log(survival) ~ blood.clotting + prognostic + enzyme + liver.function
+##   Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+## 1     50 7.3723                                  
+## 2     49 0.5821  1    6.7902 571.55 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<pre class="r"><code>########################################################
+
+redl &lt;- lm(log(survival) ~ blood.clotting + enzyme + prognostic, data = q6data) 
+anova(redl, fit1)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: log(survival) ~ blood.clotting + enzyme + prognostic
+## Model 2: log(survival) ~ blood.clotting + prognostic + enzyme + liver.function
+##   Res.Df     RSS Df  Sum of Sq     F Pr(&gt;F)
+## 1     50 0.58260                           
+## 2     49 0.58214  1 0.00046344 0.039 0.8442</code></pre>
+<pre class="r"><code>########################################################
+
+## Part D
+a = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:enzyme + blood.clotting:prognostic + 
+         enzyme:prognostic + blood.clotting:enzyme:prognostic, 
+       data = q6data)
+b = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:enzyme + blood.clotting:prognostic + 
+         enzyme:prognostic, data = q6data)
+c = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:enzyme + blood.clotting:prognostic, 
+       data = q6data)
+d = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:enzyme + enzyme:prognostic, 
+       data = q6data)
+e = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:prognostic + enzyme:prognostic, 
+       data = q6data)
+f = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:enzyme, data = q6data)
+g = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         blood.clotting:prognostic, data = q6data)
+h = lm(log(survival) ~ blood.clotting + enzyme + prognostic + 
+         enzyme:prognostic, data = q6data)
+i = lm(log(survival) ~ blood.clotting + enzyme + prognostic, 
+       data = q6data)
+j = lm(log(survival) ~ blood.clotting + enzyme + 
+         blood.clotting:enzyme, data = q6data)
+k = lm(log(survival) ~ blood.clotting + enzyme, data = q6data)
+l = lm(log(survival) ~ blood.clotting + prognostic + 
+         blood.clotting:prognostic, data = q6data)
+m = lm(log(survival) ~ blood.clotting + prognostic, data = q6data)
+n = lm(log(survival) ~ enzyme + prognostic +  enzyme:prognostic, 
+       data = q6data)
+o = lm(log(survival) ~ enzyme + prognostic, data = q6data)
+p = lm(log(survival) ~ blood.clotting, data = q6data)
+q = lm(log(survival) ~ enzyme, data = q6data)
+r = lm(log(survival) ~ prognostic, data = q6data)
+
+BIC(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r)</code></pre>
+<pre><code>##   df       BIC
+## a  9 -70.57050
+## b  8 -67.42302
+## c  7 -65.30855
+## d  7 -66.52116
+## e  7 -71.19779
+## f  6 -68.37125
+## g  6 -68.76799
+## h  6 -69.38580
+## i  5 -71.38847
+## j  5  65.28978
+## k  4  62.31910
+## l  5  88.70800
+## m  4  87.23674
+## n  5  31.74638
+## o  4  27.83797
+## p  3 107.46924
+## q  3  82.83581
+## r  3  90.98374</code></pre>
+<pre class="r"><code>########################################################
+
+## Part E
+fit1 &lt;- redl
+
+png(&quot;images/q6_plots.png&quot;,
+    height = 620, width = 760)
+
+par(mfrow = c(2,2), oma = c(0,0,4,0))
+
+#-------------------------------------------#
+
+plot(fit1$fitted.values, studres(fit1),
+     main = &quot;Studentized Residual Plot&quot;,
+     xlab = &quot;Fitted Cholesterol (mg)&quot;,
+     ylab = &quot;Students Residual&quot;,
+     xlim = c(3, 7),
+     ylim = c(-4, 4),
+     cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+abline(h = 0)
+
+#-------------------------------------------#
+
+cutoff &lt;- 4/((nrow(q6data)-length(fit1$coefficients)-2)) 
+plot(fit1, which=4, cook.levels=cutoff,
+     cex.lab = 1.4, sub = NA)
+
+par(cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+#-------------------------------------------#
+
+qqPlot(fit1, simulate = F,
+       main = &quot;Q-Q Plot&quot;,
+       xlab = &quot;Quantiles&quot;,
+       ylab = &quot;Studentized Residuals&quot;,
+       grid = F, lwd = 1.5, cex = 1)
+
+#-------------------------------------------#
+
+hist(studres(fit1) , freq=FALSE, 
+   main=&quot;Distribution of Studentized Residuals&quot;,
+   xlab = &quot;Studentized Residual&quot;,
+   ylim = c(0,0.5),
+   cex.lab = 1.4, cex.main = 1.5, font.main = 1)
+
+xfit&lt;-seq(min(studres(fit1) - 1),max(studres(fit1) + 1),length=40) 
+yfit&lt;-dnorm(xfit) 
+lines(xfit, yfit, col = &quot;red&quot;)
+
+
+
+mtext(text = &quot;Diagnostic Plots \n Regression of Survival Time Level onto Blood Clotting, Prognostic, and Enzyme Function Scores&quot;,
+      outer = T,
+      padj = -0.25,
+      cex = 1.2, font = 2)
+
+dev.off()</code></pre>
+<pre><code>## png 
+##   2</code></pre>
+<pre class="r"><code>########################################################
+
+x &lt;- data.frame(P = c(shapiro.test(fit1$residuals)$p.value, shapiro.test(studres(fit1))$p.value))
+colnames(x) &lt;- &quot;P-Value&quot;
+rownames(x) &lt;- c(&quot;Raw Residuals&quot;, &quot;Studentized Residuals&quot;)
+
+pandoc.table(x,
+             caption = &quot;**Table Q6E:** Results from Shapiro-Wilk normality test on raw and studentized residuals of our regression model. The p-values of less than 0.05 indicate that the residuals are not normally distributed&quot;,
+             split.table = Inf)</code></pre>
+<pre><code>## 
+## -------------------------------------
+##           &amp;nbsp;             P-Value 
+## --------------------------- ---------
+##      **Raw Residuals**      0.002438 
+## 
+##  **Studentized Residuals**  0.0006446
+## -------------------------------------
+## 
+## **Table Q6E:** Results from Shapiro-Wilk normality test on raw and studentized residuals of our regression model. The p-values of less than 0.05 indicate that the residuals are not normally distributed</code></pre>
 <p><br> <br></p>
 </div>
 <div id="a7" class="section level2">
 <h2>A7</h2>
+<p><br> <br></p>
+</div>
+<div id="a8" class="section level2">
+<h2>A8</h2>
 </div>
 </div>
 
