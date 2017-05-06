@@ -1,0 +1,31 @@
+"Age Group"	"Gender"	"Cholesterol"
+Under 30	Male	265
+Under 30	Male	303
+Under 30	Male	1252
+Under 30	Male	230
+Under 30	Male	957
+Under 30	Female	325
+Under 30	Female	112
+Under 30	Female	62
+Under 30	Female	301
+Under 30	Female	223
+30-50	Male	702
+30-50	Male	277
+30-50	Male	176
+30-50	Male	416
+30-50	Male	120
+30-50	Female	146
+30-50	Female	173
+30-50	Female	149
+30-50	Female	462
+30-50	Female	94
+Over 50	Male	75
+Over 50	Male	189
+Over 50	Male	288
+Over 50	Male	578
+Over 50	Male	31
+Over 50	Female	254
+Over 50	Female	384
+Over 50	Female	318
+Over 50	Female	600
+Over 50	Female	309
