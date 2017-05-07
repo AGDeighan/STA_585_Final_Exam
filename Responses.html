@@ -705,14 +705,6 @@ summary(fit2)</code></pre>
 <p><br></p>
 <p>Running Shapiro-Wilk tests for normality (using the “shapiro.test()” function in R) concluded our suspicions from the histograms shown in figure Q51. Table Q51 reports the p-values for the Shapiro-Wilk tests for the untransformed and log-transformed <em>Cholesterol</em> data. The small p-value (&lt; 0.05) for the untransformed data indicates that we should reject the null hypothesis that the untransformed <em>Cholesterol</em> data are normally distributed and conclude that the untransformed data are not normally distributed. On the other hand the large p-value for the log-transformed data (&gt;0.05) indicates that we should accept the null hypothesis that the data are normally distributed, thus we can safely assume the log-transformed <em>Cholesterol</em> data are approximately normally distributed.</p>
 <hr />
-<pre class="r"><code>x &lt;- data.frame(P = c(shapiro.test(q5data$Cholesterol)$p.value, 
-                      shapiro.test(log(q5data$Cholesterol))$p.value))
-colnames(x) &lt;- &quot;P-Value&quot;
-rownames(x) &lt;- c(&quot;Untransformed Cholesterol Data&quot;, &quot;Log-Transformed Cholesterol Data&quot;)
-
-pandoc.table(x,
-             caption = &quot;**Table Q51:** Shapiro-Wilk normality test results for untransformed and log-transformed cholesterol data. The p-value of less than 0.05 for the untransformed data means we should reject the assumption that the unstransformed data are normally distributed. Conversely, the p-value of more than 0.05 for the log-transformed data indicates that we can accept the assumption that the log-transformed cholesterol data are normally distributed&quot;,
-             split.table = Inf)</code></pre>
 <table style="width:57%;">
 <colgroup>
 <col width="44%"></col>
@@ -1064,13 +1056,6 @@ BIC(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r)</code></pre>
 </div>
 <p><br></p>
 <hr />
-<pre class="r"><code>x &lt;- data.frame(P = c(shapiro.test(fit1$residuals)$p.value, shapiro.test(studres(fit1))$p.value))
-colnames(x) &lt;- &quot;P-Value&quot;
-rownames(x) &lt;- c(&quot;Raw Residuals&quot;, &quot;Studentized Residuals&quot;)
-
-pandoc.table(x,
-             caption = &quot;**Table Q6E:** Results from Shapiro-Wilk normality test on raw and studentized residuals of our regression model. The p-values of less than 0.05 indicate that the residuals are not normally distributed&quot;,
-             split.table = Inf)</code></pre>
 <table style="width:51%;">
 <colgroup>
 <col width="38%"></col>
@@ -1408,6 +1393,7 @@ for(i in 1:nrow(q9.data)){
 }
 
 q9.data$gender &lt;- factor(q9.data$gender, levels = c(&quot;female&quot;, &quot;male&quot;))</code></pre>
+<p><br></p>
 <div id="a" class="section level4">
 <h4>A</h4>
 <p>The boxplots in figure Q9.1A show that the distributions of CRP levels are heavily right skewed for gender and age group combinations. The skewness decreases as age increases, especially for females, but it is still present.</p>
@@ -1660,14 +1646,16 @@ summary(fit.int)</code></pre>
 ## Multiple R-squared:  0.002859,   Adjusted R-squared:  0.002253 
 ## F-statistic: 4.712 on 3 and 4929 DF,  p-value: 0.002752</code></pre>
 <p>The regression model summary above shows that after adjusting for gender, there is a significant linear relationship between age and and mean CRP level. The model above is of the form:</p>
-<p><span class="math display">\[ \text{E[CRP]} = \widehat{\beta}_0 + \widehat{\beta}_1(age) + \widehat{\beta}_2(male) + \widehat{\beta}_3(male*age) \\ \text{where:} \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space                        \\ \widehat{\beta}_0 \approx 7.38   \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space                                               \\ \widehat{\beta}_1 \approx -0.0517  \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space                             \\ \widehat{\beta}_2 \approx -8.74 \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space                       \\ \widehat{\beta}_3 \approx 0.119 \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space                                                \\ age = \text{age in years}   \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space                  \\  male = 0 \space \text{ for females and } \space 1 \text{ for males }\]</span></p>
+<p><span class="math display">\[\text{E[CRP]} = \widehat{\beta}_0 + \widehat{\beta}_1(age) + \widehat{\beta}_2(male) + \widehat{\beta}_3(male*age)        \\ \text{where:} \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad                        \\ \widehat{\beta}_0 \approx 7.38   \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad                                                \\ \widehat{\beta}_1 \approx -0.0517  \quad \quad \quad \quad \quad \quad \quad \quad \quad \space \space                             \\ \widehat{\beta}_2 \approx -8.74 \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \space \space                      \\ \widehat{\beta}_3 \approx 0.119 \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \space \space \space                                                \\ age = \text{age in years}   \quad \quad \quad \quad  \quad \quad \quad \space \space \space                 \\  male = 0 \space \text{ for females and } \space 1 \text{ for males }\]</span></p>
 <p>The interaction term between gender and age means that there are, in effect, two different models for females and males.</p>
 <ul>
 <li>The model for females is:</li>
 </ul>
-<p><span class="math display">\[ \text{E[CRP]} = \widehat{\beta}_0 + \widehat{\beta}_1(age) \]</span><br />
-* The model for males is:</p>
-<pre><code>  $$ \text{E[CRP]} = \widehat{\beta}_0' + \widehat{\beta}_1'(age)                                \\ \text{where:} \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space                                            \\ \widehat{\beta}_0' = \widehat{\beta}_0 + \widehat{\beta}_2 \approx 7.38 - 8.74 = -1.36 \space  \space \space  \space \space  \space \space  \space \space  \space                                                 \\  \widehat{\beta}_1' = \widehat{\beta}_1 + \widehat{\beta}_3 \approx -0.0517 + 0.119 = 0.0673$$ </code></pre>
+<p><span class="math display">\[ \text{E[CRP]} = \widehat{\beta}_0 + \widehat{\beta}_1(age) \]</span></p>
+<ul>
+<li>The model for males is:</li>
+</ul>
+<p><span class="math display">\[\text{E[CRP]} = \widehat{\beta}_0' + \widehat{\beta}_1'(age) \\ \text{where:}  \quad \quad \quad \quad \quad \quad \quad \quad  \quad \quad \quad \quad  \quad \quad \quad \quad  \\ \widehat{\beta}_0' = \widehat{\beta}_0 + \widehat{\beta}_2 \approx 7.38 - 8.74 = -1.36 \quad \quad  \\  \widehat{\beta}_1' = \widehat{\beta}_1 + \widehat{\beta}_3 \approx -0.0517 + 0.119 = 0.0673\]</span></p>
 <p>The 95% confidence intervals for the regression coefficients for the female model are easy to calculate, but the confidence intervals for the regression coefficients for the male model are a bit more complicated because we need to take into account the covariance between the parameters. The standard errors for <span class="math inline">\(\widehat{\beta}_0'\)</span> and <span class="math inline">\(\widehat{\beta}_1'\)</span> are:</p>
 <p><span class="math display">\[ \widehat{\text{SE}}[\widehat{\beta}_0'] = \sqrt{ \widehat{\text{V}}[\widehat{\beta}_0] +  \widehat{\text{V}}[\widehat{\beta}_2] +  2*\widehat{\text{Cov}}[\widehat{\beta}_0, \widehat{\beta}_2] } \\                                                                   \widehat{\text{SE}}[\widehat{\beta}_1'] = \sqrt{ \widehat{\text{V}}[\widehat{\beta}_1] +  \widehat{\text{V}}[\widehat{\beta}_3] +  2*\widehat{\text{Cov}}[\widehat{\beta}_1, \widehat{\beta}_3] } \]</span></p>
 <p>We can find the covariances from the R summary object of our model. Table Q9.1E gives the 95% confidence intervals for the intercept and slope parameters for the male and female models.</p>
@@ -2235,9 +2223,60 @@ BIC(Grouped.Lin, Ungrouped.Lin,
 ## Ungrouped.Cub.NoInt    3 31900.83</code></pre>
 <p>The lower the BIC the better. None of the models containing higher order cholesterol terms have a lower BIC indicating that the do not provide any better fit. There is no evidence that a higher order relationship between cholesterol level and mean CRP levels is needed.</p>
 <p><br> <br></p>
+</div>
+</div>
+</div>
+<div id="question-10" class="section level2">
+<h2>Question 10</h2>
+<p>See appendix <a href="#a10">A10</a> for full R code.</p>
+<blockquote>
+<p>(only for graduate students)The data contained in the file “Skull.txt” contains variables which represent physical measurements of skulls from a small region in Egypt. The variables description are as follows:</p>
+<blockquote>
+<p>MB: Maximal Breadth of Skull</p>
+</blockquote>
+<blockquote>
+<p>BH: Basibregmatic Height of Skull</p>
+</blockquote>
+<blockquote>
+<p>BL: Basialveolar Length of Skull</p>
+</blockquote>
+<blockquote>
+<p>NH: Nasal Height of Skull</p>
+</blockquote>
+<blockquote>
+<p>Year: Approximate Year of Skull Formation (negative = B.C., positive = A.D.)</p>
+</blockquote>
+<p>These variables represent physical measurements of skulls from a small region in Egypt. The basic question here is to determine whether or not these measurements have changed over time.</p>
+</blockquote>
+<blockquote>
+<p>Consider the following four simple linear regression models:</p>
+<blockquote>
+<p>Model 1: Use Years to predict MB.</p>
+</blockquote>
+<blockquote>
+<p>Model 2: Use Years to predict BH.</p>
+</blockquote>
+<blockquote>
+<p>Model 3: Use Years to predict BL.</p>
+</blockquote>
+<blockquote>
+<p>Model 4: Use Years to predict NH.</p>
+</blockquote>
+<p>For each model answer the following questions:</p>
+<blockquote>
+<p>Are the model assumptions reasonable?</p>
+</blockquote>
+<blockquote>
+<p>Test for significance of the final regression equation at the 5% level of significance.</p>
+</blockquote>
+<blockquote>
+<p>Interpret the slope of the fitted model.</p>
+</blockquote>
+<blockquote>
+<p>For each simple linear regression model, assume this relationship continues to the present time and construct a 95% prediction interval for the MB, BH, BL, and NH measurement of an individual from this region for the year 2015.</p>
+</blockquote>
+</blockquote>
 <p><br> <br></p>
-</div>
-</div>
 </div>
 </div>
 <div id="appendix" class="section level1">
@@ -4535,6 +4574,219 @@ pandoc.table(x,
 </div>
 <div id="part-2-1" class="section level3">
 <h3>Part 2</h3>
+<pre class="r"><code>## Removing Missing Values &amp; Creating New Variable
+nrow(q9.data)</code></pre>
+<pre><code>## [1] 4933</code></pre>
+<pre class="r"><code>nrow(q9.data[is.na(q9.data$crp),])</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>nrow(q9.data[is.na(q9.data$cholest),])</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre class="r"><code>###############################################################
+
+q9.data &lt;- q9.data[!is.na(q9.data$cholest),]
+
+###############################################################
+
+q9.data[, &quot;chol.group&quot;] &lt;- 0
+
+for(i in 1:nrow(q9.data)){
+  if(q9.data$cholest[i] &lt; 160){
+    q9.data$chol.group[i] &lt;- 1
+  }
+  
+  else if(q9.data$cholest[i] &gt;= 160 &amp; q9.data$cholest[i] &lt; 180){
+    q9.data$chol.group[i] &lt;- 2
+  }
+  
+  else if(q9.data$cholest[i] &gt;= 180 &amp; q9.data$cholest[i] &lt; 200){
+    q9.data$chol.group[i] &lt;- 3
+  }
+  
+  else if(q9.data$cholest[i] &gt;= 200 &amp; q9.data$cholest[i] &lt; 220){
+    q9.data$chol.group[i] &lt;- 4
+  }
+  
+  else if(q9.data$cholest[i] &gt;= 220 &amp; q9.data$age[i] &lt; 240){
+    q9.data$chol.group[i] &lt;- 5
+  }
+  
+  else if(q9.data$cholest[i] &gt;= 240 &amp; q9.data$cholest[i] &lt;= 260){
+    q9.data$chol.group[i] &lt;- 6
+  }
+  else if(q9.data$cholest[i] &gt; 260){
+    q9.data$chol.group[i] &lt;- 7
+  }
+}
+
+###############################################################
+
+## Part A
+png(&quot;images/q92a_boxplot.png&quot;,
+    width = 480, height = 480)
+
+
+boxplot(crp~ chol.group, data = q9.data,
+        main = &quot;Distribution of CRP Levels for Different Cholesterol Levels&quot;,
+        xlab=&quot;Cholesterol Group&quot;, 
+        ylab=&quot;CRP Level (mg/l)&quot;)
+
+dev.off()</code></pre>
+<pre><code>## png 
+##   2</code></pre>
+<pre class="r"><code>###############################################################
+
+x &lt;- data.frame(c1 = c(as.numeric(summary(q9.data$crp[q9.data$chol.group==1])), 
+                       var(q9.data$crp[q9.data$chol.group==1]),
+                       sqrt(var(q9.data$crp[q9.data$chol.group==1]))/mean(q9.data$crp[q9.data$chol.group==1]),
+                       skewness(q9.data$crp[q9.data$chol.group==1]),
+                       kurtosis(q9.data$crp[q9.data$chol.group==1])),
+                c2 = c(as.numeric(summary(q9.data$crp[q9.data$chol.group==2])), 
+                       var(q9.data$crp[q9.data$chol.group==2]),
+                       sqrt(var(q9.data$crp[q9.data$chol.group==2]))/mean(q9.data$crp[q9.data$chol.group==2]),
+                       skewness(q9.data$crp[q9.data$chol.group==2]),
+                       kurtosis(q9.data$crp[q9.data$chol.group==2])),
+                c3 = c(as.numeric(summary(q9.data$crp[q9.data$chol.group==3])), 
+                       var(q9.data$crp[q9.data$chol.group==3]),
+                       sqrt(var(q9.data$crp[q9.data$chol.group==3]))/mean(q9.data$crp[q9.data$chol.group==3]),
+                       skewness(q9.data$crp[q9.data$chol.group==3]),
+                       kurtosis(q9.data$crp[q9.data$chol.group==3])),
+                c4 = c(as.numeric(summary(q9.data$crp[q9.data$chol.group==4])), 
+                       var(q9.data$crp[q9.data$chol.group==4]),
+                       sqrt(var(q9.data$crp[q9.data$chol.group==4]))/mean(q9.data$crp[q9.data$chol.group==4]),
+                       skewness(q9.data$crp[q9.data$chol.group==4]),
+                       kurtosis(q9.data$crp[q9.data$chol.group==4])),
+                c5 = c(as.numeric(summary(q9.data$crp[q9.data$chol.group==5])), 
+                       var(q9.data$crp[q9.data$chol.group==5]),
+                       sqrt(var(q9.data$crp[q9.data$chol.group==5]))/mean(q9.data$crp[q9.data$chol.group==5]),
+                       skewness(q9.data$crp[q9.data$chol.group==5]),
+                       kurtosis(q9.data$crp[q9.data$chol.group==5])),
+                ac = c(as.numeric(summary(q9.data$crp)), 
+                       var(q9.data$crp),
+                       sqrt(var(q9.data$crp))/mean(q9.data$crp),
+                       skewness(q9.data$crp),
+                       kurtosis(q9.data$crp))
+                )
+
+x &lt;- t(x)
+colnames(x) &lt;- c(&quot;Min&quot;, &quot;1st Quartile&quot;, &quot;Median&quot;, &quot;Mean&quot;, &quot;3rd Quartile&quot;, &quot;Max&quot;, &quot;Variance&quot;, &quot;CV&quot;, &quot;Skewness&quot;, &quot;Kurtosis&quot;)
+rownames(x) &lt;- c(&quot;Cholesterol Group 1&quot;, &quot;Cholesterol Group 2&quot;, &quot;Cholesterol Group 3&quot;, 
+                 &quot;Cholesterol Group 4&quot;, &quot;Cholesterol Group 5&quot;, &quot;All&quot;)
+
+pandoc.table(x,
+             caption = &quot;**Table Q9.2A:** Descriptive statistics for the distribution of CRP levels at different cholesterol level groups. From looking at the discrepency between the means and medians, and the large differences between the 3rd quartiles and mximum values we can see that the distributions are all right skewed. This is confirmed by the positive skewness coefficient for all distributions. The large kurtosis values indicate that the distributions are all heavy tailed.&quot;,
+             split.table = Inf)</code></pre>
+<pre><code>## 
+## --------------------------------------------------------------------------------------------------------------------------
+##          &amp;nbsp;            Min   1st Quartile   Median   Mean   3rd Quartile   Max   Variance   CV    Skewness   Kurtosis 
+## ------------------------- ----- -------------- -------- ------ -------------- ----- ---------- ----- ---------- ----------
+##  **Cholesterol Group 1**    0         1           2     5.324        4         100    125.5    2.104   4.705      29.98   
+## 
+##  **Cholesterol Group 2**    0         1           2     4.334        4         108    71.49    1.951   6.444      60.54   
+## 
+##  **Cholesterol Group 3**    0         1           2     3.443        3         54     28.52    1.551   4.379      29.02   
+## 
+##  **Cholesterol Group 4**    0         1           2      3.47        3         66     27.58    1.514   5.018      40.41   
+## 
+##  **Cholesterol Group 5**    0         1           2      3.2         3         63     18.78    1.354   5.052      46.07   
+## 
+##          **All**            0         1           2     3.613        3         108    37.86    1.703   6.454      67.99   
+## --------------------------------------------------------------------------------------------------------------------------
+## 
+## **Table Q9.2A:** Descriptive statistics for the distribution of CRP levels at different cholesterol level groups. From looking at the discrepency between the means and medians, and the large differences between the 3rd quartiles and mximum values we can see that the distributions are all right skewed. This is confirmed by the positive skewness coefficient for all distributions. The large kurtosis values indicate that the distributions are all heavy tailed.</code></pre>
+<pre class="r"><code>###############################################################
+
+## Part B
+fit.cg &lt;- lm(crp ~ chol.group, data = q9.data)
+summary(fit.cg)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = crp ~ chol.group, data = q9.data)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+##  -4.752  -2.494  -1.494  -0.075 103.667 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  5.17081    0.26211  19.727  &lt; 2e-16 ***
+## chol.group  -0.41914    0.06648  -6.305 3.14e-10 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6.129 on 4928 degrees of freedom
+## Multiple R-squared:  0.008002,   Adjusted R-squared:  0.0078 
+## F-statistic: 39.75 on 1 and 4928 DF,  p-value: 3.139e-10</code></pre>
+<pre class="r"><code>###############################################################
+
+sf &lt;- summary(fit.cg)
+
+x &lt;- data.frame(E = c(sf$coefficients[1,1], sf$coefficients[2,1]),
+                LB = c(sf$coefficients[1,1] - 1.96*sf$coefficients[1,2], sf$coefficients[2,1] - 1.96*sf$coefficients[2,2] ),
+                UB = c(sf$coefficients[1,1] + 1.96*sf$coefficients[1,2], sf$coefficients[2,1] + 1.96*sf$coefficients[2,2] ),
+                pv = c(sf$coefficients[1,4], sf$coefficients[2,4]))
+
+colnames(x) &lt;- c(&quot;Estimate&quot;, &quot;Lower Bound&quot;, &quot;Upper Bound&quot;, &quot;P.value&quot;)
+rownames(x) &lt;- c(&quot;Intercept&quot;, &quot;Slope&quot;)
+
+pandoc.table(x,
+             caption = &quot;**Table Q9.2B:** The point estimates, 95% confidence intervals, and p-values for the parameters of the linear regression model of the relationship between mean CRP levels and cholesterol.&quot;,
+             split.table = Inf)</code></pre>
+<pre><code>## 
+## ----------------------------------------------------------------
+##     &amp;nbsp;       Estimate   Lower Bound   Upper Bound   P.value 
+## --------------- ---------- ------------- ------------- ---------
+##  **Intercept**    5.171        4.657         5.685     1.935e-83
+## 
+##    **Slope**     -0.4191      -0.5494       -0.2888    3.139e-10
+## ----------------------------------------------------------------
+## 
+## **Table Q9.2B:** The point estimates, 95% confidence intervals, and p-values for the parameters of the linear regression model of the relationship between mean CRP levels and cholesterol.</code></pre>
+<pre class="r"><code>###############################################################
+
+## Part C
+Grouped.Lin &lt;- lm(crp ~ chol.group, data = q9.data)
+Ungrouped.Lin &lt;- lm(crp ~ cholest, data = q9.data)
+Grouped.Quad.NoInt &lt;- lm(crp ~ chol.group + chol.group^2, data = q9.data)
+Ungrouped.Quad.NoInt &lt;- lm(crp ~ cholest + cholest^2, data = q9.data)
+Grouped.Quad.Int &lt;- lm(crp ~ chol.group + chol.group^2 + chol.group:(chol.group^2), data = q9.data)
+Ungrouped.Quad.Int &lt;- lm(crp ~ cholest + cholest^2 + cholest:(cholest^2), data = q9.data)
+Grouped.Cub.FullInt &lt;- lm(crp ~ chol.group + chol.group^2 + chol.group:(chol.group^2) + chol.group^3 + 
+                            chol.group:(chol.group^3) + (chol.group^2):(chol.group^3) + chol.group:(chol.group^2):(chol.group^3), data = q9.data)
+Ungrouped.Cub.FullInt &lt;- lm(crp ~ cholest + cholest^2 + cholest:(cholest^2) + cholest^3 + 
+                              cholest:(cholest^3) + (cholest^2):(cholest^3) + cholest:(cholest^2):(cholest^3), data = q9.data)
+Grouped.Cub.2wInt &lt;- lm(crp ~ chol.group + chol.group^2 + chol.group:(chol.group^2) + chol.group^3 + 
+                            chol.group:(chol.group^3) + (chol.group^2):(chol.group^3), data = q9.data)
+Ungrouped.Cub.2wInt &lt;- lm(crp ~ cholest + cholest^2 + cholest:(cholest^2) + cholest^3 + 
+                              cholest:(cholest^3) + (cholest^2):(cholest^3), data = q9.data)
+Grouped.Cub.NoInt &lt;- lm(crp ~ chol.group + chol.group^2 + chol.group^3, data = q9.data)
+Ungrouped.Cub.NoInt &lt;- lm(crp ~ cholest + cholest^2 + cholest^3, data = q9.data)
+
+
+
+BIC(Grouped.Lin, Ungrouped.Lin, 
+    Grouped.Quad.NoInt, 
+    Ungrouped.Quad.NoInt, 
+    Grouped.Quad.Int,
+    Ungrouped.Quad.Int,
+    Grouped.Cub.FullInt,
+    Ungrouped.Cub.FullInt,
+    Grouped.Cub.2wInt,
+    Ungrouped.Cub.2wInt,
+    Grouped.Cub.NoInt,
+    Ungrouped.Cub.NoInt)</code></pre>
+<pre><code>##                       df      BIC
+## Grouped.Lin            3 31890.53
+## Ungrouped.Lin          3 31900.83
+## Grouped.Quad.NoInt     3 31890.53
+## Ungrouped.Quad.NoInt   3 31900.83
+## Grouped.Quad.Int       3 31890.53
+## Ungrouped.Quad.Int     3 31900.83
+## Grouped.Cub.FullInt    3 31890.53
+## Ungrouped.Cub.FullInt  3 31900.83
+## Grouped.Cub.2wInt      3 31890.53
+## Ungrouped.Cub.2wInt    3 31900.83
+## Grouped.Cub.NoInt      3 31890.53
+## Ungrouped.Cub.NoInt    3 31900.83</code></pre>
 <p><br> <br></p>
 </div>
 </div>
