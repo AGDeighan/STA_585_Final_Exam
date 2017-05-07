@@ -14,7 +14,7 @@ output: html_document
 
 ## Question 1
 
-  See appendix [A1](#a1) for R code.
+  See appendix [A1](#a1) for full R code.
 
 > Use the “sleep.txt” data to answer the following questions.
 A description of this data is given bellow.
@@ -496,7 +496,7 @@ pandoc.table(x,
 
 ## Question 2
 
-  See appendix [A2](#a2) for R code.
+  See appendix [A2](#a2) for full R code.
 
 > The amount of water used by a production plant varies from month to month. Observations
 on water usage and a few other, possibly related, variables were collected for 17 months
@@ -522,7 +522,7 @@ qdata <- data.frame(read.table("data/water.txt", header = T, sep = ""))
 
 ## Question 3
 
-  See appendix [A3](#a3) for R code.
+  See appendix [A3](#a3) for full R code.
   
 > Use the flour dataset “flour.txt” to do these problems:
 >
@@ -765,7 +765,7 @@ dev.off()
 
 ## Question 4
 
-  See appendix [A4](#a4) for R code.
+  See appendix [A4](#a4) for full R code.
 
 > The data are from a hypothetical Verbal Learning Experiment in which participants with Low
 Anxiety levels and High Anxiety levels are given a verbal learning task “anxiety.txt”. Some
@@ -930,7 +930,7 @@ dev.off()
 
 ## Question 5
 
-  See appendix [A5](#a5) for R code.
+  See appendix [A5](#a5) for full R code.
   
 > Researchers were interested in determining the relationship between a person’s cholesterol
 level and their age and gender. For each of 30 subjects, data was collected on their
@@ -1513,7 +1513,7 @@ summary(fit2l)
 
 ## Question 6
 
-  See appendix [A6](#a6) for R code.
+  See appendix [A6](#a6) for full R code.
 
 > A hospital surgical unit was interested in predicting survival time in patients undergoing a
 particular type of liver operation. From a random sample of 54 patients, information on the
@@ -1872,7 +1872,7 @@ TukeyHSD(a)
 
 ## Question 8
 
-  See appendix [A8](#a8) for R code.
+  See appendix [A8](#a8) for full R code.
 
 > (only for graduate students) In a psychology experiment, researchers asked participants to
 respond to various stimuli and measured their reaction time. Participants were randomly
@@ -2096,7 +2096,821 @@ dev.off()
 
 ## Question 9
 
-  See appendix [A9](#a9) for R code.
+  See appendix [A9](#a9) for full R code.
+
+> (only for graduate students) The following questions pertain to the dataset for biomarkers
+of inflammation and cardiovascular disease stored as “inflamm.txt” on the class web page.
+For all questions involving statistical inference, provide estimates, confidence intervals, and
+P values in text suitable for a scientific journal.
+
+> Create a new variable representing the following strata for the age (for both male and
+female):
+>
+>65 – 69 year old
+>
+>70 – 74 year old
+>
+>75 – 79 year old
+>
+>80 – 84 year old
+>
+>85 – 89 year old
+>
+>90 – 100 year old
+>
+>Part 1: We are interested in “examining how mean C reactive protein levels vary
+by age and sex.”
+>
+>a. Provide suitable descriptive statistics regarding the distribution of C reactive protein
+levels by age and sex.
+>b. Perform an analysis to determine whether the mean C reactive protein levels differ across
+sex groups.
+>c. Perform an analysis to determine whether there is a linear trend in mean C reactive
+protein levels by age.
+>d. Perform an analysis to determine whether the mean C reactive protein levels differ across
+sex groups after adjustment for age.
+>e. Perform an analysis to determine whether there is a linear trend in mean C reactive
+protein levels by age after adjustment for sex.
+>f. Perform an analysis to determine whether there is a linear trend in mean C reactive
+protein levels by age in women.
+>g. Perform an analysis to determine whether there is a linear trend in mean C reactive
+protein levels by age in men.
+>h. Perform an analysis to test whether the results obtained in part g are statistically
+significantly different from those in part f. Interpret all parameters in the model used to
+answer this question, and relate those estimates to the parameter estimates obtained in
+parts f and g.
+>i. How would you summarize the association between C reactive protein levels and age and
+sex? Provide a summary of your findings suitable for inclusion in a manuscript.
+
+> Part 2: We are interested in “examining how mean C reactive protein levels vary
+across groups defined by cholesterol level.”
+>
+> Create a new variable representing the following strata for the cholesterol levels
+>
+> less than 160 mg/dl
+>
+> 160 – 180 mg/dl
+>
+> 180 – 200 mg/dl
+>
+> 200 – 220 mg/dl
+>
+> 220 – 240 mg/dl
+>
+> 240 – 260 mg/dl
+>
+> greater than 260 mg/dl
+>
+>a. Provide suitable descriptive statistics regarding the distribution of C reactive protein
+levels across groups defined by cholesterol levels.
+>b. Perform an analysis to determine whether there is a linear trend in mean C reactive
+protein levels by cholesterol level.
+>c. Perform an analysis to determine whether any trend in mean C reactive protein levels by
+cholesterol is well described by a straight line. That is, perform a test to see whether there
+is sufficient evidence in the data to suggest a nonlinear trend in mean C reactive protein
+levels by cholesterol. (A typical approach is to consider the possibility of a curvilinear
+trend by fitting both cholesterol and a new variable equal to the square of cholesterol.)
+
+<br>
+
+  First we will import the data set. Since we are only interested in the variables pertaining to C reactive protein (CRP) levels, age, gender, and cholesterol levels we will remove all other variables from our data-set.
+
+```{r}
+## Import Data
+q9.data <- data.frame(read.table("data/inflamm.txt", header = T, sep = ""))
+
+q9.data <- q9.data[, c("crp", "age", "male", "cholest")]
+```
+
+<br>
+
+  For all statistical tests we will use an alpha level of 0.05 (significance level of 5%).
+
+### Part 1
+
+  First we will count how many total observations are in the data set and how many observations have missing values for age, gender, or CRP levels.
+```{r}
+nrow(q9.data)
+nrow(q9.data[is.na(q9.data$crp),])
+nrow(q9.data[is.na(q9.data$age),])
+nrow(q9.data[is.na(q9.data$male),])
+```
+
+  From above we can see that we have a large data set, 5000 observations, and we have only 67 observations that contain missing values for any of our variables of interest. We can safely remove these missing values without losing too much information.
+
+```{r}
+q9.data <- q9.data[!is.na(q9.data$crp),]
+```
+  
+  
+  Now we will create a new variable for discretized age groups:
+
+* "Late Sixties": 65 – 69 year old
+* "Early Seventies": 70 – 74 year old
+* "Late Seventies": 75 – 79 year old
+* "Early Eighties": 80 – 84 year old
+* "Late Eighties": 85 – 89 year old
+* "Nineties": 90 – 100 year old 
+
+  We will treat these variables as factors with the lower level factors corresponding to lower age group (level 1 -> Late Sixties = 65-69)
+
+```{r}
+q9.data[,"Age.Group"] <- 0
+
+for(i in 1:nrow(q9.data)){
+  if(q9.data$age[i] >= 65 & q9.data$age[i] < 70){
+    q9.data$Age.Group[i] <- "Late Sixties"
+  }
+  
+  else if(q9.data$age[i] >= 70 & q9.data$age[i] < 75){
+    q9.data$Age.Group[i] <- "Early Seventies"
+  }
+  
+  else if(q9.data$age[i] >= 75 & q9.data$age[i] < 80){
+    q9.data$Age.Group[i] <- "Late Seventies"
+  }
+  
+  else if(q9.data$age[i] >= 80 & q9.data$age[i] < 85){
+    q9.data$Age.Group[i] <- "Early Eighties"
+  }
+  
+  else if(q9.data$age[i] >= 85 & q9.data$age[i] < 90){
+    q9.data$Age.Group[i] <- "Late Eighties"
+  }
+  
+  else if(q9.data$age[i] >= 90 & q9.data$age[i] <= 100){
+    q9.data$Age.Group[i] <- "Nineties"
+  }
+}
+
+q9.data$Age.Group <- factor(q9.data$Age.Group, levels = c("Late Sixties",
+                                                          "Early Seventies",
+                                                          "Late Seventies",
+                                                          "Early Eighties",
+                                                          "Late Eighties",
+                                                          "Nineties")
+                            )
+
+```
+
+  We also rename the variable *male* to *gender* and change the values of the variable to factors ("female" = level 1, "male" = level 2).
+```{r}
+
+colnames(q9.data) <- c("crp", "age", "gender", "cholest", "Age.Group")
+
+for(i in 1:nrow(q9.data)){
+  if(q9.data$gender[i] == 0){
+    q9.data$gender[i] <- "female"
+  }
+  else if(q9.data$gender[i] == 1){
+    q9.data$gender[i] <- "male"
+  }
+}
+
+q9.data$gender <- factor(q9.data$gender, levels = c("female", "male"))
+
+```
+
+#### A
+
+  The boxplots in figure Q9.1A show that the distributions of CRP levels are heavily right skewed for gender and age group combinations. The skewness decreases as age increases, especially for females, but it is still present.
+
+```{r, include=F}
+## Part A
+png("images/q91a_boxplots.png",
+    width = 1300, height = 1200)
+
+par(oma = c(1,3,5,2), mar = c(6, 6, 5, 4))
+layout(matrix(c(1,1,1,2,3,3,3,3), 2, 4, byrow = TRUE))
+
+boxplot(crp~Age.Group, data = q9.data,
+        main = "Distribution of CRP Levels for Different Age Groups",
+        xlab="Age Group", 
+        ylab="CRP Level (mg/l)",
+        cex.main = 2, cex.lab = 2, cex.axis = 2, cex = 1.5, font.main = 1)
+
+boxplot(crp~gender, data = q9.data,
+        main = "Distribution of CRP Levels \n Females and Males",
+        xlab="Gender", 
+        ylab="CRP Level (mg/l)",
+        cex.main = 2, cex.lab = 2, cex.axis = 2, cex = 1.5, font.main = 1)
+
+boxplot(crp~Age.Group + gender, data=q9.data, 
+        main="Distribution of CRP Levels for Males and Females of Different Age Groups",
+        xlab="Group", 
+        ylab="CRP Level (mg/l)",
+        cex.main = 2, cex.lab = 2, cex.axis = 1.5, cex = 1.5, font.main = 1)
+
+mtext(text = "Boxplots Showing Distribution of CRP Levels",
+      outer = T,
+      padj = -.25,
+      cex = 2.5,
+      font = 2)
+
+dev.off()
+
+```
+
+![**Figure Q9.1A:** The boxplots above show the distribution of CRP levels (mg/l) for each combination of gender and age group. The distributions are all strongly right skewed (large valued outliers), but the skewness decreases as age group increases (more noteably for females than males).](images/q91a_boxplots.png)
+
+  Table Q9.1A reports some descriptive statistics for the distribution of CRP levels for different age and gender groups. The distributions for all groups are heavy-tailed and strongly skewed to the right.
+  
+***
+  
+```{r, echo=F, results="asis"}
+library(moments)
+
+x <- data.frame(fm = c(as.numeric(summary(q9.data$crp[q9.data$gender=="female"])), 
+                       var(q9.data$crp[q9.data$gender=="female"]),
+                       sqrt(var(q9.data$crp[q9.data$gender=="female"]))/mean(q9.data$crp[q9.data$gender=="female"]),
+                       skewness(q9.data$crp[q9.data$gender=="female"]),
+                       kurtosis(q9.data$crp[q9.data$gender=="female"])),
+                ml = c(as.numeric(summary(q9.data$crp[q9.data$gender=="male"])), 
+                       var(q9.data$crp[q9.data$gender=="male"]),
+                       sqrt(var(q9.data$crp[q9.data$gender=="male"]))/mean(q9.data$crp[q9.data$gender=="male"]),
+                       skewness(q9.data$crp[q9.data$gender=="male"]),
+                       kurtosis(q9.data$crp[q9.data$gender=="male"])),
+                l6 = c(as.numeric(summary(q9.data$crp[q9.data$Age.Group=="Late Sixties"])), 
+                       var(q9.data$crp[q9.data$Age.Group=="Late Sixties"]),
+                       sqrt(var(q9.data$crp[q9.data$Age.Group=="Late Sixties"]))/mean(q9.data$crp[q9.data$Age.Group=="Late Sixties"]),
+                       skewness(q9.data$crp[q9.data$Age.Group=="Late Sixties"]),
+                       kurtosis(q9.data$crp[q9.data$Age.Group=="Late Sixties"])),
+                e7 = c(as.numeric(summary(q9.data$crp[q9.data$Age.Group=="Early Seventies"])), 
+                       var(q9.data$crp[q9.data$Age.Group=="Early Seventies"]),
+                       sqrt(var(q9.data$crp[q9.data$Age.Group=="Early Seventies"]))/mean(q9.data$crp[q9.data$Age.Group=="Early Seventies"]),
+                       skewness(q9.data$crp[q9.data$Age.Group=="Early Seventies"]),
+                       kurtosis(q9.data$crp[q9.data$Age.Group=="Early Seventies"])),
+                l7 = c(as.numeric(summary(q9.data$crp[q9.data$Age.Group=="Late Seventies"])), 
+                       var(q9.data$crp[q9.data$Age.Group=="Late Seventies"]),
+                       sqrt(var(q9.data$crp[q9.data$Age.Group=="Late Seventies"]))/mean(q9.data$crp[q9.data$Age.Group=="Late Seventies"]),
+                       skewness(q9.data$crp[q9.data$Age.Group=="Late Seventies"]),
+                       kurtosis(q9.data$crp[q9.data$Age.Group=="Late Seventies"])),
+                e8 = c(as.numeric(summary(q9.data$crp[q9.data$Age.Group=="Early Eighties"])), 
+                       var(q9.data$crp[q9.data$Age.Group=="Early Eighties"]),
+                       sqrt(var(q9.data$crp[q9.data$Age.Group=="Early Eighties"]))/mean(q9.data$crp[q9.data$Age.Group=="Early Eighties"]),
+                       skewness(q9.data$crp[q9.data$Age.Group=="Early Eighties"]),
+                       kurtosis(q9.data$crp[q9.data$Age.Group=="Early Eighties"])),
+                l8 = c(as.numeric(summary(q9.data$crp[q9.data$Age.Group=="Late Eighties"])), 
+                       var(q9.data$crp[q9.data$Age.Group=="Late Eighties"]),
+                       sqrt(var(q9.data$crp[q9.data$Age.Group=="Late Eighties"]))/mean(q9.data$crp[q9.data$Age.Group=="Late Eighties"]),
+                       skewness(q9.data$crp[q9.data$Age.Group=="Late Eighties"]),
+                       kurtosis(q9.data$crp[q9.data$Age.Group=="Late Eighties"])),
+                nn = c(as.numeric(summary(q9.data$crp[q9.data$Age.Group=="Nineties"])), 
+                       var(q9.data$crp[q9.data$Age.Group=="Nineties"]),
+                       sqrt(var(q9.data$crp[q9.data$Age.Group=="Nineties"]))/mean(q9.data$crp[q9.data$Age.Group=="Nineties"]),
+                       skewness(q9.data$crp[q9.data$Age.Group=="Nineties"]),
+                       kurtosis(q9.data$crp[q9.data$Age.Group=="Nineties"]))
+                )
+
+x <- t(x)
+colnames(x) <- c("Min", "1st Quartile", "Median", "Mean", "3rd Quartile", "Max", "Variance", "CV", "Skewness", "Kurtosis")
+rownames(x) <- c("Female", "Male", "Late Sixties", "Early Seventies", "Late Seventies", "Early Eighties", "Late Eighties", "Nineties")
+
+pandoc.table(x,
+             caption = "**Table Q9.1A:** Descriptive statistics for the distribution of CRP levels at different age and gender groups. From looking at the discrepency between the means and medians, and the large differences between the 3rd quartiles and mximum values we can see that the distributions are all right skewed. This is confirmed by the positive skewness coefficient for all distributions. The large kurtosis values indicate that the distributions are all heavy tailed.",
+             split.table = Inf)
+
+```
+
+***
+
+<br>
+<br>
+
+#### B
+
+  I will use one-way ANOVA to determine if there is a difference in CRP levels between males and females. See below:
+
+```{r}
+x <- aov(crp~gender, data = q9.data)
+summary(x)
+```
+
+  The summary output for the one-way ANOVA above shows that our F-statistic for is 0.069. The p-value of this statistic 0.793, thus there is no evidence of differenc in mean CRP levels between males and females.
+  
+<br>
+<br>
+
+#### C
+
+  To determine if there is a linear trend between mean CRP levels and age I will fit two regression models. One regressing CRP levels onto *age* (ungrouped ages) and one regressing CRP levels onto *Age Group* (grouped ages). 
+
+```{r}
+fit.a1 <- lm(crp ~ age, data = q9.data)
+fit.a2 <- lm(crp ~ Age.Group, data = q9.data)
+summary(fit.a1)
+summary(fit.a2)
+```
+
+  The summary output for the model regressing CRP levels onto *age* shows that the coefficient for *age* is not significant, with a p-value close to one (~0.98445). This indicates that there is no linear trend between CRP levels and *age*. The summary output for the model regressing CRP onto *Age Group* also shows that there is no linear trend, the p-values for all coefficients are greater than 0.05.
+
+<br>
+<br>
+
+#### D
+
+  To determine whether mean CRP levels differ across gender after adjusting for age I will run a two-way ANOVA model including the interaction between *gender* and *Age.Group*. See below:
+  
+```{r}
+x <- aov(crp ~ gender + Age.Group + gender:Age.Group, data = q9.data)
+summary(x)
+```
+
+  The p-value of 0.0131 (less than 0.05) indicates that there is indeed a significant interaction effect between age and gender. The interaction plot below shows that at older age groups their appears to be a strong effect of gender on CRP levels.
+
+```{r, echo = F}
+
+interaction.plot(q9.data$Age.Group, q9.data$gender, q9.data$crp,
+                 trace.label = "Gender",
+                 type = "b", col = c("darkmagenta", "forestgreen"),
+                 leg.bty = "o", leg.bg = "beige", lwd = 2, pch = c(20, 24),
+                 xlab = "Age Group", 
+                 ylab = "CRP Level",
+                 main = "Interaction Plot", cex.axis = .5)
+
+```
+
+<br>
+<br>
+
+#### E
+
+  To determine if there is a linear trend between mean CRP levels and age after adjusting for gender I will fit a linear model regression mean CRP levels onto age and gender and include an interaction term between age and gender. I will use the ungrouped ages first. See below:
+  
+```{r}
+fit.int <- lm(crp ~ age + gender + age:gender, data= q9.data)
+summary(fit.int)
+```
+
+  The regression model summary above shows that after adjusting for gender, there is a significant linear relationship between age and and mean CRP level. The model above is of the form:
+  
+  $$ \text{E[CRP]} = \widehat{\beta}_0 + \widehat{\beta}_1(age) + \widehat{\beta}_2(male) + \widehat{\beta}_3(male*age) \\ \text{where:} \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space                        \\ \widehat{\beta}_0 \approx 7.38   \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space                                               \\ \widehat{\beta}_1 \approx -0.0517  \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space                             \\ \widehat{\beta}_2 \approx -8.74 \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space                       \\ \widehat{\beta}_3 \approx 0.119 \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space                                                \\ age = \text{age in years}   \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space                  \\  male = 0 \space \text{ for females and } \space 1 \text{ for males }$$
+  
+  The interaction term between gender and age means that there are, in effect, two different models for females and males.
+
+* The model for females is:
+
+  $$ \text{E[CRP]} = \widehat{\beta}_0 + \widehat{\beta}_1(age) $$  
+* The model for males is: 
+
+      $$ \text{E[CRP]} = \widehat{\beta}_0' + \widehat{\beta}_1'(age)                                \\ \text{where:} \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space                                            \\ \widehat{\beta}_0' = \widehat{\beta}_0 + \widehat{\beta}_2 \approx 7.38 - 8.74 = -1.36 \space  \space \space  \space \space  \space \space  \space \space  \space                                                 \\  \widehat{\beta}_1' = \widehat{\beta}_1 + \widehat{\beta}_3 \approx -0.0517 + 0.119 = 0.0673$$ 
+ 
+  The 95% confidence intervals for the regression coefficients for the female model are easy to calculate, but the confidence intervals for the regression coefficients for the male model are a bit more complicated because we need to take into account the covariance between the parameters. The standard errors for $\widehat{\beta}_0'$ and $\widehat{\beta}_1'$ are:
+
+  $$ \widehat{\text{SE}}[\widehat{\beta}_0'] = \sqrt{ \widehat{\text{V}}[\widehat{\beta}_0] +  \widehat{\text{V}}[\widehat{\beta}_2] +  2*\widehat{\text{Cov}}[\widehat{\beta}_0, \widehat{\beta}_2] } \\                                                                   \widehat{\text{SE}}[\widehat{\beta}_1'] = \sqrt{ \widehat{\text{V}}[\widehat{\beta}_1] +  \widehat{\text{V}}[\widehat{\beta}_3] +  2*\widehat{\text{Cov}}[\widehat{\beta}_1, \widehat{\beta}_3] } $$
+ 
+  We can find the covariances from the R summary object of our model. Table Q9.1E gives the 95% confidence intervals for the intercept and slope parameters for the male and female models. 
+   
+```{r, include = F}
+
+sf <- summary(fit.int)
+v <- sf$cov.unscaled
+c <- sf$coefficients
+
+icp <- c[1,1]+c[3,1]
+SE.icp <- sqrt( v[1,1] + v[3,3] + 2*v[3,1] )
+LB.icp <- icp - 1.96*SE.icp
+UB.icp <- icp + 1.96*SE.icp
+
+slp <- c[2,1] + c[4,1]
+SE.slp <- sqrt( v[2,2] + v[4,4] + 2*v[2,4] )
+LB.slp <- slp - 1.96*SE.slp
+UB.slp <- slp + 1.96*SE.slp
+
+males <- data.frame(Intercept = c(icp, LB.icp, UB.icp),
+                    Slope = c(slp, LB.slp, UB.slp))
+
+icp <- c[1,1]
+SE.icp <- sqrt(v[1,1])
+LB.icp <- icp - 1.96*SE.icp
+UB.icp <- icp + 1.96*SE.icp
+
+slp <- c[2,1]
+SE.slp <- sqrt( v[2,2] )
+LB.slp <- slp - 1.96*SE.slp
+UB.slp <- slp + 1.96*SE.slp
+
+females <- data.frame(Interceptf = c(icp, LB.icp, UB.icp),
+                    Slopem = c(slp, LB.slp, UB.slp))
+
+
+```  
+  
+
+***
+
+```{r, echo=F, results="asis"}
+
+x <- t(cbind(females, males))
+
+colnames(x) <- c("Estimate", "Lower Bound", "Upper Bound")
+rownames(x) <- c("Females: Intercept", "Females: Slope", "Males: Intercept", "Males: Slope")
+
+pandoc.table(x,
+             caption = "**Table Q9.1E:** 95% confidence intervals for the effective slope and intercept coefficients for the linear regression of mean CRP levels onto age and gender. The inclusion of the ineraction term between age and gender effectively gives rise to two different sets of intercept and slope coefficients, one for males and one for females.",
+             split.table = Inf)
+
+```
+
+***
+
+<br>
+
+  Using the above age adjusted model, we expect that for a 1 year increase in age mean CRP levels will *decrease* by ~0.052 mg/l (95% CI: 0.0450, 0.0584) for females. On the other hand, we expect for males that for a 1 year increase in age, mean CRP levels will *increase* by ~0.0675 mg/l (95% CI: 0.0599, 0.0752).
+  
+<br>
+<br>
+
+#### F
+
+  To examine if there is a linear relationship between mean CRP levels and age in women I will fit a linear model regressing *crp* onto *age* only considering females. See below:
+  
+```{r}
+fit.w <- lm(crp ~ age, data = q9.data[q9.data$gender=="female",])
+summary(fit.w)
+```
+
+
+  The above output summary of our model indicates that is indeed a linear relationship between mean CRP levels and age in women (p-value ~0.00564 < 0.05). The 95% confidence intervals for the intercept and slope coeficients are given in table Q9.1F.
+
+***
+  
+```{r, echo=F, results="asis"}
+
+sf <- summary(fit.w)
+
+x <- data.frame(E = c(sf$coefficients[1,1], sf$coefficients[2,1]),
+                LB = c(sf$coefficients[1,1] - 1.96*sf$coefficients[1,2], sf$coefficients[2,1] - 1.96*sf$coefficients[2,2] ),
+                UB = c(sf$coefficients[1,1] + 1.96*sf$coefficients[1,2], sf$coefficients[2,1] + 1.96*sf$coefficients[2,2] ),
+                pv = c(sf$coefficients[1,4], sf$coefficients[2,4]))
+
+colnames(x) <- c("Estimate", "Lower Bound", "Upper Bound", "P.value")
+rownames(x) <- c("Intercept", "Slope")
+
+pandoc.table(x,
+             caption = "**Table Q9.1F:** The point estimates, 95% confidence intervals, and p-values for the parameters of the regression model of the relationship between mean CRP levels and age in women.",
+             split.table = Inf)
+
+```
+
+***
+
+  From the above table we can see that for a 1 year increase in age we expect the mean CRP level for females to decrease by 0.052 mg/l (95% CI: 0.0151, 0.0883).
+  
+<br>
+<br>
+
+#### G
+
+  To examine if there is a linear relationship between mean CRP levels and age in men I will fit a linear model regressing *crp* onto *age* only considering only males. See below:
+  
+```{r}
+fit.m <- lm(crp ~ age, data=q9.data[q9.data$gender=="male",])
+summary(fit.m)
+```
+
+  The model output summary shown above indicates that there is indeed a linear relationship between mean CRP levels and age in men (p-value ~ 0.0128 < 0.05). However the p-value of 0.4959 for the intercept coefficient indicates the the intercept is *not* significantly non-zero. We will re-fit the model so that it passes through the origin. See below:
+  
+```{r}
+fit.m <- lm(crp ~ 0 + age, data=q9.data[q9.data$gender=="male",])
+summary(fit.m)
+```
+
+  After re-fitting our model so that it passes through the origin the p-value for the slope coefficient is practically zero, indicating that the linear relationship between mean CRP levels and age is highly statistically significant for men. Table Q9.1F gives the 95% confidence interval for the slope coefficient.
+  
+***
+  
+```{r, echo=F, results="asis"}
+
+sfm <- summary(fit.m)
+
+x <- data.frame(E = c(sfm$coefficients[1,1]),
+                LB = c(sfm$coefficients[1,1] - 1.96*sfm$coefficients[1,2]),
+                UB = c(sfm$coefficients[1,1] + 1.96*sfm$coefficients[1,2] ),
+                pv = c(sfm$coefficients[1,4]))
+
+colnames(x) <- c("Estimate", "Lower Bound", "Upper Bound", "P.value")
+rownames(x) <- c("Slope")
+
+pandoc.table(x,
+             caption = "**Table Q9.1F:** The point estimate, 95% confidence interval, and p-value for the slope coefficient of the regression model of the relationship between mean CRP levels and age in men.",
+             split.table = Inf)
+
+```
+
+***
+
+  From the above table we can see that for a 1 year increase in age we expect the mean CRP level for males to increase by ~0.0491 mg/l (95% CI: 0.0451, 0.0532).
+  
+<br>
+<br>
+
+#### H
+
+  To determine if the linear relationship between mean CRP levels and age in women is different from that in men I will perform a t-test to see if the slope parameters are significanly different. This test is in essence redundant, since from tables Q9.1F and Q9.1G we already know the confidence intervals do not overlap and thus the slope parameters *must* be siginifcantly different, but I will perform it anyways because the question asks for the comparison.
+
+  The null hypothesis for this test is that the two slope parameters are not significantly different, the alternative hypothesis is that they are different:
+
+  $$ \text{H}_o: \text{D}_o = \widehat{\beta}_{1m} - \widehat{\beta}_{1f} = 0 \space \space \space \space \space \space \text{vs}. \space \space \space \space \space \space \text{H}_a: \text{D}_a = \widehat{\beta}_{1m} - \widehat{\beta}_{1f} \neq 0 $$
+  
+
+  The test statistic is given below. Under the null hypothesis the test-statistic has a t-distribution with degrees of freedom equal to $ (n_m - 1) + (n_f - 2) $ where $ n_m $ is the number of males used to fit the model for men and $ n_f $ is the number of females used to fit the model for women. The reason why we use $ (n_m - 1) $ rather than $ (n_m -2) $ is because tha model for men does *not* include an intercept parameter. Thus the number of parameters in the model for men is 1 while the number of parameters in the model for women is 2.
+  
+  $$ \text{T} = \frac{(\widehat{\beta}_{1m} - \widehat{\beta}_{1f}) - \text{D}_o } { \sqrt{\widehat{\text{V}}[\widehat{\beta}_{1m}] - \widehat{\text{V}}[\widehat{\beta}_{1f}]} } \sim t_{n_m + n_f - 3} $$
+ 
+***
+  
+```{r, echo = F, results="asis"}
+
+## Part H
+nm <- nrow(q9.data[q9.data$gender=="male",])
+nf <- nrow(q9.data[q9.data$gender=="female",])
+df <- nm + nf - 3
+
+dif <- sfm$coefficients[1,1] - sf$coefficients[2,1]
+se <- (sfm$coefficients[1,2] + sf$coefficients[2,2])^2
+
+t <- dif/se
+
+x <- data.frame(d = dif,
+                ts = t,
+                df = df,
+                pv = pt(t, df = df, lower.tail = F))
+
+colnames(x) <- c("Observed Difference", "Test Statistic", "Degrees of Freedom", "P-Value")
+
+pandoc.table(x,
+             caption = "**Table Q9.1H:** The results of the t-test for the difference between the slope parameters of the mens and womens regression model of the relationship between mean CRP levels and age.")
+
+
+```
+  
+***
+
+  Table Q9.1H reports the results of the t-test of the difference between the slope parameters. The test-statitistic is very large and the p-value is virtually zero. We can safely reject the null hypothesis that the slope parameters are the same and conclude that the linear relationship between mean CRP levels and age is different for men and women.
+  
+<br>
+<br>
+
+#### I
+
+  In summary, mean CRP levels are linearly related with age, but the relationship is different between men and women. The linear correlation (the slope of the relationship) is positive for men and negative for women. Meaning that, as men age mean CRP levels increase while as women age mean CRP levels decrease. Table Q9.1I reports the estimates, confidence intervals, and p-values for the estimates of the slope of the linear relationship beteen mean CRP levels and age in women and men.
+
+***
+  
+```{r, echo = F, results="asis"}
+
+
+
+x <- data.frame(E = c(sf$coefficients[2,1], sfm$coefficients[1,1]),
+                LB = c(sf$coefficients[2,1] - 1.96*sf$coefficients[2,2], sfm$coefficients[1,1] - 1.96*sfm$coefficients[1,2] ),
+                UB = c(sf$coefficients[2,1] + 1.96*sf$coefficients[2,2], sfm$coefficients[1,1] + 1.96*sfm$coefficients[1,2] ),
+                pv = c(sf$coefficients[2,4], sfm$coefficients[1,4]))
+
+colnames(x) <- c("Estimate", "Lower Bound", "Upper Bound", "P.value")
+rownames(x) <- c("Women", "Men")
+
+pandoc.table(x,
+             caption = "**Table Q9.1I:** Point estimates, 95% confidence intervals, and p-values for the slope of the linear relationship between mean CRP levels and age in women and men.",
+             split.table = Inf)
+
+```
+
+***
+
+  We expect that for every year increase in age the mean CRP levels for women should drop by ~0.052 mg/l (95% CI: 0.0151, 0.0883) and for men they should rise by ~0.049 mg/l (95% CI: 0.0451, 0.0532).
+
+
+<br>
+<br>
+
+### Part 2
+
+  First we will count how many missing values there are for *cholest*
+
+```{r}
+nrow(q9.data)
+nrow(q9.data[is.na(q9.data$crp),])
+nrow(q9.data[is.na(q9.data$cholest),])
+```
+
+  There are only three missing values for *cholest* and our data set is large so we can safely remove these three missin values without losing too much information.
+  
+```{r}
+q9.data <- q9.data[!is.na(q9.data$cholest),]
+```
+
+  Next we will create a new variable *chol.group* with cholesterol levels grouped into 7 different levels.
+  
+1. < 160 mg/dl
+2. 160 – 180 mg/dl
+3. 180 – 200 mg/dl
+4. 200 – 220 mg/dl
+5. 220 – 240 mg/dl
+6. 240 – 260 mg/dl
+7. > 260 mg/dl
+
+```{r}
+q9.data[, "chol.group"] <- 0
+
+for(i in 1:nrow(q9.data)){
+  if(q9.data$cholest[i] < 160){
+    q9.data$chol.group[i] <- 1
+  }
+  
+  else if(q9.data$cholest[i] >= 160 & q9.data$cholest[i] < 180){
+    q9.data$chol.group[i] <- 2
+  }
+  
+  else if(q9.data$cholest[i] >= 180 & q9.data$cholest[i] < 200){
+    q9.data$chol.group[i] <- 3
+  }
+  
+  else if(q9.data$cholest[i] >= 200 & q9.data$cholest[i] < 220){
+    q9.data$chol.group[i] <- 4
+  }
+  
+  else if(q9.data$cholest[i] >= 220 & q9.data$age[i] < 240){
+    q9.data$chol.group[i] <- 5
+  }
+  
+  else if(q9.data$cholest[i] >= 240 & q9.data$cholest[i] <= 260){
+    q9.data$chol.group[i] <- 6
+  }
+  else if(q9.data$cholest[i] > 260){
+    q9.data$chol.group[i] <- 7
+  }
+}
+```
+  
+  
+<br>
+
+#### A
+
+  The boxplot in figure Q9.2A shows that the distribution of CRP levels is right skewed for all cholesterol groups. The boxplots for cholesterol groups 6 and 7 are absent because there were no observation of cholesterol levels that high.
+
+```{r, include = F}
+
+png("images/q92a_boxplot.png",
+    width = 480, height = 480)
+
+
+boxplot(crp~ chol.group, data = q9.data,
+        main = "Distribution of CRP Levels for Different Cholesterol Levels",
+        xlab="Cholesterol Group", 
+        ylab="CRP Level (mg/l)")
+
+dev.off()
+
+
+```
+
+![**Figure Q9.2A:** The boxplots in the figure above show that the distribution of CRP levels is right-skewed for all cholesterol level groups.](images/q92a_boxplot.png)
+
+<br>
+
+  Table Q9.2A reports some of the descriptive statistices for the distribution of CRP levels at differen cholesterol levels and over all groups. Regardless of the cholesterol groups the distribution of CRP levels was right-skewed with heavy-tails (although higher cholesterol groups seemed to be slightly less right skewed).
+  
+***
+
+```{r, echo=F, results="asis"}
+
+x <- data.frame(c1 = c(as.numeric(summary(q9.data$crp[q9.data$chol.group==1])), 
+                       var(q9.data$crp[q9.data$chol.group==1]),
+                       sqrt(var(q9.data$crp[q9.data$chol.group==1]))/mean(q9.data$crp[q9.data$chol.group==1]),
+                       skewness(q9.data$crp[q9.data$chol.group==1]),
+                       kurtosis(q9.data$crp[q9.data$chol.group==1])),
+                c2 = c(as.numeric(summary(q9.data$crp[q9.data$chol.group==2])), 
+                       var(q9.data$crp[q9.data$chol.group==2]),
+                       sqrt(var(q9.data$crp[q9.data$chol.group==2]))/mean(q9.data$crp[q9.data$chol.group==2]),
+                       skewness(q9.data$crp[q9.data$chol.group==2]),
+                       kurtosis(q9.data$crp[q9.data$chol.group==2])),
+                c3 = c(as.numeric(summary(q9.data$crp[q9.data$chol.group==3])), 
+                       var(q9.data$crp[q9.data$chol.group==3]),
+                       sqrt(var(q9.data$crp[q9.data$chol.group==3]))/mean(q9.data$crp[q9.data$chol.group==3]),
+                       skewness(q9.data$crp[q9.data$chol.group==3]),
+                       kurtosis(q9.data$crp[q9.data$chol.group==3])),
+                c4 = c(as.numeric(summary(q9.data$crp[q9.data$chol.group==4])), 
+                       var(q9.data$crp[q9.data$chol.group==4]),
+                       sqrt(var(q9.data$crp[q9.data$chol.group==4]))/mean(q9.data$crp[q9.data$chol.group==4]),
+                       skewness(q9.data$crp[q9.data$chol.group==4]),
+                       kurtosis(q9.data$crp[q9.data$chol.group==4])),
+                c5 = c(as.numeric(summary(q9.data$crp[q9.data$chol.group==5])), 
+                       var(q9.data$crp[q9.data$chol.group==5]),
+                       sqrt(var(q9.data$crp[q9.data$chol.group==5]))/mean(q9.data$crp[q9.data$chol.group==5]),
+                       skewness(q9.data$crp[q9.data$chol.group==5]),
+                       kurtosis(q9.data$crp[q9.data$chol.group==5])),
+                ac = c(as.numeric(summary(q9.data$crp)), 
+                       var(q9.data$crp),
+                       sqrt(var(q9.data$crp))/mean(q9.data$crp),
+                       skewness(q9.data$crp),
+                       kurtosis(q9.data$crp))
+                )
+
+x <- t(x)
+colnames(x) <- c("Min", "1st Quartile", "Median", "Mean", "3rd Quartile", "Max", "Variance", "CV", "Skewness", "Kurtosis")
+rownames(x) <- c("Cholesterol Group 1", "Cholesterol Group 2", "Cholesterol Group 3", 
+                 "Cholesterol Group 4", "Cholesterol Group 5", "All")
+
+pandoc.table(x,
+             caption = "**Table Q9.2A:** Descriptive statistics for the distribution of CRP levels at different cholesterol level groups. From looking at the discrepency between the means and medians, and the large differences between the 3rd quartiles and mximum values we can see that the distributions are all right skewed. This is confirmed by the positive skewness coefficient for all distributions. The large kurtosis values indicate that the distributions are all heavy tailed.",
+             split.table = Inf)
+
+```
+
+***
+
+<br>
+<br>
+
+#### B
+  
+  To determine if there is a linear trend between mean CRP levels and cholesterol level we will try and fit and linear model regressing *crp* onto *chol.group*. See below:
+
+```{r}
+fit.cg <- lm(crp ~ chol.group, data = q9.data)
+summary(fit.cg)
+```
+ 
+  In the model summary output above, the very small p-value ($3.14*10^{-10} <<< 0.05 $) indicates that there is a statistically significant relationship between cholesterol level and mean CRP levels. Recall that this model regresses CRP levels onto cholesterol level groups with each level covering a range of 20 mg/dl. So the estimate if -0.419 for the slope coefficient indicates that for a 20 mg/dl increase in cholesterol level (a change up one group) we would expect an *decrease* in the mean CRP level of approximately 0.419 mg/l. Table Q9.2B reports the confidence interval for the slope of the linear relationship between mean CRP level and cholesterol level group.
+  
+***
+  
+```{r, echo=F, results="asis"}
+
+sf <- summary(fit.cg)
+
+x <- data.frame(E = c(sf$coefficients[1,1], sf$coefficients[2,1]),
+                LB = c(sf$coefficients[1,1] - 1.96*sf$coefficients[1,2], sf$coefficients[2,1] - 1.96*sf$coefficients[2,2] ),
+                UB = c(sf$coefficients[1,1] + 1.96*sf$coefficients[1,2], sf$coefficients[2,1] + 1.96*sf$coefficients[2,2] ),
+                pv = c(sf$coefficients[1,4], sf$coefficients[2,4]))
+
+colnames(x) <- c("Estimate", "Lower Bound", "Upper Bound", "P.value")
+rownames(x) <- c("Intercept", "Slope")
+
+pandoc.table(x,
+             caption = "**Table Q9.2B:** The point estimates, 95% confidence intervals, and p-values for the parameters of the linear regression model of the relationship between mean CRP levels and cholesterol.",
+             split.table = Inf)
+
+
+```
+
+***
+
+  Table Q9.2B reports the 95% confidence intervals and p-values for both the intercept and slope parameters of our model but we are only interested in the slop parameter since it describes the linear relationship between mean CRP levels and cholesterol. The fact that the p-value is very small -- much less than 0.05 -- and that the confidence interval for the slope does not include 0 indicates that we can safely concluded that there is indeed a signficant linear relationship between mean CRP levels and cholesterol levels. Keep in mind though that this model was fit using cholesterol levels discretized into groups, with each cholesterol level group having a range of 20 mg/dl. So the estimate of the intercept indicates how much we expect the the mean CRP levels to change when changing from one cholesterol group level (change of 20 mg/dl cholesterol) to another. For an increase in cholesterol level *by one level* we expect mean CRP levels to decrease by ~0.42 (95% CI: 0.289, 0.549).
+
+<br>
+<br>
+
+#### C
+
+  To determine if the relationship between mean CRP levels and cholesterol is better approximated by a linear or nonlinear relationship I will fit add terms taking cholesterol level to various powers and compare the Schwarz criterion (BIC) of the models to see if any of the higher order models give better fit. I will do this using both the ungrouped cholesterol variable *cholest* and the grouped cholesterol level variable *chol.group*. See below:
+  
+```{r}
+
+Grouped.Lin <- lm(crp ~ chol.group, data = q9.data)
+Ungrouped.Lin <- lm(crp ~ cholest, data = q9.data)
+Grouped.Quad.NoInt <- lm(crp ~ chol.group + chol.group^2, data = q9.data)
+Ungrouped.Quad.NoInt <- lm(crp ~ cholest + cholest^2, data = q9.data)
+Grouped.Quad.Int <- lm(crp ~ chol.group + chol.group^2 + chol.group:(chol.group^2), data = q9.data)
+Ungrouped.Quad.Int <- lm(crp ~ cholest + cholest^2 + cholest:(cholest^2), data = q9.data)
+Grouped.Cub.FullInt <- lm(crp ~ chol.group + chol.group^2 + chol.group:(chol.group^2) + chol.group^3 + 
+                            chol.group:(chol.group^3) + (chol.group^2):(chol.group^3) + chol.group:(chol.group^2):(chol.group^3), data = q9.data)
+Ungrouped.Cub.FullInt <- lm(crp ~ cholest + cholest^2 + cholest:(cholest^2) + cholest^3 + 
+                              cholest:(cholest^3) + (cholest^2):(cholest^3) + cholest:(cholest^2):(cholest^3), data = q9.data)
+Grouped.Cub.2wInt <- lm(crp ~ chol.group + chol.group^2 + chol.group:(chol.group^2) + chol.group^3 + 
+                            chol.group:(chol.group^3) + (chol.group^2):(chol.group^3), data = q9.data)
+Ungrouped.Cub.2wInt <- lm(crp ~ cholest + cholest^2 + cholest:(cholest^2) + cholest^3 + 
+                              cholest:(cholest^3) + (cholest^2):(cholest^3), data = q9.data)
+Grouped.Cub.NoInt <- lm(crp ~ chol.group + chol.group^2 + chol.group^3, data = q9.data)
+Ungrouped.Cub.NoInt <- lm(crp ~ cholest + cholest^2 + cholest^3, data = q9.data)
+
+
+
+BIC(Grouped.Lin, Ungrouped.Lin, 
+    Grouped.Quad.NoInt, 
+    Ungrouped.Quad.NoInt, 
+    Grouped.Quad.Int,
+    Ungrouped.Quad.Int,
+    Grouped.Cub.FullInt,
+    Ungrouped.Cub.FullInt,
+    Grouped.Cub.2wInt,
+    Ungrouped.Cub.2wInt,
+    Grouped.Cub.NoInt,
+    Ungrouped.Cub.NoInt)
+
+
+```
+
+
+  The lower the BIC the better. None of the models containing higher order cholesterol terms have a lower BIC indicating that the do not provide any better fit. There is no evidence that a higher order relationship between cholesterol level and mean CRP levels is needed.
+
+<br>
+<br>
+
+
+
 
 
 
@@ -3509,6 +4323,341 @@ dev.off()
 <br>
 
 ## A9
+
+```{r}
+## Import Data
+q9.data <- data.frame(read.table("data/inflamm.txt", header = T, sep = ""))
+
+q9.data <- q9.data[, c("crp", "age", "male", "cholest")]
+```
+
+<br>
+
+### Part 1
+
+```{r}
+nrow(q9.data)
+nrow(q9.data[is.na(q9.data$crp),])
+nrow(q9.data[is.na(q9.data$age),])
+nrow(q9.data[is.na(q9.data$male),])
+
+###################################################
+
+q9.data <- q9.data[!is.na(q9.data$crp),]
+
+###################################################
+
+q9.data[,"Age.Group"] <- 0
+
+for(i in 1:nrow(q9.data)){
+  if(q9.data$age[i] >= 65 & q9.data$age[i] < 70){
+    q9.data$Age.Group[i] <- "Late Sixties"
+  }
+  
+  else if(q9.data$age[i] >= 70 & q9.data$age[i] < 75){
+    q9.data$Age.Group[i] <- "Early Seventies"
+  }
+  
+  else if(q9.data$age[i] >= 75 & q9.data$age[i] < 80){
+    q9.data$Age.Group[i] <- "Late Seventies"
+  }
+  
+  else if(q9.data$age[i] >= 80 & q9.data$age[i] < 85){
+    q9.data$Age.Group[i] <- "Early Eighties"
+  }
+  
+  else if(q9.data$age[i] >= 85 & q9.data$age[i] < 90){
+    q9.data$Age.Group[i] <- "Late Eighties"
+  }
+  
+  else if(q9.data$age[i] >= 90 & q9.data$age[i] <= 100){
+    q9.data$Age.Group[i] <- "Nineties"
+  }
+}
+
+q9.data$Age.Group <- factor(q9.data$Age.Group, levels = c("Late Sixties",
+                                                          "Early Seventies",
+                                                          "Late Seventies",
+                                                          "Early Eighties",
+                                                          "Late Eighties",
+                                                          "Nineties")
+                            )
+
+###################################################
+
+colnames(q9.data) <- c("crp", "age", "gender", "cholest", "Age.Group")
+
+for(i in 1:nrow(q9.data)){
+  if(q9.data$gender[i] == 0){
+    q9.data$gender[i] <- "female"
+  }
+  else if(q9.data$gender[i] == 1){
+    q9.data$gender[i] <- "male"
+  }
+}
+
+q9.data$gender <- factor(q9.data$gender, levels = c("female", "male"))
+
+###################################################
+
+## Part A
+png("images/q91a_boxplots.png",
+    width = 1300, height = 1200)
+
+par(oma = c(1,3,5,2), mar = c(6, 6, 5, 4))
+layout(matrix(c(1,1,1,2,3,3,3,3), 2, 4, byrow = TRUE))
+
+boxplot(crp~Age.Group, data = q9.data,
+        main = "Distribution of CRP Levels for Different Age Groups",
+        xlab="Age Group", 
+        ylab="CRP Level (mg/l)",
+        cex.main = 2, cex.lab = 2, cex.axis = 2, cex = 1.5, font.main = 1)
+
+boxplot(crp~gender, data = q9.data,
+        main = "Distribution of CRP Levels \n Females and Males",
+        xlab="Gender", 
+        ylab="CRP Level (mg/l)",
+        cex.main = 2, cex.lab = 2, cex.axis = 2, cex = 1.5, font.main = 1)
+
+boxplot(crp~Age.Group + gender, data=q9.data, 
+        main="Distribution of CRP Levels for Males and Females of Different Age Groups",
+        xlab="Group", 
+        ylab="CRP Level (mg/l)",
+        cex.main = 2, cex.lab = 2, cex.axis = 1.5, cex = 1.5, font.main = 1)
+
+mtext(text = "Boxplots Showing Distribution of CRP Levels",
+      outer = T,
+      padj = -.25,
+      cex = 2.5,
+      font = 2)
+
+dev.off()
+
+###################################################
+
+library(moments)
+
+x <- data.frame(fm = c(as.numeric(summary(q9.data$crp[q9.data$gender=="female"])), 
+                       var(q9.data$crp[q9.data$gender=="female"]),
+                       sqrt(var(q9.data$crp[q9.data$gender=="female"]))/mean(q9.data$crp[q9.data$gender=="female"]),
+                       skewness(q9.data$crp[q9.data$gender=="female"]),
+                       kurtosis(q9.data$crp[q9.data$gender=="female"])),
+                ml = c(as.numeric(summary(q9.data$crp[q9.data$gender=="male"])), 
+                       var(q9.data$crp[q9.data$gender=="male"]),
+                       sqrt(var(q9.data$crp[q9.data$gender=="male"]))/mean(q9.data$crp[q9.data$gender=="male"]),
+                       skewness(q9.data$crp[q9.data$gender=="male"]),
+                       kurtosis(q9.data$crp[q9.data$gender=="male"])),
+                l6 = c(as.numeric(summary(q9.data$crp[q9.data$Age.Group=="Late Sixties"])), 
+                       var(q9.data$crp[q9.data$Age.Group=="Late Sixties"]),
+                       sqrt(var(q9.data$crp[q9.data$Age.Group=="Late Sixties"]))/mean(q9.data$crp[q9.data$Age.Group=="Late Sixties"]),
+                       skewness(q9.data$crp[q9.data$Age.Group=="Late Sixties"]),
+                       kurtosis(q9.data$crp[q9.data$Age.Group=="Late Sixties"])),
+                e7 = c(as.numeric(summary(q9.data$crp[q9.data$Age.Group=="Early Seventies"])), 
+                       var(q9.data$crp[q9.data$Age.Group=="Early Seventies"]),
+                       sqrt(var(q9.data$crp[q9.data$Age.Group=="Early Seventies"]))/mean(q9.data$crp[q9.data$Age.Group=="Early Seventies"]),
+                       skewness(q9.data$crp[q9.data$Age.Group=="Early Seventies"]),
+                       kurtosis(q9.data$crp[q9.data$Age.Group=="Early Seventies"])),
+                l7 = c(as.numeric(summary(q9.data$crp[q9.data$Age.Group=="Late Seventies"])), 
+                       var(q9.data$crp[q9.data$Age.Group=="Late Seventies"]),
+                       sqrt(var(q9.data$crp[q9.data$Age.Group=="Late Seventies"]))/mean(q9.data$crp[q9.data$Age.Group=="Late Seventies"]),
+                       skewness(q9.data$crp[q9.data$Age.Group=="Late Seventies"]),
+                       kurtosis(q9.data$crp[q9.data$Age.Group=="Late Seventies"])),
+                e8 = c(as.numeric(summary(q9.data$crp[q9.data$Age.Group=="Early Eighties"])), 
+                       var(q9.data$crp[q9.data$Age.Group=="Early Eighties"]),
+                       sqrt(var(q9.data$crp[q9.data$Age.Group=="Early Eighties"]))/mean(q9.data$crp[q9.data$Age.Group=="Early Eighties"]),
+                       skewness(q9.data$crp[q9.data$Age.Group=="Early Eighties"]),
+                       kurtosis(q9.data$crp[q9.data$Age.Group=="Early Eighties"])),
+                l8 = c(as.numeric(summary(q9.data$crp[q9.data$Age.Group=="Late Eighties"])), 
+                       var(q9.data$crp[q9.data$Age.Group=="Late Eighties"]),
+                       sqrt(var(q9.data$crp[q9.data$Age.Group=="Late Eighties"]))/mean(q9.data$crp[q9.data$Age.Group=="Late Eighties"]),
+                       skewness(q9.data$crp[q9.data$Age.Group=="Late Eighties"]),
+                       kurtosis(q9.data$crp[q9.data$Age.Group=="Late Eighties"])),
+                nn = c(as.numeric(summary(q9.data$crp[q9.data$Age.Group=="Nineties"])), 
+                       var(q9.data$crp[q9.data$Age.Group=="Nineties"]),
+                       sqrt(var(q9.data$crp[q9.data$Age.Group=="Nineties"]))/mean(q9.data$crp[q9.data$Age.Group=="Nineties"]),
+                       skewness(q9.data$crp[q9.data$Age.Group=="Nineties"]),
+                       kurtosis(q9.data$crp[q9.data$Age.Group=="Nineties"]))
+                )
+
+x <- t(x)
+colnames(x) <- c("Min", "1st Quartile", "Median", "Mean", "3rd Quartile", "Max", "Variance", "CV", "Skewness", "Kurtosis")
+rownames(x) <- c("Female", "Male", "Late Sixties", "Early Seventies", "Late Seventies", "Early Eighties", "Late Eighties", "Nineties")
+
+pandoc.table(x,
+             caption = "**Table Q9.1A:** Descriptive statistics for the distribution of CRP levels at different age and gender groups. From looking at the discrepency between the means and medians, and the large differences between the 3rd quartiles and mximum values we can see that the distributions are all right skewed. This is confirmed by the positive skewness coefficient for all distributions. The large kurtosis values indicate that the distributions are all heavy tailed.",
+             split.table = Inf)
+
+###################################################
+
+## Part B
+x <- aov(crp~gender, data = q9.data)
+summary(x)
+
+###################################################
+
+## Part C
+fit.a1 <- lm(crp ~ age, data = q9.data)
+fit.a2 <- lm(crp ~ Age.Group, data = q9.data)
+summary(fit.a1)
+summary(fit.a2)
+
+###################################################
+
+## Part D
+x <- aov(crp ~ gender + Age.Group + gender:Age.Group, data = q9.data)
+summary(x)
+
+###################################################
+
+interaction.plot(q9.data$Age.Group, q9.data$gender, q9.data$crp,
+                 trace.label = "Gender",
+                 type = "b", col = c("darkmagenta", "forestgreen"),
+                 leg.bty = "o", leg.bg = "beige", lwd = 2, pch = c(20, 24),
+                 xlab = "Age Group", 
+                 ylab = "CRP Level",
+                 main = "Interaction Plot", cex.axis = .5)
+
+###################################################
+
+## Part E
+fit.int <- lm(crp ~ age + gender + age:gender, data= q9.data)
+summary(fit.int)
+
+###################################################
+
+sf <- summary(fit.int)
+v <- sf$cov.unscaled
+c <- sf$coefficients
+
+icp <- c[1,1]+c[3,1]
+SE.icp <- sqrt( v[1,1] + v[3,3] + 2*v[3,1] )
+LB.icp <- icp - 1.96*SE.icp
+UB.icp <- icp + 1.96*SE.icp
+
+slp <- c[2,1] + c[4,1]
+SE.slp <- sqrt( v[2,2] + v[4,4] + 2*v[2,4] )
+LB.slp <- slp - 1.96*SE.slp
+UB.slp <- slp + 1.96*SE.slp
+
+males <- data.frame(Intercept = c(icp, LB.icp, UB.icp),
+                    Slope = c(slp, LB.slp, UB.slp))
+
+icp <- c[1,1]
+SE.icp <- sqrt(v[1,1])
+LB.icp <- icp - 1.96*SE.icp
+UB.icp <- icp + 1.96*SE.icp
+
+slp <- c[2,1]
+SE.slp <- sqrt( v[2,2] )
+LB.slp <- slp - 1.96*SE.slp
+UB.slp <- slp + 1.96*SE.slp
+
+females <- data.frame(Interceptf = c(icp, LB.icp, UB.icp),
+                    Slopem = c(slp, LB.slp, UB.slp))
+
+
+###################################################
+
+x <- t(cbind(females, males))
+
+colnames(x) <- c("Estimate", "Lower Bound", "Upper Bound")
+rownames(x) <- c("Females: Intercept", "Females: Slope", "Males: Intercept", "Males: Slope")
+
+pandoc.table(x,
+             caption = "**Table Q9.1E:** 95% confidence intervals for the effective slope and intercept coefficients for the linear regression of mean CRP levels onto age and gender. The inclusion of the ineraction term between age and gender effectively gives rise to two different sets of intercept and slope coefficients, one for males and one for females.",
+             split.table = Inf)
+
+###################################################
+
+## Part F
+fit.w <- lm(crp ~ age, data = q9.data[q9.data$gender=="female",])
+summary(fit.w)
+
+###################################################
+
+sf <- summary(fit.w)
+
+x <- data.frame(E = c(sf$coefficients[1,1], sf$coefficients[2,1]),
+                LB = c(sf$coefficients[1,1] - 1.96*sf$coefficients[1,2], sf$coefficients[2,1] - 1.96*sf$coefficients[2,2] ),
+                UB = c(sf$coefficients[1,1] + 1.96*sf$coefficients[1,2], sf$coefficients[2,1] + 1.96*sf$coefficients[2,2] ),
+                pv = c(sf$coefficients[1,4], sf$coefficients[2,4]))
+
+colnames(x) <- c("Estimate", "Lower Bound", "Upper Bound", "P.value")
+rownames(x) <- c("Intercept", "Slope")
+
+pandoc.table(x,
+             caption = "**Table Q9.1F:** The point estimates, 95% confidence intervals, and p-values for the parameters of the regression model of the relationship between mean CRP levels and age in women.",
+             split.table = Inf)
+
+###################################################
+
+## Part G
+fit.m <- lm(crp ~ age, data=q9.data[q9.data$gender=="male",])
+summary(fit.m)
+
+###################################################
+
+fit.m <- lm(crp ~ 0 + age, data=q9.data[q9.data$gender=="male",])
+summary(fit.m)
+
+###################################################
+
+sfm <- summary(fit.m)
+
+x <- data.frame(E = c(sfm$coefficients[1,1]),
+                LB = c(sfm$coefficients[1,1] - 1.96*sfm$coefficients[1,2]),
+                UB = c(sfm$coefficients[1,1] + 1.96*sfm$coefficients[1,2] ),
+                pv = c(sfm$coefficients[1,4]))
+
+colnames(x) <- c("Estimate", "Lower Bound", "Upper Bound", "P.value")
+rownames(x) <- c("Slope")
+
+pandoc.table(x,
+             caption = "**Table Q9.1F:** The point estimate, 95% confidence interval, and p-value for the slope coefficient of the regression model of the relationship between mean CRP levels and age in men.",
+             split.table = Inf)
+
+###################################################
+
+## Part H
+nm <- nrow(q9.data[q9.data$gender=="male",])
+nf <- nrow(q9.data[q9.data$gender=="female",])
+df <- nm + nf - 3
+
+dif <- sfm$coefficients[1,1] - sf$coefficients[2,1]
+se <- (sfm$coefficients[1,2] + sf$coefficients[2,2])^2
+
+t <- dif/se
+
+x <- data.frame(d = dif,
+                ts = t,
+                df = df,
+                pv = pt(t, df = df, lower.tail = F))
+
+colnames(x) <- c("Observed Difference", "Test Statistic", "Degrees of Freedom", "P-Value")
+
+pandoc.table(x,
+             caption = "**Table Q9.1H:** The results of the t-test for the difference between the slope parameters of the mens and womens regression model of the relationship between mean CRP levels and age.")
+
+###################################################
+
+## Part I
+x <- data.frame(E = c(sf$coefficients[2,1], sfm$coefficients[1,1]),
+                LB = c(sf$coefficients[2,1] - 1.96*sf$coefficients[2,2], sfm$coefficients[1,1] - 1.96*sfm$coefficients[1,2] ),
+                UB = c(sf$coefficients[2,1] + 1.96*sf$coefficients[2,2], sfm$coefficients[1,1] + 1.96*sfm$coefficients[1,2] ),
+                pv = c(sf$coefficients[2,4], sfm$coefficients[1,4]))
+
+colnames(x) <- c("Estimate", "Lower Bound", "Upper Bound", "P.value")
+rownames(x) <- c("Women", "Men")
+
+pandoc.table(x,
+             caption = "**Table Q9.1I:** Point estimates, 95% confidence intervals, and p-values for the slope of the linear relationship between mean CRP levels and age in women and men.",
+             split.table = Inf)
+
+```
+
+<br>
+
+### Part 2
 
 
 
