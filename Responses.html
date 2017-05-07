@@ -267,7 +267,246 @@ $(document).ready(function () {
 <p>The amount of water used by a production plant varies from month to month. Observations on water usage and a few other, possibly related, variables were collected for 17 months “water.txt”. The explanatory variables are the average monthly temperature, amount of production, number of operating days in the month, number of people on the monthly plant payroll and the number of hours the plant was shut down for maintenance. The response variable is the monthly water usage (in gallons/100) “USAGE”. Determine an appropriate model for predicting water usage using any or all of the 5 possible explanatory variables. Keep in mind that the production plant is interested in developing the most parsimonious model that is still able to efficiently predict water usage.</p>
 </blockquote>
 <p><br></p>
-<pre class="r"><code>qdata &lt;- data.frame(read.table(&quot;data/water.txt&quot;, header = T, sep = &quot;&quot;))</code></pre>
+<p>The first model I will fit is the full mode,l containing all 5 explanatory variables and all 10 first order interaction terms. This gives a total of 16 parameters and the size of our data-set is only 17 so we know in advance this model will be significantly overfit. However, I would like to start with the semi-full model (we don’t have enough observations to fit a model with higher interaction terms, there are a total of 26 interaction terms but including them all would mean we would be fitting a model with more parameters than we have observations in our data set). See below:</p>
+<pre class="r"><code>fit.full &lt;- lm(USAGE ~ TEMP + PROD + DAYS + PAYR + HOUR +
+                 TEMP:PROD + TEMP:DAYS + TEMP:PAYR + TEMP:HOUR + PROD:DAYS + 
+                 PROD:PAYR + PROD:HOUR + DAYS:PAYR + DAYS:HOUR + PAYR:HOUR,
+               data = q2data)
+summary(fit.full)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = USAGE ~ TEMP + PROD + DAYS + PAYR + HOUR + TEMP:PROD + 
+##     TEMP:DAYS + TEMP:PAYR + TEMP:HOUR + PROD:DAYS + PROD:PAYR + 
+##     PROD:HOUR + DAYS:PAYR + DAYS:HOUR + PAYR:HOUR, data = q2data)
+## 
+## Residuals:
+##       1       2       3       4       5       6       7       8       9 
+##  0.3676 -0.8119  0.6079 -0.5655  0.1868 -0.3078  1.4196 -1.9601  1.5636 
+##      10      11      12      13      14      15      16      17 
+## -1.1030  0.9839 -0.7025  1.1952 -0.9548  0.1454  0.3422 -0.4064 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept) -5.828e+02  3.784e+02  -1.540    0.367
+## TEMP         2.648e+00  1.272e+01   0.208    0.869
+## PROD        -2.226e-02  2.291e-02  -0.972    0.509
+## DAYS         1.426e+01  2.124e+01   0.671    0.624
+## PAYR         4.772e+00  3.881e+00   1.230    0.435
+## HOUR         3.479e+00  7.574e+00   0.459    0.726
+## TEMP:PROD    1.495e-04  2.909e-04   0.514    0.698
+## TEMP:DAYS    5.126e-02  2.809e-01   0.183    0.885
+## TEMP:PAYR   -3.107e-02  5.226e-02  -0.595    0.659
+## TEMP:HOUR   -9.974e-03  9.556e-03  -1.044    0.486
+## PROD:DAYS   -1.459e-05  5.936e-04  -0.025    0.984
+## PROD:PAYR    5.116e-05  1.072e-04   0.477    0.717
+## PROD:HOUR    1.559e-04  3.146e-04   0.496    0.707
+## DAYS:PAYR   -9.799e-02  1.075e-01  -0.912    0.529
+## DAYS:HOUR    4.033e-02  2.666e-02   1.512    0.372
+## PAYR:HOUR   -3.292e-02  6.478e-02  -0.508    0.701
+## 
+## Residual standard error: 3.903 on 1 degrees of freedom
+## Multiple R-squared:  0.9523, Adjusted R-squared:  0.2369 
+## F-statistic: 1.331 on 15 and 1 DF,  p-value: 0.6002</code></pre>
+<p>The model above definitely contains to0 many parameters, the first thing we will do is use an F-test to determine if any of the interaction coefficients are significant. To do this I will fit another model including with no interaction terms and use the R function “anova()” to perform and F-test comparing the full model (with interaction terms) to the reduced model (no interaction terms). The null hypothesis of this test is that the interaction terms contain no useful information for predicting mean water usage, or in mathematical terms, that their slope coefficients are zero. The alternative hypothesis is that at least one of the interaction terms includes useful information for predicting mean water usage, or in mathematical terms that at least one of the slope coefficients is non-zero.</p>
+<hr />
+<table>
+<colgroup>
+<col width="23%"></col>
+<col width="32%"></col>
+<col width="34%"></col>
+<col width="9%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Observed F-Statistic</th>
+<th align="center">Numerator Degrees of Freedom</th>
+<th align="center">Denominator Degrees of Freedom</th>
+<th align="center">P-value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">0.6452</td>
+<td align="center">10</td>
+<td align="center">1</td>
+<td align="center">0.7585</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table Q21:</strong> The results of the F-test comparing the model without interaction terms to the model including interaction terms.</p>
+<hr />
+<p>Table Q21 reports the results of the F-test comparing the model without interaction terms to the model with interaction terms. The null hypothesis for this test is that the interaction terms include no significant additional information for predicting mean water usage. Since the p-value is large (0.76 &gt;&gt; 0.05) we can safely accept the null hypothesis that the interaction terms do not include any useful additional information for predicting mean water usage.</p>
+<p>Table Q22 shows gives the cestimated value, 95% confidence interval, and p-value for each coefficient of the model containing all five explanatory variables. Except for <em>PRD</em>, the p-values for all slope coefficients are greater than 0.05 indicating that they are likely to not provide any useful information for predicting mean water usage. However, note that – in addition to the 95% confidence interval for <em>PROD</em> – the 95% confidence interval for the slope parameter for <em>PAYR</em> does not include zero, indicating that this variable may include useful information in predictin mean water usage.</p>
+<hr />
+<table style="width:89%;">
+<colgroup>
+<col width="22%"></col>
+<col width="15%"></col>
+<col width="19%"></col>
+<col width="19%"></col>
+<col width="12%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Estimate</th>
+<th align="center">Lower Bound</th>
+<th align="center">Upper Bound</th>
+<th align="center">P-value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Intercept</strong></td>
+<td align="center">39.44</td>
+<td align="center">15.7</td>
+<td align="center">63.17</td>
+<td align="center">0.007649</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>TEMP</strong></td>
+<td align="center">0.08407</td>
+<td align="center">-0.03445</td>
+<td align="center">0.2026</td>
+<td align="center">0.1919</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>PROD</strong></td>
+<td align="center">0.001876</td>
+<td align="center">0.0006863</td>
+<td align="center">0.003066</td>
+<td align="center">0.01027</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>DAYS</strong></td>
+<td align="center">0.1317</td>
+<td align="center">-0.4363</td>
+<td align="center">0.6997</td>
+<td align="center">0.6583</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>PAYR</strong></td>
+<td align="center">-0.2157</td>
+<td align="center">-0.4093</td>
+<td align="center">-0.02201</td>
+<td align="center">0.05162</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>HOUR</strong></td>
+<td align="center">-0.01448</td>
+<td align="center">-0.07338</td>
+<td align="center">0.04443</td>
+<td align="center">0.6395</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table Q22:</strong> The point estimates, 95% confidence intervals, and p-values for the coefficients of the linear regression model for mean water usage including all five explanatory variables.</p>
+<hr />
+<p>I will now fit a model containing only <em>PROD</em> and <em>PAYR</em> as predictor variables for mean water usage. I will use an F-test to compare this reduced model with only two explanatory variables to the more full model with all 5 explanatory variables to determine if the three removed variables (<em>TEMP</em>, <em>DAYS</em>, and <em>HOUR</em>) contain any useful information for predicting mean water usage. The null hypothesis of this test is that the explanatory variables <em>TEMP</em>, <em>DAYS</em>, and <em>HOUR</em> contain no useful information for predicting mean water usage, or in mathematical terms, that their slope coefficients are zero. The alternative hypothesis is that at least one of the explanatory variables <em>TEMP</em>, <em>DAYS</em>, and <em>HOUR</em> includes useful information for predicting mean water usage, or in mathematical terms that at least one of the slope coefficients is non-zero. The results of this test are given in table Q23.</p>
+<hr />
+<table>
+<colgroup>
+<col width="23%"></col>
+<col width="32%"></col>
+<col width="34%"></col>
+<col width="9%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Observed F-Statistic</th>
+<th align="center">Numerator Degrees of Freedom</th>
+<th align="center">Denominator Degrees of Freedom</th>
+<th align="center">P-value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">0.7258</td>
+<td align="center">3</td>
+<td align="center">11</td>
+<td align="center">0.5575</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table Q23:</strong> The results of the F-test comparing the model with only <em>PROD</em> and <em>PAYR</em> as predictor variables to the model including all five explanatory variables.</p>
+<hr />
+<p>The large p-value (0.56 &gt;&gt; 0.05) reported in table Q23 indicates that we fail to reject our null hypothesis and thus conclude that there is no evidence that the explanatory variables <em>TEMP</em>, <em>DAYS</em>, and <em>HOUR</em> contain useful information for predicting mean water usage.</p>
+<p>Table Q24 shows gives the cestimated value, 95% confidence interval, and p-value for each coefficient of the model containing <em>PROD</em> and <em>PAYR</em> as predictor variables for mean water usage. Note that the p-value of each parameter is less than 0.05 and that none of the 95% confidence intervals contain 0. This indicates that at a 5% significane level, all three parameters appear significant.</p>
+<hr />
+<table style="width:89%;">
+<colgroup>
+<col width="22%"></col>
+<col width="15%"></col>
+<col width="19%"></col>
+<col width="19%"></col>
+<col width="12%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Estimate</th>
+<th align="center">Lower Bound</th>
+<th align="center">Upper Bound</th>
+<th align="center">P-value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Intercept</strong></td>
+<td align="center">46.02</td>
+<td align="center">26.2</td>
+<td align="center">65.83</td>
+<td align="center">0.0004517</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>PROD</strong></td>
+<td align="center">0.002035</td>
+<td align="center">0.0009402</td>
+<td align="center">0.00313</td>
+<td align="center">0.002663</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>PAYR</strong></td>
+<td align="center">-0.2158</td>
+<td align="center">-0.3914</td>
+<td align="center">-0.0402</td>
+<td align="center">0.03036</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table Q24:</strong> The point estimates, 95% confidence intervals, and p-values for the coefficients of the linear regression model for mean water usage using <em>PROD</em> and <em>PAYR</em> as predictor variables.</p>
+<hr />
+<p>The last thing I will do is compare the Schwarz criterion (or BIC) the above model containing both <em>PROD</em> and <em>PAYR</em> and models containing only <em>PROD</em> and only <em>PAYR</em>. The BIC judges a model on it’s fit, but also penelizes models for having more parameters, thus trying to prevent overfit and helping to find the most parsimonious model, The lower the BIC value the better. Table Q25 reports the observed BIC values for each model.</p>
+<hr />
+<table style="width:35%;">
+<colgroup>
+<col width="27%"></col>
+<col width="6%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">BIC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>PROD and PAYR</strong></td>
+<td align="center">94.93</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>PROD</strong></td>
+<td align="center">97.99</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>PAYR</strong></td>
+<td align="center">103.4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table Q25:</strong> The BIC values for the three different models.</p>
+<hr />
+<p>Since the model containing both <em>PROD</em> and <em>PAYR</em> as predictor variables for mean water usage has the lowest BIC value we will accept it as the best model for predicting mean water usage. This model is relatively simple since it only includes two predictor variables.</p>
 <p><br> <br></p>
 </div>
 <div id="question-3" class="section level2">
@@ -2658,6 +2897,158 @@ pandoc.table(x,
 </div>
 <div id="a2" class="section level2">
 <h2>A2</h2>
+<pre class="r"><code>q2data &lt;- data.frame(read.table(&quot;data/water.txt&quot;, header = T, sep = &quot;&quot;))
+
+##################################################
+
+fit.full &lt;- lm(USAGE ~ TEMP + PROD + DAYS + PAYR + HOUR +
+                 TEMP:PROD + TEMP:DAYS + TEMP:PAYR + TEMP:HOUR + PROD:DAYS + 
+                 PROD:PAYR + PROD:HOUR + DAYS:PAYR + DAYS:HOUR + PAYR:HOUR,
+               data = q2data)
+
+##################################################
+
+fit.full.noInt &lt;- lm(USAGE ~ TEMP + PROD + DAYS + PAYR + HOUR, data = q2data)
+a &lt;- anova(fit.full.noInt, fit.full)
+
+x &lt;- data.frame(f = a$F[2], numdf &lt;- a$Df[2], dendf &lt;- a$Res.Df[2], p &lt;- a$`Pr(&gt;F)`[2])
+colnames(x) &lt;- c(&quot;Observed F-Statistic&quot;, &quot;Numerator Degrees of Freedom&quot;, &quot;Denominator Degrees of Freedom&quot;, &quot;P-value&quot;)
+
+pandoc.table(x,
+             caption = &quot;**Table Q21:** The results of the F-test comparing the model without interaction terms to the model including interaction terms.&quot;,
+             split.table = Inf)</code></pre>
+<pre><code>## 
+## ------------------------------------------------------------------------------------------------
+##  Observed F-Statistic   Numerator Degrees of Freedom   Denominator Degrees of Freedom   P-value 
+## ---------------------- ------------------------------ -------------------------------- ---------
+##         0.6452                       10                              1                  0.7585  
+## ------------------------------------------------------------------------------------------------
+## 
+## **Table Q21:** The results of the F-test comparing the model without interaction terms to the model including interaction terms.</code></pre>
+<pre class="r"><code>##################################################
+
+sf &lt;- summary(fit.full.noInt)
+
+x &lt;- data.frame(E = c(sf$coefficients[1,1], sf$coefficients[2,1], 
+                      sf$coefficients[3,1], sf$coefficients[4,1], 
+                      sf$coefficients[5,1], sf$coefficients[6,1] ),
+                LB = c(sf$coefficients[1,1] - 1.96*sf$coefficients[1,2], 
+                       sf$coefficients[2,1] - 1.96*sf$coefficients[2,2], 
+                       sf$coefficients[3,1] - 1.96*sf$coefficients[3,2], 
+                       sf$coefficients[4,1] - 1.96*sf$coefficients[4,2], 
+                       sf$coefficients[5,1] - 1.96*sf$coefficients[5,2], 
+                       sf$coefficients[6,1] - 1.96*sf$coefficients[6,2] ),
+                UB = c(sf$coefficients[1,1] + 1.96*sf$coefficients[1,2], 
+                       sf$coefficients[2,1] + 1.96*sf$coefficients[2,2], 
+                       sf$coefficients[3,1] + 1.96*sf$coefficients[3,2], 
+                       sf$coefficients[4,1] + 1.96*sf$coefficients[4,2], 
+                       sf$coefficients[5,1] + 1.96*sf$coefficients[5,2], 
+                       sf$coefficients[6,1] + 1.96*sf$coefficients[6,2] ),
+                pv = c(sf$coefficients[1,4], sf$coefficients[2,4],
+                       sf$coefficients[3,4], sf$coefficients[4,4],
+                       sf$coefficients[5,4], sf$coefficients[6,4]))
+
+colnames(x) &lt;- c(&quot;Estimate&quot;, &quot;Lower Bound&quot;, &quot;Upper Bound&quot;, &quot;P-value&quot;)
+rownames(x) &lt;- c(&quot;Intercept&quot;, &quot;TEMP&quot;, &quot;PROD&quot;, &quot;DAYS&quot;, &quot;PAYR&quot;, &quot;HOUR&quot;)
+
+pandoc.table(x,
+             caption = &quot;**Table Q22:** The point estimates, 95% confidence intervals, and p-values for the coefficients of the linear regression model for mean water usage including all five explanatory variables.&quot;,
+             split.table = Inf)</code></pre>
+<pre><code>## 
+## ----------------------------------------------------------------
+##     &amp;nbsp;       Estimate   Lower Bound   Upper Bound   P-value 
+## --------------- ---------- ------------- ------------- ---------
+##  **Intercept**    39.44        15.7          63.17     0.007649 
+## 
+##    **TEMP**      0.08407     -0.03445       0.2026      0.1919  
+## 
+##    **PROD**      0.001876    0.0006863     0.003066     0.01027 
+## 
+##    **DAYS**       0.1317      -0.4363       0.6997      0.6583  
+## 
+##    **PAYR**      -0.2157      -0.4093      -0.02201     0.05162 
+## 
+##    **HOUR**      -0.01448    -0.07338       0.04443     0.6395  
+## ----------------------------------------------------------------
+## 
+## **Table Q22:** The point estimates, 95% confidence intervals, and p-values for the coefficients of the linear regression model for mean water usage including all five explanatory variables.</code></pre>
+<pre class="r"><code>##################################################
+
+fit.red2 &lt;- lm(USAGE ~ PROD + PAYR, data = q2data)
+a &lt;- anova(fit.red2, fit.full.noInt)
+
+x &lt;- data.frame(f = a$F[2], numdf &lt;- a$Df[2], dendf &lt;- a$Res.Df[2], p &lt;- a$`Pr(&gt;F)`[2])
+colnames(x) &lt;- c(&quot;Observed F-Statistic&quot;, &quot;Numerator Degrees of Freedom&quot;, &quot;Denominator Degrees of Freedom&quot;, &quot;P-value&quot;)
+
+pandoc.table(x,
+             caption = &quot;**Table Q23:** The results of the F-test comparing the model with only *PROD* and *PAYR* as predictor variables to the model including all five explanatory variables.&quot;,
+             split.table = Inf)</code></pre>
+<pre><code>## 
+## ------------------------------------------------------------------------------------------------
+##  Observed F-Statistic   Numerator Degrees of Freedom   Denominator Degrees of Freedom   P-value 
+## ---------------------- ------------------------------ -------------------------------- ---------
+##         0.7258                       3                               11                 0.5575  
+## ------------------------------------------------------------------------------------------------
+## 
+## **Table Q23:** The results of the F-test comparing the model with only *PROD* and *PAYR* as predictor variables to the model including all five explanatory variables.</code></pre>
+<pre class="r"><code>##################################################
+
+sf &lt;- summary(fit.red2)
+
+x &lt;- data.frame(E = c(sf$coefficients[1,1], sf$coefficients[2,1], sf$coefficients[3,1] ),
+                LB = c(sf$coefficients[1,1] - 1.96*sf$coefficients[1,2], 
+                       sf$coefficients[2,1] - 1.96*sf$coefficients[2,2], 
+                       sf$coefficients[3,1] - 1.96*sf$coefficients[3,2]),
+                UB = c(sf$coefficients[1,1] + 1.96*sf$coefficients[1,2], 
+                       sf$coefficients[2,1] + 1.96*sf$coefficients[2,2], 
+                       sf$coefficients[3,1] + 1.96*sf$coefficients[3,2]),
+                pv = c(sf$coefficients[1,4], sf$coefficients[2,4], sf$coefficients[3,4]))
+
+colnames(x) &lt;- c(&quot;Estimate&quot;, &quot;Lower Bound&quot;, &quot;Upper Bound&quot;, &quot;P-value&quot;)
+rownames(x) &lt;- c(&quot;Intercept&quot;, &quot;PROD&quot;, &quot;PAYR&quot;)
+
+pandoc.table(x,
+             caption = &quot;**Table Q24:** The point estimates, 95% confidence intervals, and p-values for the coefficients of the linear regression model for mean water usage using *PROD* and *PAYR* as predictor variables.&quot;,
+             split.table = Inf)</code></pre>
+<pre><code>## 
+## ----------------------------------------------------------------
+##     &amp;nbsp;       Estimate   Lower Bound   Upper Bound   P-value 
+## --------------- ---------- ------------- ------------- ---------
+##  **Intercept**    46.02        26.2          65.83     0.0004517
+## 
+##    **PROD**      0.002035    0.0009402      0.00313    0.002663 
+## 
+##    **PAYR**      -0.2158      -0.3914       -0.0402     0.03036 
+## ----------------------------------------------------------------
+## 
+## **Table Q24:** The point estimates, 95% confidence intervals, and p-values for the coefficients of the linear regression model for mean water usage using *PROD* and *PAYR* as predictor variables.</code></pre>
+<pre class="r"><code>##################################################
+
+b &lt;- BIC(fit.red2,
+         lm(USAGE ~ PROD, data = q2data),
+         lm(USAGE ~ PAYR, data = q2data))
+
+x &lt;- data.frame(B = c(b[1,2], b[2,2], b[3,2])
+                )
+
+colnames(x) &lt;- c(&quot;BIC&quot;)
+rownames(x) &lt;- c(&quot;PROD and PAYR&quot;, &quot;PROD&quot;, &quot;PAYR&quot;)
+
+pandoc.table(x,
+             caption = &quot;**Table Q25:** The BIC values for the three different models.&quot;,
+             split.table = Inf)</code></pre>
+<pre><code>## 
+## -------------------------
+##       &amp;nbsp;         BIC 
+## ------------------- -----
+##  **PROD and PAYR**  94.93
+## 
+##      **PROD**       97.99
+## 
+##      **PAYR**       103.4
+## -------------------------
+## 
+## **Table Q25:** The BIC values for the three different models.</code></pre>
 <p><br> <br></p>
 </div>
 <div id="a3" class="section level2">
