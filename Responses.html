@@ -129,7 +129,7 @@ $(document).ready(function () {
 <p><br></p>
 <div id="question-1" class="section level2">
 <h2>Question 1</h2>
-<p>See appendix <a href="#a1">A1</a> for R code.</p>
+<p>See appendix <a href="#a1">A1</a> for full R code.</p>
 <blockquote>
 <p>Use the “sleep.txt” data to answer the following questions. A description of this data is given bellow.</p>
 <p>Species: species of animal</p>
@@ -262,7 +262,7 @@ $(document).ready(function () {
 </div>
 <div id="question-2" class="section level2">
 <h2>Question 2</h2>
-<p>See appendix <a href="#a2">A2</a> for R code.</p>
+<p>See appendix <a href="#a2">A2</a> for full R code.</p>
 <blockquote>
 <p>The amount of water used by a production plant varies from month to month. Observations on water usage and a few other, possibly related, variables were collected for 17 months “water.txt”. The explanatory variables are the average monthly temperature, amount of production, number of operating days in the month, number of people on the monthly plant payroll and the number of hours the plant was shut down for maintenance. The response variable is the monthly water usage (in gallons/100) “USAGE”. Determine an appropriate model for predicting water usage using any or all of the 5 possible explanatory variables. Keep in mind that the production plant is interested in developing the most parsimonious model that is still able to efficiently predict water usage.</p>
 </blockquote>
@@ -272,7 +272,7 @@ $(document).ready(function () {
 </div>
 <div id="question-3" class="section level2">
 <h2>Question 3</h2>
-<p>See appendix <a href="#a3">A3</a> for R code.</p>
+<p>See appendix <a href="#a3">A3</a> for full R code.</p>
 <blockquote>
 <p>Use the flour dataset “flour.txt” to do these problems:</p>
 <ol style="list-style-type: lower-alpha">
@@ -418,7 +418,7 @@ summary(fito)</code></pre>
 </div>
 <div id="question-4" class="section level2">
 <h2>Question 4</h2>
-<p>See appendix <a href="#a4">A4</a> for R code.</p>
+<p>See appendix <a href="#a4">A4</a> for full R code.</p>
 <blockquote>
 <p>The data are from a hypothetical Verbal Learning Experiment in which participants with Low Anxiety levels and High Anxiety levels are given a verbal learning task “anxiety.txt”. Some are given instructions to induce little if any pressure. Some are given instructions to induce moderation pressure to perform well. Others are given instructions to induce strong pressure to perform well. Assume that all assumptions for Two-Way ANOVA model are met.</p>
 <ol style="list-style-type: lower-alpha">
@@ -610,7 +610,7 @@ summary(fit)</code></pre>
 </div>
 <div id="question-5" class="section level2">
 <h2>Question 5</h2>
-<p>See appendix <a href="#a5">A5</a> for R code.</p>
+<p>See appendix <a href="#a5">A5</a> for full R code.</p>
 <blockquote>
 <p>Researchers were interested in determining the relationship between a person’s cholesterol level and their age and gender. For each of 30 subjects, data was collected on their cholesterol level (in mg), age group (Under 30, 30-50, Over 50) and gender “CholesterolLevel.txt”. Fit an appropriate model to the data set. Justify your choice carefully. Determine whether there is a significant age or gender difference in the mean cholesterol levels. Also determine whether or not the two factors interact with one another.</p>
 </blockquote>
@@ -856,7 +856,7 @@ summary(fit2l)</code></pre>
 </div>
 <div id="question-6" class="section level2">
 <h2>Question 6</h2>
-<p>See appendix <a href="#a6">A6</a> for R code.</p>
+<p>See appendix <a href="#a6">A6</a> for full R code.</p>
 <blockquote>
 <p>A hospital surgical unit was interested in predicting survival time in patients undergoing a particular type of liver operation. From a random sample of 54 patients, information on the patient’s survival time, blood clotting score, prognostic index, enzyme function test score and liver function test score were extracted “Surgical.txt”.</p>
 <ol style="list-style-type: lower-alpha">
@@ -1169,7 +1169,7 @@ summary(a)</code></pre>
 </div>
 <div id="question-8" class="section level2">
 <h2>Question 8</h2>
-<p>See appendix <a href="#a8">A8</a> for R code.</p>
+<p>See appendix <a href="#a8">A8</a> for full R code.</p>
 <blockquote>
 <p>(only for graduate students) In a psychology experiment, researchers asked participants to respond to various stimuli and measured their reaction time. Participants were randomly assigned to one of three treatment groups. Subjects in group 1 were required to respond as quickly as possible to any stimulus that was presented. Subjects in group 2 were required to respond to a particular stimulus while disregarding other types of stimuli. Finally, subjects in group 3 were required to respond differently depending on the stimuli presented. The researcher felt that age may be a factor in determining the reaction time, so she organized the subjects by age and obtained the following data:</p>
 </blockquote>
@@ -1288,8 +1288,956 @@ summary(a)</code></pre>
 </div>
 <div id="question-9" class="section level2">
 <h2>Question 9</h2>
-<p>See appendix <a href="#a9">A9</a> for R code.</p>
+<p>See appendix <a href="#a9">A9</a> for full R code.</p>
+<blockquote>
+<p>(only for graduate students) The following questions pertain to the dataset for biomarkers of inflammation and cardiovascular disease stored as “inflamm.txt” on the class web page. For all questions involving statistical inference, provide estimates, confidence intervals, and P values in text suitable for a scientific journal.</p>
+</blockquote>
+<blockquote>
+<p>Create a new variable representing the following strata for the age (for both male and female):</p>
+<p>65 – 69 year old</p>
+<p>70 – 74 year old</p>
+<p>75 – 79 year old</p>
+<p>80 – 84 year old</p>
+<p>85 – 89 year old</p>
+<p>90 – 100 year old</p>
+<p>Part 1: We are interested in “examining how mean C reactive protein levels vary by age and sex.”</p>
+<ol style="list-style-type: lower-alpha">
+<li>Provide suitable descriptive statistics regarding the distribution of C reactive protein levels by age and sex.</li>
+<li>Perform an analysis to determine whether the mean C reactive protein levels differ across sex groups.</li>
+<li>Perform an analysis to determine whether there is a linear trend in mean C reactive protein levels by age.</li>
+<li>Perform an analysis to determine whether the mean C reactive protein levels differ across sex groups after adjustment for age.</li>
+<li>Perform an analysis to determine whether there is a linear trend in mean C reactive protein levels by age after adjustment for sex.</li>
+<li>Perform an analysis to determine whether there is a linear trend in mean C reactive protein levels by age in women.</li>
+<li>Perform an analysis to determine whether there is a linear trend in mean C reactive protein levels by age in men.</li>
+<li>Perform an analysis to test whether the results obtained in part g are statistically significantly different from those in part f. Interpret all parameters in the model used to answer this question, and relate those estimates to the parameter estimates obtained in parts f and g.</li>
+<li>How would you summarize the association between C reactive protein levels and age and sex? Provide a summary of your findings suitable for inclusion in a manuscript.</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>Part 2: We are interested in “examining how mean C reactive protein levels vary across groups defined by cholesterol level.”</p>
+<p>Create a new variable representing the following strata for the cholesterol levels</p>
+<p>less than 160 mg/dl</p>
+<p>160 – 180 mg/dl</p>
+<p>180 – 200 mg/dl</p>
+<p>200 – 220 mg/dl</p>
+<p>220 – 240 mg/dl</p>
+<p>240 – 260 mg/dl</p>
+<p>greater than 260 mg/dl</p>
+<ol style="list-style-type: lower-alpha">
+<li>Provide suitable descriptive statistics regarding the distribution of C reactive protein levels across groups defined by cholesterol levels.</li>
+<li>Perform an analysis to determine whether there is a linear trend in mean C reactive protein levels by cholesterol level.</li>
+<li>Perform an analysis to determine whether any trend in mean C reactive protein levels by cholesterol is well described by a straight line. That is, perform a test to see whether there is sufficient evidence in the data to suggest a nonlinear trend in mean C reactive protein levels by cholesterol. (A typical approach is to consider the possibility of a curvilinear trend by fitting both cholesterol and a new variable equal to the square of cholesterol.)</li>
+</ol>
+</blockquote>
+<p><br></p>
+<p>First we will import the data set. Since we are only interested in the variables pertaining to C reactive protein (CRP) levels, age, gender, and cholesterol levels we will remove all other variables from our data-set.</p>
+<pre class="r"><code>## Import Data
+q9.data &lt;- data.frame(read.table(&quot;data/inflamm.txt&quot;, header = T, sep = &quot;&quot;))
+
+q9.data &lt;- q9.data[, c(&quot;crp&quot;, &quot;age&quot;, &quot;male&quot;, &quot;cholest&quot;)]</code></pre>
+<p><br></p>
+<p>For all statistical tests we will use an alpha level of 0.05 (significance level of 5%).</p>
+<div id="part-1" class="section level3">
+<h3>Part 1</h3>
+<p>First we will count how many total observations are in the data set and how many observations have missing values for age, gender, or CRP levels.</p>
+<pre class="r"><code>nrow(q9.data)</code></pre>
+<pre><code>## [1] 5000</code></pre>
+<pre class="r"><code>nrow(q9.data[is.na(q9.data$crp),])</code></pre>
+<pre><code>## [1] 67</code></pre>
+<pre class="r"><code>nrow(q9.data[is.na(q9.data$age),])</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>nrow(q9.data[is.na(q9.data$male),])</code></pre>
+<pre><code>## [1] 0</code></pre>
+<p>From above we can see that we have a large data set, 5000 observations, and we have only 67 observations that contain missing values for any of our variables of interest. We can safely remove these missing values without losing too much information.</p>
+<pre class="r"><code>q9.data &lt;- q9.data[!is.na(q9.data$crp),]</code></pre>
+<p>Now we will create a new variable for discretized age groups:</p>
+<ul>
+<li>“Late Sixties”: 65 – 69 year old</li>
+<li>“Early Seventies”: 70 – 74 year old</li>
+<li>“Late Seventies”: 75 – 79 year old</li>
+<li>“Early Eighties”: 80 – 84 year old</li>
+<li>“Late Eighties”: 85 – 89 year old</li>
+<li>“Nineties”: 90 – 100 year old</li>
+</ul>
+<p>We will treat these variables as factors with the lower level factors corresponding to lower age group (level 1 -&gt; Late Sixties = 65-69)</p>
+<pre class="r"><code>q9.data[,&quot;Age.Group&quot;] &lt;- 0
+
+for(i in 1:nrow(q9.data)){
+  if(q9.data$age[i] &gt;= 65 &amp; q9.data$age[i] &lt; 70){
+    q9.data$Age.Group[i] &lt;- &quot;Late Sixties&quot;
+  }
+  
+  else if(q9.data$age[i] &gt;= 70 &amp; q9.data$age[i] &lt; 75){
+    q9.data$Age.Group[i] &lt;- &quot;Early Seventies&quot;
+  }
+  
+  else if(q9.data$age[i] &gt;= 75 &amp; q9.data$age[i] &lt; 80){
+    q9.data$Age.Group[i] &lt;- &quot;Late Seventies&quot;
+  }
+  
+  else if(q9.data$age[i] &gt;= 80 &amp; q9.data$age[i] &lt; 85){
+    q9.data$Age.Group[i] &lt;- &quot;Early Eighties&quot;
+  }
+  
+  else if(q9.data$age[i] &gt;= 85 &amp; q9.data$age[i] &lt; 90){
+    q9.data$Age.Group[i] &lt;- &quot;Late Eighties&quot;
+  }
+  
+  else if(q9.data$age[i] &gt;= 90 &amp; q9.data$age[i] &lt;= 100){
+    q9.data$Age.Group[i] &lt;- &quot;Nineties&quot;
+  }
+}
+
+q9.data$Age.Group &lt;- factor(q9.data$Age.Group, levels = c(&quot;Late Sixties&quot;,
+                                                          &quot;Early Seventies&quot;,
+                                                          &quot;Late Seventies&quot;,
+                                                          &quot;Early Eighties&quot;,
+                                                          &quot;Late Eighties&quot;,
+                                                          &quot;Nineties&quot;)
+                            )</code></pre>
+<p>We also rename the variable <em>male</em> to <em>gender</em> and change the values of the variable to factors (“female” = level 1, “male” = level 2).</p>
+<pre class="r"><code>colnames(q9.data) &lt;- c(&quot;crp&quot;, &quot;age&quot;, &quot;gender&quot;, &quot;cholest&quot;, &quot;Age.Group&quot;)
+
+for(i in 1:nrow(q9.data)){
+  if(q9.data$gender[i] == 0){
+    q9.data$gender[i] &lt;- &quot;female&quot;
+  }
+  else if(q9.data$gender[i] == 1){
+    q9.data$gender[i] &lt;- &quot;male&quot;
+  }
+}
+
+q9.data$gender &lt;- factor(q9.data$gender, levels = c(&quot;female&quot;, &quot;male&quot;))</code></pre>
+<div id="a" class="section level4">
+<h4>A</h4>
+<p>The boxplots in figure Q9.1A show that the distributions of CRP levels are heavily right skewed for gender and age group combinations. The skewness decreases as age increases, especially for females, but it is still present.</p>
+<div class="figure">
+<img src="data:image/png;base64,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" alt="Figure Q9.1A: The boxplots above show the distribution of CRP levels (mg/l) for each combination of gender and age group. The distributions are all strongly right skewed (large valued outliers), but the skewness decreases as age group increases (more noteably for females than males)." />
+<p class="caption"><strong>Figure Q9.1A:</strong> The boxplots above show the distribution of CRP levels (mg/l) for each combination of gender and age group. The distributions are all strongly right skewed (large valued outliers), but the skewness decreases as age group increases (more noteably for females than males).</p>
+</div>
+<p>Table Q9.1A reports some descriptive statistics for the distribution of CRP levels for different age and gender groups. The distributions for all groups are heavy-tailed and strongly skewed to the right.</p>
+<hr />
+<table>
+<colgroup>
+<col width="18%"></col>
+<col width="5%"></col>
+<col width="12%"></col>
+<col width="7%"></col>
+<col width="5%"></col>
+<col width="12%"></col>
+<col width="5%"></col>
+<col width="9%"></col>
+<col width="5%"></col>
+<col width="9%"></col>
+<col width="9%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Min</th>
+<th align="center">1st Quartile</th>
+<th align="center">Median</th>
+<th align="center">Mean</th>
+<th align="center">3rd Quartile</th>
+<th align="center">Max</th>
+<th align="center">Variance</th>
+<th align="center">CV</th>
+<th align="center">Skewness</th>
+<th align="center">Kurtosis</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Female</strong></td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">3.633</td>
+<td align="center">4</td>
+<td align="center">86</td>
+<td align="center">30.14</td>
+<td align="center">1.511</td>
+<td align="center">5.443</td>
+<td align="center">50.2</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Male</strong></td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">3.587</td>
+<td align="center">3</td>
+<td align="center">108</td>
+<td align="center">48.53</td>
+<td align="center">1.942</td>
+<td align="center">6.911</td>
+<td align="center">71.82</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>Late Sixties</strong></td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">3.757</td>
+<td align="center">3</td>
+<td align="center">108</td>
+<td align="center">47.18</td>
+<td align="center">1.828</td>
+<td align="center">7.543</td>
+<td align="center">85.41</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Early Seventies</strong></td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">3.37</td>
+<td align="center">3</td>
+<td align="center">63</td>
+<td align="center">23.57</td>
+<td align="center">1.441</td>
+<td align="center">4.884</td>
+<td align="center">38.85</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>Late Seventies</strong></td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">3.633</td>
+<td align="center">3</td>
+<td align="center">83</td>
+<td align="center">37.61</td>
+<td align="center">1.688</td>
+<td align="center">5.499</td>
+<td align="center">47.65</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Early Eighties</strong></td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">3.825</td>
+<td align="center">3</td>
+<td align="center">51</td>
+<td align="center">44.31</td>
+<td align="center">1.74</td>
+<td align="center">3.868</td>
+<td align="center">20.4</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>Late Eighties</strong></td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">3.597</td>
+<td align="center">4</td>
+<td align="center">53</td>
+<td align="center">37.22</td>
+<td align="center">1.696</td>
+<td align="center">5.292</td>
+<td align="center">38.66</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Nineties</strong></td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">4.256</td>
+<td align="center">3</td>
+<td align="center">76</td>
+<td align="center">144.8</td>
+<td align="center">2.827</td>
+<td align="center">5.647</td>
+<td align="center">34.13</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table Q9.1A:</strong> Descriptive statistics for the distribution of CRP levels at different age and gender groups. From looking at the discrepency between the means and medians, and the large differences between the 3rd quartiles and mximum values we can see that the distributions are all right skewed. This is confirmed by the positive skewness coefficient for all distributions. The large kurtosis values indicate that the distributions are all heavy tailed.</p>
+<hr />
 <p><br> <br></p>
+</div>
+<div id="b" class="section level4">
+<h4>B</h4>
+<p>I will use one-way ANOVA to determine if there is a difference in CRP levels between males and females. See below:</p>
+<pre class="r"><code>x &lt;- aov(crp~gender, data = q9.data)
+summary(x)</code></pre>
+<pre><code>##               Df Sum Sq Mean Sq F value Pr(&gt;F)
+## gender         1      3    2.60   0.069  0.793
+## Residuals   4931 186703   37.86</code></pre>
+<p>The summary output for the one-way ANOVA above shows that our F-statistic for is 0.069. The p-value of this statistic 0.793, thus there is no evidence of differenc in mean CRP levels between males and females.</p>
+<p><br> <br></p>
+</div>
+<div id="c" class="section level4">
+<h4>C</h4>
+<p>To determine if there is a linear trend between mean CRP levels and age I will fit two regression models. One regressing CRP levels onto <em>age</em> (ungrouped ages) and one regressing CRP levels onto <em>Age Group</em> (grouped ages).</p>
+<pre class="r"><code>fit.a1 &lt;- lm(crp ~ age, data = q9.data)
+fit.a2 &lt;- lm(crp ~ Age.Group, data = q9.data)
+summary(fit.a1)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = crp ~ age, data = q9.data)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+##  -3.616  -2.614  -1.614  -0.611 104.384 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)   
+## (Intercept)  3.6361602  1.1495801   3.163  0.00157 **
+## age         -0.0003068  0.0157453  -0.019  0.98445   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6.153 on 4931 degrees of freedom
+## Multiple R-squared:  7.7e-08,    Adjusted R-squared:  -0.0002027 
+## F-statistic: 0.0003797 on 1 and 4931 DF,  p-value: 0.9845</code></pre>
+<pre class="r"><code>summary(fit.a2)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = crp ~ Age.Group, data = q9.data)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+##  -4.256  -2.633  -1.633  -0.370 104.243 
+## 
+## Coefficients:
+##                          Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)               3.75736    0.14932  25.163   &lt;2e-16 ***
+## Age.GroupEarly Seventies -0.38704    0.21519  -1.799   0.0721 .  
+## Age.GroupLate Seventies  -0.12396    0.24435  -0.507   0.6120    
+## Age.GroupEarly Eighties   0.06769    0.32260   0.210   0.8338    
+## Age.GroupLate Eighties   -0.16014    0.53406  -0.300   0.7643    
+## Age.GroupNineties         0.49905    0.99654   0.501   0.6165    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6.153 on 4927 degrees of freedom
+## Multiple R-squared:  0.0008874,  Adjusted R-squared:  -0.0001265 
+## F-statistic: 0.8752 on 5 and 4927 DF,  p-value: 0.4967</code></pre>
+<p>The summary output for the model regressing CRP levels onto <em>age</em> shows that the coefficient for <em>age</em> is not significant, with a p-value close to one (~0.98445). This indicates that there is no linear trend between CRP levels and <em>age</em>. The summary output for the model regressing CRP onto <em>Age Group</em> also shows that there is no linear trend, the p-values for all coefficients are greater than 0.05.</p>
+<p><br> <br></p>
+</div>
+<div id="d" class="section level4">
+<h4>D</h4>
+<p>To determine whether mean CRP levels differ across gender after adjusting for age I will run a two-way ANOVA model including the interaction between <em>gender</em> and <em>Age.Group</em>. See below:</p>
+<pre class="r"><code>x &lt;- aov(crp ~ gender + Age.Group + gender:Age.Group, data = q9.data)
+summary(x)</code></pre>
+<pre><code>##                    Df Sum Sq Mean Sq F value Pr(&gt;F)  
+## gender              1      3    2.60   0.069 0.7933  
+## Age.Group           5    165   32.99   0.873 0.4984  
+## gender:Age.Group    5    546  109.26   2.891 0.0131 *
+## Residuals        4921 185992   37.80                 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<p>The p-value of 0.0131 (less than 0.05) indicates that there is indeed a significant interaction effect between age and gender. The interaction plot below shows that at older age groups their appears to be a strong effect of gender on CRP levels.</p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABUAAAAPACAMAAADDuCPrAAAAzFBMVEUAAAAAADIAADoAAFgAAGYAOHwAOjoAOpAAYp0AZmYAZpAAZrYiiyI4AAA4ip04ir06AAA6ADo6OgA6Ojo6OpA6ZmY6kJA6kNtiAABir9xmAABmADpmZmZmkJBmtrZmtv+KOACKYgCK0r2K0tyLAIuQOgCQkGaQ27aQ2/+vYgCv9dy2ZgC2Zma2tma225C2/7a2///SijLS9b3S9dzbkDrbtmbb2//b/7bb/9vb///1r1j10nz19Z319b319dz/tmb/25D//7b//9v///99L04ZAAAACXBIWXMAAB2HAAAdhwGP5fFlAAAgAElEQVR4nO3d/YPaWn7YYeLcrtPazXrzNllvG29SO/WGNrk3JU3tpsE2////VPQCSCAY+M6RdCQ9zw+7MwyIY3n8uUevrHYAhKzGHgDAVAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShx396tVqtXn5972vaptxEcFv39/V0jualcRsOH1g9G/WOSKwEl7q6A7p/UV1lOi+4joMeE3rXwHv+Y5EtAibsjoD8+7Z/ST1mai+4noHVB71h4j39MciagxN0R0PWqt7I0F91TQKsl3rHwHv+Y5ExAicsnoCm0OrmpCvrm4gfDjIWJEFDiZhzQ6s+2+unnix8MMhYmQkCJm3NAq8WXe0EFlGsElLhGQLd1Qaodia+/7I4PdhzRbrZmU327aTxabz6fBam5UX2x6PPGlQd16glk4wXnA2w5W8b2akDPF97xx2QhBJS4i4CejsM8HR9slqVxnKYOYV3O9elJm8aLzjrbeOXNgFab36XjY50DbLkzoJcLF9DlElDizgP6l6e2lIE6L0ujPcdJYFnGP68eKuZ0zX4eM1fP+RqvvBXQzkV0DrDl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" width="672" /></p>
+<p><br> <br></p>
+</div>
+<div id="e" class="section level4">
+<h4>E</h4>
+<p>To determine if there is a linear trend between mean CRP levels and age after adjusting for gender I will fit a linear model regression mean CRP levels onto age and gender and include an interaction term between age and gender. I will use the ungrouped ages first. See below:</p>
+<pre class="r"><code>fit.int &lt;- lm(crp ~ age + gender + age:gender, data= q9.data)
+summary(fit.int)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = crp ~ age + gender + age:gender, data = q9.data)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+##  -4.993  -2.575  -1.661  -0.170 104.830 
+## 
+## Coefficients:
+##                Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)     7.38291    1.52157   4.852 1.26e-06 ***
+## age            -0.05170    0.02092  -2.471 0.013494 *  
+## gendermale     -8.73738    2.32410  -3.759 0.000172 ***
+## age:gendermale  0.11923    0.03179   3.750 0.000179 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6.146 on 4929 degrees of freedom
+## Multiple R-squared:  0.002859,   Adjusted R-squared:  0.002253 
+## F-statistic: 4.712 on 3 and 4929 DF,  p-value: 0.002752</code></pre>
+<p>The regression model summary above shows that after adjusting for gender, there is a significant linear relationship between age and and mean CRP level. The model above is of the form:</p>
+<p><span class="math display">\[ \text{E[CRP]} = \widehat{\beta}_0 + \widehat{\beta}_1(age) + \widehat{\beta}_2(male) + \widehat{\beta}_3(male*age) \\ \text{where:} \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space                        \\ \widehat{\beta}_0 \approx 7.38   \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space                                               \\ \widehat{\beta}_1 \approx -0.0517  \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space                             \\ \widehat{\beta}_2 \approx -8.74 \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space                       \\ \widehat{\beta}_3 \approx 0.119 \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space                                                \\ age = \text{age in years}   \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space                  \\  male = 0 \space \text{ for females and } \space 1 \text{ for males }\]</span></p>
+<p>The interaction term between gender and age means that there are, in effect, two different models for females and males.</p>
+<ul>
+<li>The model for females is:</li>
+</ul>
+<p><span class="math display">\[ \text{E[CRP]} = \widehat{\beta}_0 + \widehat{\beta}_1(age) \]</span><br />
+* The model for males is:</p>
+<pre><code>  $$ \text{E[CRP]} = \widehat{\beta}_0' + \widehat{\beta}_1'(age)                                \\ \text{where:} \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space \space  \space \space \space \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space  \space \space  \space \space \space \space \space                                            \\ \widehat{\beta}_0' = \widehat{\beta}_0 + \widehat{\beta}_2 \approx 7.38 - 8.74 = -1.36 \space  \space \space  \space \space  \space \space  \space \space  \space                                                 \\  \widehat{\beta}_1' = \widehat{\beta}_1 + \widehat{\beta}_3 \approx -0.0517 + 0.119 = 0.0673$$ </code></pre>
+<p>The 95% confidence intervals for the regression coefficients for the female model are easy to calculate, but the confidence intervals for the regression coefficients for the male model are a bit more complicated because we need to take into account the covariance between the parameters. The standard errors for <span class="math inline">\(\widehat{\beta}_0'\)</span> and <span class="math inline">\(\widehat{\beta}_1'\)</span> are:</p>
+<p><span class="math display">\[ \widehat{\text{SE}}[\widehat{\beta}_0'] = \sqrt{ \widehat{\text{V}}[\widehat{\beta}_0] +  \widehat{\text{V}}[\widehat{\beta}_2] +  2*\widehat{\text{Cov}}[\widehat{\beta}_0, \widehat{\beta}_2] } \\                                                                   \widehat{\text{SE}}[\widehat{\beta}_1'] = \sqrt{ \widehat{\text{V}}[\widehat{\beta}_1] +  \widehat{\text{V}}[\widehat{\beta}_3] +  2*\widehat{\text{Cov}}[\widehat{\beta}_1, \widehat{\beta}_3] } \]</span></p>
+<p>We can find the covariances from the R summary object of our model. Table Q9.1E gives the 95% confidence intervals for the intercept and slope parameters for the male and female models.</p>
+<hr />
+<table style="width:89%;">
+<colgroup>
+<col width="34%"></col>
+<col width="15%"></col>
+<col width="19%"></col>
+<col width="19%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Estimate</th>
+<th align="center">Lower Bound</th>
+<th align="center">Upper Bound</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Females: Intercept</strong></td>
+<td align="center">7.383</td>
+<td align="center">6.898</td>
+<td align="center">7.868</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Females: Slope</strong></td>
+<td align="center">-0.0517</td>
+<td align="center">-0.05837</td>
+<td align="center">-0.04503</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>Males: Intercept</strong></td>
+<td align="center">-1.354</td>
+<td align="center">-1.915</td>
+<td align="center">-0.7942</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Males: Slope</strong></td>
+<td align="center">0.06753</td>
+<td align="center">0.0599</td>
+<td align="center">0.07516</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table Q9.1E:</strong> 95% confidence intervals for the effective slope and intercept coefficients for the linear regression of mean CRP levels onto age and gender. The inclusion of the ineraction term between age and gender effectively gives rise to two different sets of intercept and slope coefficients, one for males and one for females.</p>
+<hr />
+<p><br></p>
+<p>Using the above age adjusted model, we expect that for a 1 year increase in age mean CRP levels will <em>decrease</em> by ~0.052 mg/l (95% CI: 0.0450, 0.0584) for females. On the other hand, we expect for males that for a 1 year increase in age, mean CRP levels will <em>increase</em> by ~0.0675 mg/l (95% CI: 0.0599, 0.0752).</p>
+<p><br> <br></p>
+</div>
+<div id="f" class="section level4">
+<h4>F</h4>
+<p>To examine if there is a linear relationship between mean CRP levels and age in women I will fit a linear model regressing <em>crp</em> onto <em>age</em> only considering females. See below:</p>
+<pre class="r"><code>fit.w &lt;- lm(crp ~ age, data = q9.data[q9.data$gender==&quot;female&quot;,])
+summary(fit.w)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = crp ~ age, data = q9.data[q9.data$gender == &quot;female&quot;, 
+##     ])
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -4.022 -2.609 -1.661  0.133 82.081 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  7.38291    1.35759   5.438 5.84e-08 ***
+## age         -0.05170    0.01866  -2.770  0.00564 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 5.483 on 2859 degrees of freedom
+## Multiple R-squared:  0.002676,   Adjusted R-squared:  0.002327 
+## F-statistic: 7.672 on 1 and 2859 DF,  p-value: 0.005645</code></pre>
+<p>The above output summary of our model indicates that is indeed a linear relationship between mean CRP levels and age in women (p-value ~0.00564 &lt; 0.05). The 95% confidence intervals for the intercept and slope coeficients are given in table Q9.1F.</p>
+<hr />
+<table style="width:89%;">
+<colgroup>
+<col width="22%"></col>
+<col width="15%"></col>
+<col width="19%"></col>
+<col width="19%"></col>
+<col width="12%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Estimate</th>
+<th align="center">Lower Bound</th>
+<th align="center">Upper Bound</th>
+<th align="center">P.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Intercept</strong></td>
+<td align="center">7.383</td>
+<td align="center">4.722</td>
+<td align="center">10.04</td>
+<td align="center">5.835e-08</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Slope</strong></td>
+<td align="center">-0.0517</td>
+<td align="center">-0.08828</td>
+<td align="center">-0.01512</td>
+<td align="center">0.005645</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table Q9.1F:</strong> The point estimates, 95% confidence intervals, and p-values for the parameters of the regression model of the relationship between mean CRP levels and age in women.</p>
+<hr />
+<p>From the above table we can see that for a 1 year increase in age we expect the mean CRP level for females to decrease by 0.052 mg/l (95% CI: 0.0151, 0.0883).</p>
+<p><br> <br></p>
+</div>
+<div id="g" class="section level4">
+<h4>G</h4>
+<p>To examine if there is a linear relationship between mean CRP levels and age in men I will fit a linear model regressing <em>crp</em> onto <em>age</em> only considering only males. See below:</p>
+<pre class="r"><code>fit.m &lt;- lm(crp ~ age, data=q9.data[q9.data$gender==&quot;male&quot;,])
+summary(fit.m)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = crp ~ age, data = q9.data[q9.data$gender == &quot;male&quot;, 
+##     ])
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+##  -4.993  -2.534  -1.676  -0.315 104.830 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept) -1.35446    1.98885  -0.681   0.4959  
+## age          0.06753    0.02710   2.492   0.0128 *
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6.958 on 2070 degrees of freedom
+## Multiple R-squared:  0.002991,   Adjusted R-squared:  0.002509 
+## F-statistic:  6.21 on 1 and 2070 DF,  p-value: 0.01278</code></pre>
+<p>The model output summary shown above indicates that there is indeed a linear relationship between mean CRP levels and age in men (p-value ~ 0.0128 &lt; 0.05). However the p-value of 0.4959 for the intercept coefficient indicates the the intercept is <em>not</em> significantly non-zero. We will re-fit the model so that it passes through the origin. See below:</p>
+<pre class="r"><code>fit.m &lt;- lm(crp ~ 0 + age, data=q9.data[q9.data$gender==&quot;male&quot;,])
+summary(fit.m)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = crp ~ 0 + age, data = q9.data[q9.data$gender == 
+##     &quot;male&quot;, ])
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+##  -4.618  -2.537  -1.635  -0.390 104.708 
+## 
+## Coefficients:
+##     Estimate Std. Error t value Pr(&gt;|t|)    
+## age 0.049128   0.002082   23.59   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6.957 on 2071 degrees of freedom
+## Multiple R-squared:  0.2118, Adjusted R-squared:  0.2114 
+## F-statistic: 556.6 on 1 and 2071 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>After re-fitting our model so that it passes through the origin the p-value for the slope coefficient is practically zero, indicating that the linear relationship between mean CRP levels and age is highly statistically significant for men. Table Q9.1F gives the 95% confidence interval for the slope coefficient.</p>
+<hr />
+<table style="width:85%;">
+<colgroup>
+<col width="16%"></col>
+<col width="15%"></col>
+<col width="19%"></col>
+<col width="19%"></col>
+<col width="13%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Estimate</th>
+<th align="center">Lower Bound</th>
+<th align="center">Upper Bound</th>
+<th align="center">P.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Slope</strong></td>
+<td align="center">0.04913</td>
+<td align="center">0.04505</td>
+<td align="center">0.05321</td>
+<td align="center">3.436e-109</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table Q9.1F:</strong> The point estimate, 95% confidence interval, and p-value for the slope coefficient of the regression model of the relationship between mean CRP levels and age in men.</p>
+<hr />
+<p>From the above table we can see that for a 1 year increase in age we expect the mean CRP level for males to increase by ~0.0491 mg/l (95% CI: 0.0451, 0.0532).</p>
+<p><br> <br></p>
+</div>
+<div id="h" class="section level4">
+<h4>H</h4>
+<p>To determine if the linear relationship between mean CRP levels and age in women is different from that in men I will perform a t-test to see if the slope parameters are significanly different. This test is in essence redundant, since from tables Q9.1F and Q9.1G we already know the confidence intervals do not overlap and thus the slope parameters <em>must</em> be siginifcantly different, but I will perform it anyways because the question asks for the comparison.</p>
+<p>The null hypothesis for this test is that the two slope parameters are not significantly different, the alternative hypothesis is that they are different:</p>
+<p><span class="math display">\[ \text{H}_o: \text{D}_o = \widehat{\beta}_{1m} - \widehat{\beta}_{1f} = 0 \space \space \space \space \space \space \text{vs}. \space \space \space \space \space \space \text{H}_a: \text{D}_a = \widehat{\beta}_{1m} - \widehat{\beta}_{1f} \neq 0 \]</span></p>
+<p>The test statistic is given below. Under the null hypothesis the test-statistic has a t-distribution with degrees of freedom equal to $ (n_m - 1) + (n_f - 2) $ where $ n_m $ is the number of males used to fit the model for men and $ n_f $ is the number of females used to fit the model for women. The reason why we use $ (n_m - 1) $ rather than $ (n_m -2) $ is because tha model for men does <em>not</em> include an intercept parameter. Thus the number of parameters in the model for men is 1 while the number of parameters in the model for women is 2.</p>
+<p><span class="math display">\[ \text{T} = \frac{(\widehat{\beta}_{1m} - \widehat{\beta}_{1f}) - \text{D}_o } { \sqrt{\widehat{\text{V}}[\widehat{\beta}_{1m}] - \widehat{\text{V}}[\widehat{\beta}_{1f}]} } \sim t_{n_m + n_f - 3} \]</span></p>
+<hr />
+<table style="width:96%;">
+<colgroup>
+<col width="30%"></col>
+<col width="23%"></col>
+<col width="29%"></col>
+<col width="12%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Observed Difference</th>
+<th align="center">Test Statistic</th>
+<th align="center">Degrees of Freedom</th>
+<th align="center">P-Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">0.1008</td>
+<td align="center">234.2</td>
+<td align="center">4930</td>
+<td align="center">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table Q9.1H:</strong> The results of the t-test for the difference between the slope parameters of the mens and womens regression model of the relationship between mean CRP levels and age.</p>
+<hr />
+<p>Table Q9.1H reports the results of the t-test of the difference between the slope parameters. The test-statitistic is very large and the p-value is virtually zero. We can safely reject the null hypothesis that the slope parameters are the same and conclude that the linear relationship between mean CRP levels and age is different for men and women.</p>
+<p><br> <br></p>
+</div>
+<div id="i" class="section level4">
+<h4>I</h4>
+<p>In summary, mean CRP levels are linearly related with age, but the relationship is different between men and women. The linear correlation (the slope of the relationship) is positive for men and negative for women. Meaning that, as men age mean CRP levels increase while as women age mean CRP levels decrease. Table Q9.1I reports the estimates, confidence intervals, and p-values for the estimates of the slope of the linear relationship beteen mean CRP levels and age in women and men.</p>
+<hr />
+<table style="width:85%;">
+<colgroup>
+<col width="16%"></col>
+<col width="15%"></col>
+<col width="19%"></col>
+<col width="19%"></col>
+<col width="13%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Estimate</th>
+<th align="center">Lower Bound</th>
+<th align="center">Upper Bound</th>
+<th align="center">P.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Women</strong></td>
+<td align="center">-0.0517</td>
+<td align="center">-0.08828</td>
+<td align="center">-0.01512</td>
+<td align="center">0.005645</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Men</strong></td>
+<td align="center">0.04913</td>
+<td align="center">0.04505</td>
+<td align="center">0.05321</td>
+<td align="center">3.436e-109</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table Q9.1I:</strong> Point estimates, 95% confidence intervals, and p-values for the slope of the linear relationship between mean CRP levels and age in women and men.</p>
+<hr />
+<p>We expect that for every year increase in age the mean CRP levels for women should drop by ~0.052 mg/l (95% CI: 0.0151, 0.0883) and for men they should rise by ~0.049 mg/l (95% CI: 0.0451, 0.0532).</p>
+<p><br> <br></p>
+</div>
+</div>
+<div id="part-2" class="section level3">
+<h3>Part 2</h3>
+<p>First we will count how many missing values there are for <em>cholest</em></p>
+<pre class="r"><code>nrow(q9.data)</code></pre>
+<pre><code>## [1] 4933</code></pre>
+<pre class="r"><code>nrow(q9.data[is.na(q9.data$crp),])</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>nrow(q9.data[is.na(q9.data$cholest),])</code></pre>
+<pre><code>## [1] 3</code></pre>
+<p>There are only three missing values for <em>cholest</em> and our data set is large so we can safely remove these three missin values without losing too much information.</p>
+<pre class="r"><code>q9.data &lt;- q9.data[!is.na(q9.data$cholest),]</code></pre>
+<p>Next we will create a new variable <em>chol.group</em> with cholesterol levels grouped into 7 different levels.</p>
+<ol style="list-style-type: decimal">
+<li>&lt; 160 mg/dl</li>
+<li>160 – 180 mg/dl</li>
+<li>180 – 200 mg/dl</li>
+<li>200 – 220 mg/dl</li>
+<li>220 – 240 mg/dl</li>
+<li>240 – 260 mg/dl</li>
+<li><blockquote>
+<p>260 mg/dl</p>
+</blockquote></li>
+</ol>
+<pre class="r"><code>q9.data[, &quot;chol.group&quot;] &lt;- 0
+
+for(i in 1:nrow(q9.data)){
+  if(q9.data$cholest[i] &lt; 160){
+    q9.data$chol.group[i] &lt;- 1
+  }
+  
+  else if(q9.data$cholest[i] &gt;= 160 &amp; q9.data$cholest[i] &lt; 180){
+    q9.data$chol.group[i] &lt;- 2
+  }
+  
+  else if(q9.data$cholest[i] &gt;= 180 &amp; q9.data$cholest[i] &lt; 200){
+    q9.data$chol.group[i] &lt;- 3
+  }
+  
+  else if(q9.data$cholest[i] &gt;= 200 &amp; q9.data$cholest[i] &lt; 220){
+    q9.data$chol.group[i] &lt;- 4
+  }
+  
+  else if(q9.data$cholest[i] &gt;= 220 &amp; q9.data$age[i] &lt; 240){
+    q9.data$chol.group[i] &lt;- 5
+  }
+  
+  else if(q9.data$cholest[i] &gt;= 240 &amp; q9.data$cholest[i] &lt;= 260){
+    q9.data$chol.group[i] &lt;- 6
+  }
+  else if(q9.data$cholest[i] &gt; 260){
+    q9.data$chol.group[i] &lt;- 7
+  }
+}</code></pre>
+<p><br></p>
+<div id="a-1" class="section level4">
+<h4>A</h4>
+<p>The boxplot in figure Q9.2A shows that the distribution of CRP levels is right skewed for all cholesterol groups. The boxplots for cholesterol groups 6 and 7 are absent because there were no observation of cholesterol levels that high.</p>
+<div class="figure">
+<img src="data:image/png;base64,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" alt="Figure Q9.2A: The boxplots in the figure above show that the distribution of CRP levels is right-skewed for all cholesterol level groups." />
+<p class="caption"><strong>Figure Q9.2A:</strong> The boxplots in the figure above show that the distribution of CRP levels is right-skewed for all cholesterol level groups.</p>
+</div>
+<p><br></p>
+<p>Table Q9.2A reports some of the descriptive statistices for the distribution of CRP levels at differen cholesterol levels and over all groups. Regardless of the cholesterol groups the distribution of CRP levels was right-skewed with heavy-tails (although higher cholesterol groups seemed to be slightly less right skewed).</p>
+<hr />
+<table style="width:100%;">
+<colgroup>
+<col width="21%"></col>
+<col width="4%"></col>
+<col width="12%"></col>
+<col width="7%"></col>
+<col width="5%"></col>
+<col width="12%"></col>
+<col width="4%"></col>
+<col width="8%"></col>
+<col width="4%"></col>
+<col width="8%"></col>
+<col width="8%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Min</th>
+<th align="center">1st Quartile</th>
+<th align="center">Median</th>
+<th align="center">Mean</th>
+<th align="center">3rd Quartile</th>
+<th align="center">Max</th>
+<th align="center">Variance</th>
+<th align="center">CV</th>
+<th align="center">Skewness</th>
+<th align="center">Kurtosis</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Cholesterol Group 1</strong></td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">5.324</td>
+<td align="center">4</td>
+<td align="center">100</td>
+<td align="center">125.5</td>
+<td align="center">2.104</td>
+<td align="center">4.705</td>
+<td align="center">29.98</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Cholesterol Group 2</strong></td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">4.334</td>
+<td align="center">4</td>
+<td align="center">108</td>
+<td align="center">71.49</td>
+<td align="center">1.951</td>
+<td align="center">6.444</td>
+<td align="center">60.54</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>Cholesterol Group 3</strong></td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">3.443</td>
+<td align="center">3</td>
+<td align="center">54</td>
+<td align="center">28.52</td>
+<td align="center">1.551</td>
+<td align="center">4.379</td>
+<td align="center">29.02</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Cholesterol Group 4</strong></td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">3.47</td>
+<td align="center">3</td>
+<td align="center">66</td>
+<td align="center">27.58</td>
+<td align="center">1.514</td>
+<td align="center">5.018</td>
+<td align="center">40.41</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>Cholesterol Group 5</strong></td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">3.2</td>
+<td align="center">3</td>
+<td align="center">63</td>
+<td align="center">18.78</td>
+<td align="center">1.354</td>
+<td align="center">5.052</td>
+<td align="center">46.07</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>All</strong></td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">3.613</td>
+<td align="center">3</td>
+<td align="center">108</td>
+<td align="center">37.86</td>
+<td align="center">1.703</td>
+<td align="center">6.454</td>
+<td align="center">67.99</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table Q9.2A:</strong> Descriptive statistics for the distribution of CRP levels at different cholesterol level groups. From looking at the discrepency between the means and medians, and the large differences between the 3rd quartiles and mximum values we can see that the distributions are all right skewed. This is confirmed by the positive skewness coefficient for all distributions. The large kurtosis values indicate that the distributions are all heavy tailed.</p>
+<hr />
+<p><br> <br></p>
+</div>
+<div id="b-1" class="section level4">
+<h4>B</h4>
+<p>To determine if there is a linear trend between mean CRP levels and cholesterol level we will try and fit and linear model regressing <em>crp</em> onto <em>chol.group</em>. See below:</p>
+<pre class="r"><code>fit.cg &lt;- lm(crp ~ chol.group, data = q9.data)
+summary(fit.cg)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = crp ~ chol.group, data = q9.data)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+##  -4.752  -2.494  -1.494  -0.075 103.667 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  5.17081    0.26211  19.727  &lt; 2e-16 ***
+## chol.group  -0.41914    0.06648  -6.305 3.14e-10 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6.129 on 4928 degrees of freedom
+## Multiple R-squared:  0.008002,   Adjusted R-squared:  0.0078 
+## F-statistic: 39.75 on 1 and 4928 DF,  p-value: 3.139e-10</code></pre>
+<p>In the model summary output above, the very small p-value ($3.14<em>10^{-10} &lt;&lt;&lt; 0.05 $) indicates that there is a statistically significant relationship between cholesterol level and mean CRP levels. Recall that this model regresses CRP levels onto cholesterol level groups with each level covering a range of 20 mg/dl. So the estimate if -0.419 for the slope coefficient indicates that for a 20 mg/dl increase in cholesterol level (a change up one group) we would expect an </em>decrease* in the mean CRP level of approximately 0.419 mg/l. Table Q9.2B reports the confidence interval for the slope of the linear relationship between mean CRP level and cholesterol level group.</p>
+<hr />
+<table style="width:89%;">
+<colgroup>
+<col width="22%"></col>
+<col width="15%"></col>
+<col width="19%"></col>
+<col width="19%"></col>
+<col width="12%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Estimate</th>
+<th align="center">Lower Bound</th>
+<th align="center">Upper Bound</th>
+<th align="center">P.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Intercept</strong></td>
+<td align="center">5.171</td>
+<td align="center">4.657</td>
+<td align="center">5.685</td>
+<td align="center">1.935e-83</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Slope</strong></td>
+<td align="center">-0.4191</td>
+<td align="center">-0.5494</td>
+<td align="center">-0.2888</td>
+<td align="center">3.139e-10</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table Q9.2B:</strong> The point estimates, 95% confidence intervals, and p-values for the parameters of the linear regression model of the relationship between mean CRP levels and cholesterol.</p>
+<hr />
+<p>Table Q9.2B reports the 95% confidence intervals and p-values for both the intercept and slope parameters of our model but we are only interested in the slop parameter since it describes the linear relationship between mean CRP levels and cholesterol. The fact that the p-value is very small – much less than 0.05 – and that the confidence interval for the slope does not include 0 indicates that we can safely concluded that there is indeed a signficant linear relationship between mean CRP levels and cholesterol levels. Keep in mind though that this model was fit using cholesterol levels discretized into groups, with each cholesterol level group having a range of 20 mg/dl. So the estimate of the intercept indicates how much we expect the the mean CRP levels to change when changing from one cholesterol group level (change of 20 mg/dl cholesterol) to another. For an increase in cholesterol level <em>by one level</em> we expect mean CRP levels to decrease by ~0.42 (95% CI: 0.289, 0.549).</p>
+<p><br> <br></p>
+</div>
+<div id="c-1" class="section level4">
+<h4>C</h4>
+<p>To determine if the relationship between mean CRP levels and cholesterol is better approximated by a linear or nonlinear relationship I will fit add terms taking cholesterol level to various powers and compare the Schwarz criterion (BIC) of the models to see if any of the higher order models give better fit. I will do this using both the ungrouped cholesterol variable <em>cholest</em> and the grouped cholesterol level variable <em>chol.group</em>. See below:</p>
+<pre class="r"><code>Grouped.Lin &lt;- lm(crp ~ chol.group, data = q9.data)
+Ungrouped.Lin &lt;- lm(crp ~ cholest, data = q9.data)
+Grouped.Quad.NoInt &lt;- lm(crp ~ chol.group + chol.group^2, data = q9.data)
+Ungrouped.Quad.NoInt &lt;- lm(crp ~ cholest + cholest^2, data = q9.data)
+Grouped.Quad.Int &lt;- lm(crp ~ chol.group + chol.group^2 + chol.group:(chol.group^2), data = q9.data)
+Ungrouped.Quad.Int &lt;- lm(crp ~ cholest + cholest^2 + cholest:(cholest^2), data = q9.data)
+Grouped.Cub.FullInt &lt;- lm(crp ~ chol.group + chol.group^2 + chol.group:(chol.group^2) + chol.group^3 + 
+                            chol.group:(chol.group^3) + (chol.group^2):(chol.group^3) + chol.group:(chol.group^2):(chol.group^3), data = q9.data)
+Ungrouped.Cub.FullInt &lt;- lm(crp ~ cholest + cholest^2 + cholest:(cholest^2) + cholest^3 + 
+                              cholest:(cholest^3) + (cholest^2):(cholest^3) + cholest:(cholest^2):(cholest^3), data = q9.data)
+Grouped.Cub.2wInt &lt;- lm(crp ~ chol.group + chol.group^2 + chol.group:(chol.group^2) + chol.group^3 + 
+                            chol.group:(chol.group^3) + (chol.group^2):(chol.group^3), data = q9.data)
+Ungrouped.Cub.2wInt &lt;- lm(crp ~ cholest + cholest^2 + cholest:(cholest^2) + cholest^3 + 
+                              cholest:(cholest^3) + (cholest^2):(cholest^3), data = q9.data)
+Grouped.Cub.NoInt &lt;- lm(crp ~ chol.group + chol.group^2 + chol.group^3, data = q9.data)
+Ungrouped.Cub.NoInt &lt;- lm(crp ~ cholest + cholest^2 + cholest^3, data = q9.data)
+
+
+
+BIC(Grouped.Lin, Ungrouped.Lin, 
+    Grouped.Quad.NoInt, 
+    Ungrouped.Quad.NoInt, 
+    Grouped.Quad.Int,
+    Ungrouped.Quad.Int,
+    Grouped.Cub.FullInt,
+    Ungrouped.Cub.FullInt,
+    Grouped.Cub.2wInt,
+    Ungrouped.Cub.2wInt,
+    Grouped.Cub.NoInt,
+    Ungrouped.Cub.NoInt)</code></pre>
+<pre><code>##                       df      BIC
+## Grouped.Lin            3 31890.53
+## Ungrouped.Lin          3 31900.83
+## Grouped.Quad.NoInt     3 31890.53
+## Ungrouped.Quad.NoInt   3 31900.83
+## Grouped.Quad.Int       3 31890.53
+## Ungrouped.Quad.Int     3 31900.83
+## Grouped.Cub.FullInt    3 31890.53
+## Ungrouped.Cub.FullInt  3 31900.83
+## Grouped.Cub.2wInt      3 31890.53
+## Ungrouped.Cub.2wInt    3 31900.83
+## Grouped.Cub.NoInt      3 31890.53
+## Ungrouped.Cub.NoInt    3 31900.83</code></pre>
+<p>The lower the BIC the better. None of the models containing higher order cholesterol terms have a lower BIC indicating that the do not provide any better fit. There is no evidence that a higher order relationship between cholesterol level and mean CRP levels is needed.</p>
+<p><br> <br></p>
+<p><br> <br></p>
+</div>
+</div>
 </div>
 </div>
 <div id="appendix" class="section level1">
@@ -3070,7 +4018,525 @@ dev.off()</code></pre>
 </div>
 <div id="a9" class="section level2">
 <h2>A9</h2>
+<pre class="r"><code>## Import Data
+q9.data &lt;- data.frame(read.table(&quot;data/inflamm.txt&quot;, header = T, sep = &quot;&quot;))
+
+q9.data &lt;- q9.data[, c(&quot;crp&quot;, &quot;age&quot;, &quot;male&quot;, &quot;cholest&quot;)]</code></pre>
+<p><br></p>
+<div id="part-1-1" class="section level3">
+<h3>Part 1</h3>
+<pre class="r"><code>nrow(q9.data)</code></pre>
+<pre><code>## [1] 5000</code></pre>
+<pre class="r"><code>nrow(q9.data[is.na(q9.data$crp),])</code></pre>
+<pre><code>## [1] 67</code></pre>
+<pre class="r"><code>nrow(q9.data[is.na(q9.data$age),])</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>nrow(q9.data[is.na(q9.data$male),])</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>###################################################
+
+q9.data &lt;- q9.data[!is.na(q9.data$crp),]
+
+###################################################
+
+q9.data[,&quot;Age.Group&quot;] &lt;- 0
+
+for(i in 1:nrow(q9.data)){
+  if(q9.data$age[i] &gt;= 65 &amp; q9.data$age[i] &lt; 70){
+    q9.data$Age.Group[i] &lt;- &quot;Late Sixties&quot;
+  }
+  
+  else if(q9.data$age[i] &gt;= 70 &amp; q9.data$age[i] &lt; 75){
+    q9.data$Age.Group[i] &lt;- &quot;Early Seventies&quot;
+  }
+  
+  else if(q9.data$age[i] &gt;= 75 &amp; q9.data$age[i] &lt; 80){
+    q9.data$Age.Group[i] &lt;- &quot;Late Seventies&quot;
+  }
+  
+  else if(q9.data$age[i] &gt;= 80 &amp; q9.data$age[i] &lt; 85){
+    q9.data$Age.Group[i] &lt;- &quot;Early Eighties&quot;
+  }
+  
+  else if(q9.data$age[i] &gt;= 85 &amp; q9.data$age[i] &lt; 90){
+    q9.data$Age.Group[i] &lt;- &quot;Late Eighties&quot;
+  }
+  
+  else if(q9.data$age[i] &gt;= 90 &amp; q9.data$age[i] &lt;= 100){
+    q9.data$Age.Group[i] &lt;- &quot;Nineties&quot;
+  }
+}
+
+q9.data$Age.Group &lt;- factor(q9.data$Age.Group, levels = c(&quot;Late Sixties&quot;,
+                                                          &quot;Early Seventies&quot;,
+                                                          &quot;Late Seventies&quot;,
+                                                          &quot;Early Eighties&quot;,
+                                                          &quot;Late Eighties&quot;,
+                                                          &quot;Nineties&quot;)
+                            )
+
+###################################################
+
+colnames(q9.data) &lt;- c(&quot;crp&quot;, &quot;age&quot;, &quot;gender&quot;, &quot;cholest&quot;, &quot;Age.Group&quot;)
+
+for(i in 1:nrow(q9.data)){
+  if(q9.data$gender[i] == 0){
+    q9.data$gender[i] &lt;- &quot;female&quot;
+  }
+  else if(q9.data$gender[i] == 1){
+    q9.data$gender[i] &lt;- &quot;male&quot;
+  }
+}
+
+q9.data$gender &lt;- factor(q9.data$gender, levels = c(&quot;female&quot;, &quot;male&quot;))
+
+###################################################
+
+## Part A
+png(&quot;images/q91a_boxplots.png&quot;,
+    width = 1300, height = 1200)
+
+par(oma = c(1,3,5,2), mar = c(6, 6, 5, 4))
+layout(matrix(c(1,1,1,2,3,3,3,3), 2, 4, byrow = TRUE))
+
+boxplot(crp~Age.Group, data = q9.data,
+        main = &quot;Distribution of CRP Levels for Different Age Groups&quot;,
+        xlab=&quot;Age Group&quot;, 
+        ylab=&quot;CRP Level (mg/l)&quot;,
+        cex.main = 2, cex.lab = 2, cex.axis = 2, cex = 1.5, font.main = 1)
+
+boxplot(crp~gender, data = q9.data,
+        main = &quot;Distribution of CRP Levels \n Females and Males&quot;,
+        xlab=&quot;Gender&quot;, 
+        ylab=&quot;CRP Level (mg/l)&quot;,
+        cex.main = 2, cex.lab = 2, cex.axis = 2, cex = 1.5, font.main = 1)
+
+boxplot(crp~Age.Group + gender, data=q9.data, 
+        main=&quot;Distribution of CRP Levels for Males and Females of Different Age Groups&quot;,
+        xlab=&quot;Group&quot;, 
+        ylab=&quot;CRP Level (mg/l)&quot;,
+        cex.main = 2, cex.lab = 2, cex.axis = 1.5, cex = 1.5, font.main = 1)
+
+mtext(text = &quot;Boxplots Showing Distribution of CRP Levels&quot;,
+      outer = T,
+      padj = -.25,
+      cex = 2.5,
+      font = 2)
+
+dev.off()</code></pre>
+<pre><code>## png 
+##   2</code></pre>
+<pre class="r"><code>###################################################
+
+library(moments)
+
+x &lt;- data.frame(fm = c(as.numeric(summary(q9.data$crp[q9.data$gender==&quot;female&quot;])), 
+                       var(q9.data$crp[q9.data$gender==&quot;female&quot;]),
+                       sqrt(var(q9.data$crp[q9.data$gender==&quot;female&quot;]))/mean(q9.data$crp[q9.data$gender==&quot;female&quot;]),
+                       skewness(q9.data$crp[q9.data$gender==&quot;female&quot;]),
+                       kurtosis(q9.data$crp[q9.data$gender==&quot;female&quot;])),
+                ml = c(as.numeric(summary(q9.data$crp[q9.data$gender==&quot;male&quot;])), 
+                       var(q9.data$crp[q9.data$gender==&quot;male&quot;]),
+                       sqrt(var(q9.data$crp[q9.data$gender==&quot;male&quot;]))/mean(q9.data$crp[q9.data$gender==&quot;male&quot;]),
+                       skewness(q9.data$crp[q9.data$gender==&quot;male&quot;]),
+                       kurtosis(q9.data$crp[q9.data$gender==&quot;male&quot;])),
+                l6 = c(as.numeric(summary(q9.data$crp[q9.data$Age.Group==&quot;Late Sixties&quot;])), 
+                       var(q9.data$crp[q9.data$Age.Group==&quot;Late Sixties&quot;]),
+                       sqrt(var(q9.data$crp[q9.data$Age.Group==&quot;Late Sixties&quot;]))/mean(q9.data$crp[q9.data$Age.Group==&quot;Late Sixties&quot;]),
+                       skewness(q9.data$crp[q9.data$Age.Group==&quot;Late Sixties&quot;]),
+                       kurtosis(q9.data$crp[q9.data$Age.Group==&quot;Late Sixties&quot;])),
+                e7 = c(as.numeric(summary(q9.data$crp[q9.data$Age.Group==&quot;Early Seventies&quot;])), 
+                       var(q9.data$crp[q9.data$Age.Group==&quot;Early Seventies&quot;]),
+                       sqrt(var(q9.data$crp[q9.data$Age.Group==&quot;Early Seventies&quot;]))/mean(q9.data$crp[q9.data$Age.Group==&quot;Early Seventies&quot;]),
+                       skewness(q9.data$crp[q9.data$Age.Group==&quot;Early Seventies&quot;]),
+                       kurtosis(q9.data$crp[q9.data$Age.Group==&quot;Early Seventies&quot;])),
+                l7 = c(as.numeric(summary(q9.data$crp[q9.data$Age.Group==&quot;Late Seventies&quot;])), 
+                       var(q9.data$crp[q9.data$Age.Group==&quot;Late Seventies&quot;]),
+                       sqrt(var(q9.data$crp[q9.data$Age.Group==&quot;Late Seventies&quot;]))/mean(q9.data$crp[q9.data$Age.Group==&quot;Late Seventies&quot;]),
+                       skewness(q9.data$crp[q9.data$Age.Group==&quot;Late Seventies&quot;]),
+                       kurtosis(q9.data$crp[q9.data$Age.Group==&quot;Late Seventies&quot;])),
+                e8 = c(as.numeric(summary(q9.data$crp[q9.data$Age.Group==&quot;Early Eighties&quot;])), 
+                       var(q9.data$crp[q9.data$Age.Group==&quot;Early Eighties&quot;]),
+                       sqrt(var(q9.data$crp[q9.data$Age.Group==&quot;Early Eighties&quot;]))/mean(q9.data$crp[q9.data$Age.Group==&quot;Early Eighties&quot;]),
+                       skewness(q9.data$crp[q9.data$Age.Group==&quot;Early Eighties&quot;]),
+                       kurtosis(q9.data$crp[q9.data$Age.Group==&quot;Early Eighties&quot;])),
+                l8 = c(as.numeric(summary(q9.data$crp[q9.data$Age.Group==&quot;Late Eighties&quot;])), 
+                       var(q9.data$crp[q9.data$Age.Group==&quot;Late Eighties&quot;]),
+                       sqrt(var(q9.data$crp[q9.data$Age.Group==&quot;Late Eighties&quot;]))/mean(q9.data$crp[q9.data$Age.Group==&quot;Late Eighties&quot;]),
+                       skewness(q9.data$crp[q9.data$Age.Group==&quot;Late Eighties&quot;]),
+                       kurtosis(q9.data$crp[q9.data$Age.Group==&quot;Late Eighties&quot;])),
+                nn = c(as.numeric(summary(q9.data$crp[q9.data$Age.Group==&quot;Nineties&quot;])), 
+                       var(q9.data$crp[q9.data$Age.Group==&quot;Nineties&quot;]),
+                       sqrt(var(q9.data$crp[q9.data$Age.Group==&quot;Nineties&quot;]))/mean(q9.data$crp[q9.data$Age.Group==&quot;Nineties&quot;]),
+                       skewness(q9.data$crp[q9.data$Age.Group==&quot;Nineties&quot;]),
+                       kurtosis(q9.data$crp[q9.data$Age.Group==&quot;Nineties&quot;]))
+                )
+
+x &lt;- t(x)
+colnames(x) &lt;- c(&quot;Min&quot;, &quot;1st Quartile&quot;, &quot;Median&quot;, &quot;Mean&quot;, &quot;3rd Quartile&quot;, &quot;Max&quot;, &quot;Variance&quot;, &quot;CV&quot;, &quot;Skewness&quot;, &quot;Kurtosis&quot;)
+rownames(x) &lt;- c(&quot;Female&quot;, &quot;Male&quot;, &quot;Late Sixties&quot;, &quot;Early Seventies&quot;, &quot;Late Seventies&quot;, &quot;Early Eighties&quot;, &quot;Late Eighties&quot;, &quot;Nineties&quot;)
+
+pandoc.table(x,
+             caption = &quot;**Table Q9.1A:** Descriptive statistics for the distribution of CRP levels at different age and gender groups. From looking at the discrepency between the means and medians, and the large differences between the 3rd quartiles and mximum values we can see that the distributions are all right skewed. This is confirmed by the positive skewness coefficient for all distributions. The large kurtosis values indicate that the distributions are all heavy tailed.&quot;,
+             split.table = Inf)</code></pre>
+<pre><code>## 
+## ----------------------------------------------------------------------------------------------------------------------
+##        &amp;nbsp;          Min   1st Quartile   Median   Mean   3rd Quartile   Max   Variance   CV    Skewness   Kurtosis 
+## --------------------- ----- -------------- -------- ------ -------------- ----- ---------- ----- ---------- ----------
+##      **Female**         0         1           2     3.633        4         86     30.14    1.511   5.443       50.2   
+## 
+##       **Male**          0         1           2     3.587        3         108    48.53    1.942   6.911      71.82   
+## 
+##   **Late Sixties**      0         1           2     3.757        3         108    47.18    1.828   7.543      85.41   
+## 
+##  **Early Seventies**    0         1           2      3.37        3         63     23.57    1.441   4.884      38.85   
+## 
+##  **Late Seventies**     0         1           2     3.633        3         83     37.61    1.688   5.499      47.65   
+## 
+##  **Early Eighties**     0         1           2     3.825        3         51     44.31    1.74    3.868       20.4   
+## 
+##   **Late Eighties**     0         1           2     3.597        4         53     37.22    1.696   5.292      38.66   
+## 
+##     **Nineties**        0         1           2     4.256        3         76     144.8    2.827   5.647      34.13   
+## ----------------------------------------------------------------------------------------------------------------------
+## 
+## **Table Q9.1A:** Descriptive statistics for the distribution of CRP levels at different age and gender groups. From looking at the discrepency between the means and medians, and the large differences between the 3rd quartiles and mximum values we can see that the distributions are all right skewed. This is confirmed by the positive skewness coefficient for all distributions. The large kurtosis values indicate that the distributions are all heavy tailed.</code></pre>
+<pre class="r"><code>###################################################
+
+## Part B
+x &lt;- aov(crp~gender, data = q9.data)
+summary(x)</code></pre>
+<pre><code>##               Df Sum Sq Mean Sq F value Pr(&gt;F)
+## gender         1      3    2.60   0.069  0.793
+## Residuals   4931 186703   37.86</code></pre>
+<pre class="r"><code>###################################################
+
+## Part C
+fit.a1 &lt;- lm(crp ~ age, data = q9.data)
+fit.a2 &lt;- lm(crp ~ Age.Group, data = q9.data)
+summary(fit.a1)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = crp ~ age, data = q9.data)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+##  -3.616  -2.614  -1.614  -0.611 104.384 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)   
+## (Intercept)  3.6361602  1.1495801   3.163  0.00157 **
+## age         -0.0003068  0.0157453  -0.019  0.98445   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6.153 on 4931 degrees of freedom
+## Multiple R-squared:  7.7e-08,    Adjusted R-squared:  -0.0002027 
+## F-statistic: 0.0003797 on 1 and 4931 DF,  p-value: 0.9845</code></pre>
+<pre class="r"><code>summary(fit.a2)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = crp ~ Age.Group, data = q9.data)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+##  -4.256  -2.633  -1.633  -0.370 104.243 
+## 
+## Coefficients:
+##                          Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)               3.75736    0.14932  25.163   &lt;2e-16 ***
+## Age.GroupEarly Seventies -0.38704    0.21519  -1.799   0.0721 .  
+## Age.GroupLate Seventies  -0.12396    0.24435  -0.507   0.6120    
+## Age.GroupEarly Eighties   0.06769    0.32260   0.210   0.8338    
+## Age.GroupLate Eighties   -0.16014    0.53406  -0.300   0.7643    
+## Age.GroupNineties         0.49905    0.99654   0.501   0.6165    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6.153 on 4927 degrees of freedom
+## Multiple R-squared:  0.0008874,  Adjusted R-squared:  -0.0001265 
+## F-statistic: 0.8752 on 5 and 4927 DF,  p-value: 0.4967</code></pre>
+<pre class="r"><code>###################################################
+
+## Part D
+x &lt;- aov(crp ~ gender + Age.Group + gender:Age.Group, data = q9.data)
+summary(x)</code></pre>
+<pre><code>##                    Df Sum Sq Mean Sq F value Pr(&gt;F)  
+## gender              1      3    2.60   0.069 0.7933  
+## Age.Group           5    165   32.99   0.873 0.4984  
+## gender:Age.Group    5    546  109.26   2.891 0.0131 *
+## Residuals        4921 185992   37.80                 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<pre class="r"><code>###################################################
+
+interaction.plot(q9.data$Age.Group, q9.data$gender, q9.data$crp,
+                 trace.label = &quot;Gender&quot;,
+                 type = &quot;b&quot;, col = c(&quot;darkmagenta&quot;, &quot;forestgreen&quot;),
+                 leg.bty = &quot;o&quot;, leg.bg = &quot;beige&quot;, lwd = 2, pch = c(20, 24),
+                 xlab = &quot;Age Group&quot;, 
+                 ylab = &quot;CRP Level&quot;,
+                 main = &quot;Interaction Plot&quot;, cex.axis = .5)</code></pre>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABUAAAAPACAMAAADDuCPrAAAAzFBMVEUAAAAAADIAADoAAFgAAGYAOHwAOjoAOpAAYp0AZmYAZpAAZrYiiyI4AAA4ip04ir06AAA6ADo6OgA6Ojo6OpA6ZmY6kJA6kNtiAABir9xmAABmADpmZmZmkJBmtrZmtv+KOACKYgCK0r2K0tyLAIuQOgCQkGaQ27aQ2/+vYgCv9dy2ZgC2Zma2tma225C2/7a2///SijLS9b3S9dzbkDrbtmbb2//b/7bb/9vb///1r1j10nz19Z319b319dz/tmb/25D//7b//9v///99L04ZAAAACXBIWXMAAB2HAAAdhwGP5fFlAAAgAElEQVR4nO3d/YPaWn7YYeLcrtPazXrzNllvG29SO/WGNrk3JU3tpsE2////VPQCSCAY+M6RdCQ9zw+7MwyIY3n8uUevrHYAhKzGHgDAVAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShAkIACBAkoQJCAAgQJKECQgAIECShx396tVqtXn5972vaptxEcFv39/V0jualcRsOH1g9G/WOSKwEl7q6A7p/UV1lOi+4joMeE3rXwHv+Y5EtAibsjoD8+7Z/ST1mai+4noHVB71h4j39MciagxN0R0PWqt7I0F91TQKsl3rHwHv+Y5ExAicsnoCm0OrmpCvrm4gfDjIWJEFDiZhzQ6s+2+unnix8MMhYmQkCJm3NAq8WXe0EFlGsElLhGQLd1Qaodia+/7I4PdhzRbrZmU327aTxabz6fBam5UX2x6PPGlQd16glk4wXnA2w5W8b2akDPF97xx2QhBJS4i4CejsM8HR9slqVxnKYOYV3O9elJm8aLzjrbeOXNgFab36XjY50DbLkzoJcLF9DlElDizgP6l6e2lIE6L0ujPcdJYFnGP68eKuZ0zX4eM1fP+RqvvBXQzkV0DrDl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" width="672" /></p>
+<pre class="r"><code>###################################################
+
+## Part E
+fit.int &lt;- lm(crp ~ age + gender + age:gender, data= q9.data)
+summary(fit.int)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = crp ~ age + gender + age:gender, data = q9.data)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+##  -4.993  -2.575  -1.661  -0.170 104.830 
+## 
+## Coefficients:
+##                Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)     7.38291    1.52157   4.852 1.26e-06 ***
+## age            -0.05170    0.02092  -2.471 0.013494 *  
+## gendermale     -8.73738    2.32410  -3.759 0.000172 ***
+## age:gendermale  0.11923    0.03179   3.750 0.000179 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6.146 on 4929 degrees of freedom
+## Multiple R-squared:  0.002859,   Adjusted R-squared:  0.002253 
+## F-statistic: 4.712 on 3 and 4929 DF,  p-value: 0.002752</code></pre>
+<pre class="r"><code>###################################################
+
+sf &lt;- summary(fit.int)
+v &lt;- sf$cov.unscaled
+c &lt;- sf$coefficients
+
+icp &lt;- c[1,1]+c[3,1]
+SE.icp &lt;- sqrt( v[1,1] + v[3,3] + 2*v[3,1] )
+LB.icp &lt;- icp - 1.96*SE.icp
+UB.icp &lt;- icp + 1.96*SE.icp
+
+slp &lt;- c[2,1] + c[4,1]
+SE.slp &lt;- sqrt( v[2,2] + v[4,4] + 2*v[2,4] )
+LB.slp &lt;- slp - 1.96*SE.slp
+UB.slp &lt;- slp + 1.96*SE.slp
+
+males &lt;- data.frame(Intercept = c(icp, LB.icp, UB.icp),
+                    Slope = c(slp, LB.slp, UB.slp))
+
+icp &lt;- c[1,1]
+SE.icp &lt;- sqrt(v[1,1])
+LB.icp &lt;- icp - 1.96*SE.icp
+UB.icp &lt;- icp + 1.96*SE.icp
+
+slp &lt;- c[2,1]
+SE.slp &lt;- sqrt( v[2,2] )
+LB.slp &lt;- slp - 1.96*SE.slp
+UB.slp &lt;- slp + 1.96*SE.slp
+
+females &lt;- data.frame(Interceptf = c(icp, LB.icp, UB.icp),
+                    Slopem = c(slp, LB.slp, UB.slp))
+
+
+###################################################
+
+x &lt;- t(cbind(females, males))
+
+colnames(x) &lt;- c(&quot;Estimate&quot;, &quot;Lower Bound&quot;, &quot;Upper Bound&quot;)
+rownames(x) &lt;- c(&quot;Females: Intercept&quot;, &quot;Females: Slope&quot;, &quot;Males: Intercept&quot;, &quot;Males: Slope&quot;)
+
+pandoc.table(x,
+             caption = &quot;**Table Q9.1E:** 95% confidence intervals for the effective slope and intercept coefficients for the linear regression of mean CRP levels onto age and gender. The inclusion of the ineraction term between age and gender effectively gives rise to two different sets of intercept and slope coefficients, one for males and one for females.&quot;,
+             split.table = Inf)</code></pre>
+<pre><code>## 
+## ---------------------------------------------------------------
+##          &amp;nbsp;           Estimate   Lower Bound   Upper Bound 
+## ------------------------ ---------- ------------- -------------
+##  **Females: Intercept**    7.383        6.898         7.868    
+## 
+##    **Females: Slope**     -0.0517     -0.05837      -0.04503   
+## 
+##   **Males: Intercept**     -1.354      -1.915        -0.7942   
+## 
+##     **Males: Slope**      0.06753      0.0599        0.07516   
+## ---------------------------------------------------------------
+## 
+## **Table Q9.1E:** 95% confidence intervals for the effective slope and intercept coefficients for the linear regression of mean CRP levels onto age and gender. The inclusion of the ineraction term between age and gender effectively gives rise to two different sets of intercept and slope coefficients, one for males and one for females.</code></pre>
+<pre class="r"><code>###################################################
+
+## Part F
+fit.w &lt;- lm(crp ~ age, data = q9.data[q9.data$gender==&quot;female&quot;,])
+summary(fit.w)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = crp ~ age, data = q9.data[q9.data$gender == &quot;female&quot;, 
+##     ])
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -4.022 -2.609 -1.661  0.133 82.081 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  7.38291    1.35759   5.438 5.84e-08 ***
+## age         -0.05170    0.01866  -2.770  0.00564 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 5.483 on 2859 degrees of freedom
+## Multiple R-squared:  0.002676,   Adjusted R-squared:  0.002327 
+## F-statistic: 7.672 on 1 and 2859 DF,  p-value: 0.005645</code></pre>
+<pre class="r"><code>###################################################
+
+sf &lt;- summary(fit.w)
+
+x &lt;- data.frame(E = c(sf$coefficients[1,1], sf$coefficients[2,1]),
+                LB = c(sf$coefficients[1,1] - 1.96*sf$coefficients[1,2], sf$coefficients[2,1] - 1.96*sf$coefficients[2,2] ),
+                UB = c(sf$coefficients[1,1] + 1.96*sf$coefficients[1,2], sf$coefficients[2,1] + 1.96*sf$coefficients[2,2] ),
+                pv = c(sf$coefficients[1,4], sf$coefficients[2,4]))
+
+colnames(x) &lt;- c(&quot;Estimate&quot;, &quot;Lower Bound&quot;, &quot;Upper Bound&quot;, &quot;P.value&quot;)
+rownames(x) &lt;- c(&quot;Intercept&quot;, &quot;Slope&quot;)
+
+pandoc.table(x,
+             caption = &quot;**Table Q9.1F:** The point estimates, 95% confidence intervals, and p-values for the parameters of the regression model of the relationship between mean CRP levels and age in women.&quot;,
+             split.table = Inf)</code></pre>
+<pre><code>## 
+## ----------------------------------------------------------------
+##     &amp;nbsp;       Estimate   Lower Bound   Upper Bound   P.value 
+## --------------- ---------- ------------- ------------- ---------
+##  **Intercept**    7.383        4.722         10.04     5.835e-08
+## 
+##    **Slope**     -0.0517     -0.08828      -0.01512    0.005645 
+## ----------------------------------------------------------------
+## 
+## **Table Q9.1F:** The point estimates, 95% confidence intervals, and p-values for the parameters of the regression model of the relationship between mean CRP levels and age in women.</code></pre>
+<pre class="r"><code>###################################################
+
+## Part G
+fit.m &lt;- lm(crp ~ age, data=q9.data[q9.data$gender==&quot;male&quot;,])
+summary(fit.m)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = crp ~ age, data = q9.data[q9.data$gender == &quot;male&quot;, 
+##     ])
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+##  -4.993  -2.534  -1.676  -0.315 104.830 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept) -1.35446    1.98885  -0.681   0.4959  
+## age          0.06753    0.02710   2.492   0.0128 *
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6.958 on 2070 degrees of freedom
+## Multiple R-squared:  0.002991,   Adjusted R-squared:  0.002509 
+## F-statistic:  6.21 on 1 and 2070 DF,  p-value: 0.01278</code></pre>
+<pre class="r"><code>###################################################
+
+fit.m &lt;- lm(crp ~ 0 + age, data=q9.data[q9.data$gender==&quot;male&quot;,])
+summary(fit.m)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = crp ~ 0 + age, data = q9.data[q9.data$gender == 
+##     &quot;male&quot;, ])
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+##  -4.618  -2.537  -1.635  -0.390 104.708 
+## 
+## Coefficients:
+##     Estimate Std. Error t value Pr(&gt;|t|)    
+## age 0.049128   0.002082   23.59   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6.957 on 2071 degrees of freedom
+## Multiple R-squared:  0.2118, Adjusted R-squared:  0.2114 
+## F-statistic: 556.6 on 1 and 2071 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>###################################################
+
+sfm &lt;- summary(fit.m)
+
+x &lt;- data.frame(E = c(sfm$coefficients[1,1]),
+                LB = c(sfm$coefficients[1,1] - 1.96*sfm$coefficients[1,2]),
+                UB = c(sfm$coefficients[1,1] + 1.96*sfm$coefficients[1,2] ),
+                pv = c(sfm$coefficients[1,4]))
+
+colnames(x) &lt;- c(&quot;Estimate&quot;, &quot;Lower Bound&quot;, &quot;Upper Bound&quot;, &quot;P.value&quot;)
+rownames(x) &lt;- c(&quot;Slope&quot;)
+
+pandoc.table(x,
+             caption = &quot;**Table Q9.1F:** The point estimate, 95% confidence interval, and p-value for the slope coefficient of the regression model of the relationship between mean CRP levels and age in men.&quot;,
+             split.table = Inf)</code></pre>
+<pre><code>## 
+## -------------------------------------------------------------
+##   &amp;nbsp;     Estimate   Lower Bound   Upper Bound   P.value  
+## ----------- ---------- ------------- ------------- ----------
+##  **Slope**   0.04913      0.04505       0.05321    3.436e-109
+## -------------------------------------------------------------
+## 
+## **Table Q9.1F:** The point estimate, 95% confidence interval, and p-value for the slope coefficient of the regression model of the relationship between mean CRP levels and age in men.</code></pre>
+<pre class="r"><code>###################################################
+
+## Part H
+nm &lt;- nrow(q9.data[q9.data$gender==&quot;male&quot;,])
+nf &lt;- nrow(q9.data[q9.data$gender==&quot;female&quot;,])
+df &lt;- nm + nf - 3
+
+dif &lt;- sfm$coefficients[1,1] - sf$coefficients[2,1]
+se &lt;- (sfm$coefficients[1,2] + sf$coefficients[2,2])^2
+
+t &lt;- dif/se
+
+x &lt;- data.frame(d = dif,
+                ts = t,
+                df = df,
+                pv = pt(t, df = df, lower.tail = F))
+
+colnames(x) &lt;- c(&quot;Observed Difference&quot;, &quot;Test Statistic&quot;, &quot;Degrees of Freedom&quot;, &quot;P-Value&quot;)
+
+pandoc.table(x,
+             caption = &quot;**Table Q9.1H:** The results of the t-test for the difference between the slope parameters of the mens and womens regression model of the relationship between mean CRP levels and age.&quot;)</code></pre>
+<pre><code>## 
+## ---------------------------------------------------------------------
+##  Observed Difference   Test Statistic   Degrees of Freedom   P-Value 
+## --------------------- ---------------- -------------------- ---------
+##        0.1008              234.2               4930             0    
+## ---------------------------------------------------------------------
+## 
+## **Table Q9.1H:** The results of the t-test for the difference between the slope parameters of the mens and womens regression model of the relationship between mean CRP levels and age.</code></pre>
+<pre class="r"><code>###################################################
+
+## Part I
+x &lt;- data.frame(E = c(sf$coefficients[2,1], sfm$coefficients[1,1]),
+                LB = c(sf$coefficients[2,1] - 1.96*sf$coefficients[2,2], sfm$coefficients[1,1] - 1.96*sfm$coefficients[1,2] ),
+                UB = c(sf$coefficients[2,1] + 1.96*sf$coefficients[2,2], sfm$coefficients[1,1] + 1.96*sfm$coefficients[1,2] ),
+                pv = c(sf$coefficients[2,4], sfm$coefficients[1,4]))
+
+colnames(x) &lt;- c(&quot;Estimate&quot;, &quot;Lower Bound&quot;, &quot;Upper Bound&quot;, &quot;P.value&quot;)
+rownames(x) &lt;- c(&quot;Women&quot;, &quot;Men&quot;)
+
+pandoc.table(x,
+             caption = &quot;**Table Q9.1I:** Point estimates, 95% confidence intervals, and p-values for the slope of the linear relationship between mean CRP levels and age in women and men.&quot;,
+             split.table = Inf)</code></pre>
+<pre><code>## 
+## -------------------------------------------------------------
+##   &amp;nbsp;     Estimate   Lower Bound   Upper Bound   P.value  
+## ----------- ---------- ------------- ------------- ----------
+##  **Women**   -0.0517     -0.08828      -0.01512     0.005645 
+## 
+##   **Men**    0.04913      0.04505       0.05321    3.436e-109
+## -------------------------------------------------------------
+## 
+## **Table Q9.1I:** Point estimates, 95% confidence intervals, and p-values for the slope of the linear relationship between mean CRP levels and age in women and men.</code></pre>
+<p><br></p>
+</div>
+<div id="part-2-1" class="section level3">
+<h3>Part 2</h3>
 <p><br> <br></p>
+</div>
 </div>
 <div id="a10" class="section level2">
 <h2>A10</h2>
