@@ -510,11 +510,161 @@ model that is still able to efficiently predict water usage.
 
 <br>
 
-```{r, eval=F}
-
-qdata <- data.frame(read.table("data/water.txt", header = T, sep = ""))
+```{r, include=F}
+## Import Data
+q2data <- data.frame(read.table("data/water.txt", header = T, sep = ""))
 
 ```
+
+
+  The first model I will fit is the full mode,l containing all 5 explanatory variables and all 10 first order interaction terms. This gives a total of 16 parameters and the size of our data-set is only 17 so we know in advance this model will be significantly overfit. However, I would like to start with the semi-full model (we don't have enough observations to fit a model with higher interaction terms, there are a total of 26 interaction terms but including them all would mean we would be fitting a model with more parameters than we have observations in our data set). See below:
+
+  
+```{r}
+fit.full <- lm(USAGE ~ TEMP + PROD + DAYS + PAYR + HOUR +
+                 TEMP:PROD + TEMP:DAYS + TEMP:PAYR + TEMP:HOUR + PROD:DAYS + 
+                 PROD:PAYR + PROD:HOUR + DAYS:PAYR + DAYS:HOUR + PAYR:HOUR,
+               data = q2data)
+summary(fit.full)
+```
+
+
+  The model above definitely contains to0 many parameters, the first thing we will do is use an F-test to determine if any of the interaction coefficients are significant. To do this I will fit another model including with no interaction terms and use the R function "anova()" to perform and F-test comparing the full model (with interaction terms) to the reduced model (no interaction terms). The null hypothesis of this test is that the interaction terms contain no useful information for predicting mean water usage, or in mathematical terms, that their slope coefficients are zero. The alternative hypothesis is that at least one of the interaction terms includes useful information for predicting mean water usage, or in mathematical terms that at least one of the slope coefficients is non-zero.
+  
+***
+  
+```{r, echo=F, results="asis"}
+
+fit.full.noInt <- lm(USAGE ~ TEMP + PROD + DAYS + PAYR + HOUR, data = q2data)
+a <- anova(fit.full.noInt, fit.full)
+
+x <- data.frame(f = a$F[2], numdf <- a$Df[2], dendf <- a$Res.Df[2], p <- a$`Pr(>F)`[2])
+colnames(x) <- c("Observed F-Statistic", "Numerator Degrees of Freedom", "Denominator Degrees of Freedom", "P-value")
+
+pandoc.table(x,
+             caption = "**Table Q21:** The results of the F-test comparing the model without interaction terms to the model including interaction terms.",
+             split.table = Inf)
+
+```
+  
+***
+
+  Table Q21 reports the results of the F-test comparing the model without interaction terms to the model with interaction terms. The null hypothesis for this test is that the interaction terms include no significant additional information for predicting mean water usage. Since the p-value is large (0.76 >> 0.05) we can safely accept the null hypothesis that the interaction terms do not include any useful additional information for predicting mean water usage.
+  
+  Table Q22 shows gives the cestimated value, 95% confidence interval, and p-value for each coefficient of the model containing all five explanatory variables. Except for *PRD*, the p-values for all slope coefficients are greater than 0.05 indicating that they are likely to not provide any useful information for predicting mean water usage. However, note that -- in addition to the 95% confidence interval for *PROD* -- the 95% confidence interval for the slope parameter for *PAYR* does not include zero, indicating that this variable may include useful information in predictin mean water usage.
+  
+***
+  
+```{r, echo=F, results="asis"}
+
+sf <- summary(fit.full.noInt)
+
+x <- data.frame(E = c(sf$coefficients[1,1], sf$coefficients[2,1], 
+                      sf$coefficients[3,1], sf$coefficients[4,1], 
+                      sf$coefficients[5,1], sf$coefficients[6,1] ),
+                LB = c(sf$coefficients[1,1] - 1.96*sf$coefficients[1,2], 
+                       sf$coefficients[2,1] - 1.96*sf$coefficients[2,2], 
+                       sf$coefficients[3,1] - 1.96*sf$coefficients[3,2], 
+                       sf$coefficients[4,1] - 1.96*sf$coefficients[4,2], 
+                       sf$coefficients[5,1] - 1.96*sf$coefficients[5,2], 
+                       sf$coefficients[6,1] - 1.96*sf$coefficients[6,2] ),
+                UB = c(sf$coefficients[1,1] + 1.96*sf$coefficients[1,2], 
+                       sf$coefficients[2,1] + 1.96*sf$coefficients[2,2], 
+                       sf$coefficients[3,1] + 1.96*sf$coefficients[3,2], 
+                       sf$coefficients[4,1] + 1.96*sf$coefficients[4,2], 
+                       sf$coefficients[5,1] + 1.96*sf$coefficients[5,2], 
+                       sf$coefficients[6,1] + 1.96*sf$coefficients[6,2] ),
+                pv = c(sf$coefficients[1,4], sf$coefficients[2,4],
+                       sf$coefficients[3,4], sf$coefficients[4,4],
+                       sf$coefficients[5,4], sf$coefficients[6,4]))
+
+colnames(x) <- c("Estimate", "Lower Bound", "Upper Bound", "P-value")
+rownames(x) <- c("Intercept", "TEMP", "PROD", "DAYS", "PAYR", "HOUR")
+
+pandoc.table(x,
+             caption = "**Table Q22:** The point estimates, 95% confidence intervals, and p-values for the coefficients of the linear regression model for mean water usage including all five explanatory variables.",
+             split.table = Inf)
+
+```
+  
+***
+
+  I will now fit a model containing only *PROD* and *PAYR* as predictor variables for mean water usage. I will use an F-test to compare this reduced model with only two explanatory variables to the more full model with all 5 explanatory variables to determine if the three removed variables (*TEMP*, *DAYS*, and *HOUR*) contain any useful information for predicting mean water usage. The null hypothesis of this test is that the explanatory variables *TEMP*, *DAYS*, and *HOUR* contain no useful information for predicting mean water usage, or in mathematical terms, that their slope coefficients are zero. The alternative hypothesis is that at least one of the explanatory variables *TEMP*, *DAYS*, and *HOUR* includes useful information for predicting mean water usage, or in mathematical terms that at least one of the slope coefficients is non-zero. The results of this test are given in table Q23.
+  
+***
+  
+```{r, echo=F, results="asis"}
+
+fit.red2 <- lm(USAGE ~ PROD + PAYR, data = q2data)
+a <- anova(fit.red2, fit.full.noInt)
+
+x <- data.frame(f = a$F[2], numdf <- a$Df[2], dendf <- a$Res.Df[2], p <- a$`Pr(>F)`[2])
+colnames(x) <- c("Observed F-Statistic", "Numerator Degrees of Freedom", "Denominator Degrees of Freedom", "P-value")
+
+pandoc.table(x,
+             caption = "**Table Q23:** The results of the F-test comparing the model with only *PROD* and *PAYR* as predictor variables to the model including all five explanatory variables.",
+             split.table = Inf)
+
+```
+  
+***
+
+  The large p-value (0.56 >> 0.05) reported in table Q23 indicates that we fail to reject our null hypothesis and thus conclude that there is no evidence that the explanatory variables *TEMP*, *DAYS*, and *HOUR* contain useful information for predicting mean water usage.
+  
+   Table Q24 shows gives the cestimated value, 95% confidence interval, and p-value for each coefficient of the model containing *PROD* and *PAYR* as predictor variables for mean water usage. Note that the p-value of each parameter is less than 0.05 and that none of the 95% confidence intervals contain 0. This indicates that at a 5% significane level, all three parameters appear significant.
+
+***
+  
+```{r, echo=F, results="asis"}
+
+sf <- summary(fit.red2)
+
+x <- data.frame(E = c(sf$coefficients[1,1], sf$coefficients[2,1], sf$coefficients[3,1] ),
+                LB = c(sf$coefficients[1,1] - 1.96*sf$coefficients[1,2], 
+                       sf$coefficients[2,1] - 1.96*sf$coefficients[2,2], 
+                       sf$coefficients[3,1] - 1.96*sf$coefficients[3,2]),
+                UB = c(sf$coefficients[1,1] + 1.96*sf$coefficients[1,2], 
+                       sf$coefficients[2,1] + 1.96*sf$coefficients[2,2], 
+                       sf$coefficients[3,1] + 1.96*sf$coefficients[3,2]),
+                pv = c(sf$coefficients[1,4], sf$coefficients[2,4], sf$coefficients[3,4]))
+
+colnames(x) <- c("Estimate", "Lower Bound", "Upper Bound", "P-value")
+rownames(x) <- c("Intercept", "PROD", "PAYR")
+
+pandoc.table(x,
+             caption = "**Table Q24:** The point estimates, 95% confidence intervals, and p-values for the coefficients of the linear regression model for mean water usage using *PROD* and *PAYR* as predictor variables.",
+             split.table = Inf)
+
+```
+  
+***
+
+  The last thing I will do is compare the Schwarz criterion (or BIC) the above model containing both *PROD* and *PAYR* and models containing only *PROD* and only *PAYR*. The BIC judges a model on it's fit, but also penelizes models for having more parameters, thus trying to prevent overfit and helping to find the most parsimonious model, The lower the BIC value the better. Table Q25 reports the observed BIC values for each model.
+
+***
+  
+```{r, echo=F, results="asis"}
+
+b <- BIC(fit.red2,
+         lm(USAGE ~ PROD, data = q2data),
+         lm(USAGE ~ PAYR, data = q2data))
+
+x <- data.frame(B = c(b[1,2], b[2,2], b[3,2])
+                )
+
+colnames(x) <- c("BIC")
+rownames(x) <- c("PROD and PAYR", "PROD", "PAYR")
+
+pandoc.table(x,
+             caption = "**Table Q25:** The BIC values for the three different models.",
+             split.table = Inf)
+
+
+```
+  
+***
+   
+  Since the model containing both *PROD* and *PAYR* as predictor variables for mean water usage has the lowest BIC value we will accept it as the best model for predicting mean water usage. This model is relatively simple since it only includes two predictor variables.
 
 
 <br>
@@ -3321,6 +3471,110 @@ pandoc.table(x,
 <br>
 
 ## A2
+
+
+```{r}
+q2data <- data.frame(read.table("data/water.txt", header = T, sep = ""))
+
+##################################################
+
+fit.full <- lm(USAGE ~ TEMP + PROD + DAYS + PAYR + HOUR +
+                 TEMP:PROD + TEMP:DAYS + TEMP:PAYR + TEMP:HOUR + PROD:DAYS + 
+                 PROD:PAYR + PROD:HOUR + DAYS:PAYR + DAYS:HOUR + PAYR:HOUR,
+               data = q2data)
+
+##################################################
+
+fit.full.noInt <- lm(USAGE ~ TEMP + PROD + DAYS + PAYR + HOUR, data = q2data)
+a <- anova(fit.full.noInt, fit.full)
+
+x <- data.frame(f = a$F[2], numdf <- a$Df[2], dendf <- a$Res.Df[2], p <- a$`Pr(>F)`[2])
+colnames(x) <- c("Observed F-Statistic", "Numerator Degrees of Freedom", "Denominator Degrees of Freedom", "P-value")
+
+pandoc.table(x,
+             caption = "**Table Q21:** The results of the F-test comparing the model without interaction terms to the model including interaction terms.",
+             split.table = Inf)
+
+##################################################
+
+sf <- summary(fit.full.noInt)
+
+x <- data.frame(E = c(sf$coefficients[1,1], sf$coefficients[2,1], 
+                      sf$coefficients[3,1], sf$coefficients[4,1], 
+                      sf$coefficients[5,1], sf$coefficients[6,1] ),
+                LB = c(sf$coefficients[1,1] - 1.96*sf$coefficients[1,2], 
+                       sf$coefficients[2,1] - 1.96*sf$coefficients[2,2], 
+                       sf$coefficients[3,1] - 1.96*sf$coefficients[3,2], 
+                       sf$coefficients[4,1] - 1.96*sf$coefficients[4,2], 
+                       sf$coefficients[5,1] - 1.96*sf$coefficients[5,2], 
+                       sf$coefficients[6,1] - 1.96*sf$coefficients[6,2] ),
+                UB = c(sf$coefficients[1,1] + 1.96*sf$coefficients[1,2], 
+                       sf$coefficients[2,1] + 1.96*sf$coefficients[2,2], 
+                       sf$coefficients[3,1] + 1.96*sf$coefficients[3,2], 
+                       sf$coefficients[4,1] + 1.96*sf$coefficients[4,2], 
+                       sf$coefficients[5,1] + 1.96*sf$coefficients[5,2], 
+                       sf$coefficients[6,1] + 1.96*sf$coefficients[6,2] ),
+                pv = c(sf$coefficients[1,4], sf$coefficients[2,4],
+                       sf$coefficients[3,4], sf$coefficients[4,4],
+                       sf$coefficients[5,4], sf$coefficients[6,4]))
+
+colnames(x) <- c("Estimate", "Lower Bound", "Upper Bound", "P-value")
+rownames(x) <- c("Intercept", "TEMP", "PROD", "DAYS", "PAYR", "HOUR")
+
+pandoc.table(x,
+             caption = "**Table Q22:** The point estimates, 95% confidence intervals, and p-values for the coefficients of the linear regression model for mean water usage including all five explanatory variables.",
+             split.table = Inf)
+
+##################################################
+
+fit.red2 <- lm(USAGE ~ PROD + PAYR, data = q2data)
+a <- anova(fit.red2, fit.full.noInt)
+
+x <- data.frame(f = a$F[2], numdf <- a$Df[2], dendf <- a$Res.Df[2], p <- a$`Pr(>F)`[2])
+colnames(x) <- c("Observed F-Statistic", "Numerator Degrees of Freedom", "Denominator Degrees of Freedom", "P-value")
+
+pandoc.table(x,
+             caption = "**Table Q23:** The results of the F-test comparing the model with only *PROD* and *PAYR* as predictor variables to the model including all five explanatory variables.",
+             split.table = Inf)
+
+##################################################
+
+sf <- summary(fit.red2)
+
+x <- data.frame(E = c(sf$coefficients[1,1], sf$coefficients[2,1], sf$coefficients[3,1] ),
+                LB = c(sf$coefficients[1,1] - 1.96*sf$coefficients[1,2], 
+                       sf$coefficients[2,1] - 1.96*sf$coefficients[2,2], 
+                       sf$coefficients[3,1] - 1.96*sf$coefficients[3,2]),
+                UB = c(sf$coefficients[1,1] + 1.96*sf$coefficients[1,2], 
+                       sf$coefficients[2,1] + 1.96*sf$coefficients[2,2], 
+                       sf$coefficients[3,1] + 1.96*sf$coefficients[3,2]),
+                pv = c(sf$coefficients[1,4], sf$coefficients[2,4], sf$coefficients[3,4]))
+
+colnames(x) <- c("Estimate", "Lower Bound", "Upper Bound", "P-value")
+rownames(x) <- c("Intercept", "PROD", "PAYR")
+
+pandoc.table(x,
+             caption = "**Table Q24:** The point estimates, 95% confidence intervals, and p-values for the coefficients of the linear regression model for mean water usage using *PROD* and *PAYR* as predictor variables.",
+             split.table = Inf)
+
+##################################################
+
+b <- BIC(fit.red2,
+         lm(USAGE ~ PROD, data = q2data),
+         lm(USAGE ~ PAYR, data = q2data))
+
+x <- data.frame(B = c(b[1,2], b[2,2], b[3,2])
+                )
+
+colnames(x) <- c("BIC")
+rownames(x) <- c("PROD and PAYR", "PROD", "PAYR")
+
+pandoc.table(x,
+             caption = "**Table Q25:** The BIC values for the three different models.",
+             split.table = Inf)
+
+
+```
 
 <br>
 <br>
